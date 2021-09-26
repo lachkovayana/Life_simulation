@@ -8,11 +8,11 @@ public class Plant
 	{
 		position = pos;
 	}
-	void wasEaten()
+	public void WasEaten()
 	{
 		//deletefrommap
 	}
-	public (int, int) getPosition()
+	public (int, int) GetPosition()
 	{
 		return position;
 	}

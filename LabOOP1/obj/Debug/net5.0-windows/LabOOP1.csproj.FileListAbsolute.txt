@@ -34,3 +34,4 @@ C:\Users\Пользователь\Source\Repos\OOP-LifeSimulation\LabOOP1\obj\De
 C:\Users\Пользователь\Source\Repos\OOP-LifeSimulation\LabOOP1\obj\Debug\net5.0-windows\LabOOP1.pdb
 C:\Users\Пользователь\Source\Repos\OOP-LifeSimulation\LabOOP1\obj\Debug\net5.0-windows\LabOOP1.genruntimeconfig.cache
 C:\Users\Пользователь\Source\Repos\OOP-LifeSimulation\LabOOP1\obj\Debug\net5.0-windows\LabOOP1.Form1.resources
+C:\Users\Пользователь\Source\Repos\OOP-LifeSimulation\LabOOP1\obj\Debug\net5.0-windows\LabOOP1.Properties.Resources.resources

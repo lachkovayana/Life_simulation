@@ -32,7 +32,7 @@ namespace LabOOP1
             this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.numDensity2 = new System.Windows.Forms.NumericUpDown();
             this.numResolution = new System.Windows.Forms.NumericUpDown();
             this.numDensity1 = new System.Windows.Forms.NumericUpDown();
             this.buttonStop = new System.Windows.Forms.Button();
@@ -40,13 +40,12 @@ namespace LabOOP1
             this.panel3 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.numDensity2 = new System.Windows.Forms.NumericUpDown();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numDensity2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numResolution)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDensity1)).BeginInit();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numDensity2)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -60,7 +59,6 @@ namespace LabOOP1
             // 
             this.panel2.BackColor = System.Drawing.SystemColors.ControlDark;
             this.panel2.Controls.Add(this.numDensity2);
-            this.panel2.Controls.Add(this.textBox1);
             this.panel2.Controls.Add(this.numResolution);
             this.panel2.Controls.Add(this.numDensity1);
             this.panel2.Controls.Add(this.buttonStop);
@@ -71,13 +69,17 @@ namespace LabOOP1
             this.panel2.Size = new System.Drawing.Size(276, 1000);
             this.panel2.TabIndex = 2;
             // 
-            // textBox1
+            // numDensity2
             // 
-            this.textBox1.Location = new System.Drawing.Point(80, 409);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(125, 27);
-            this.textBox1.TabIndex = 5;
-            this.textBox1.Text = "lll";
+            this.numDensity2.Location = new System.Drawing.Point(49, 369);
+            this.numDensity2.Name = "numDensity2";
+            this.numDensity2.Size = new System.Drawing.Size(150, 27);
+            this.numDensity2.TabIndex = 6;
+            this.numDensity2.Value = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
             // 
             // numResolution
             // 
@@ -93,7 +95,7 @@ namespace LabOOP1
             // 
             // numDensity1
             // 
-            this.numDensity1.Location = new System.Drawing.Point(49, 336);
+            this.numDensity1.Location = new System.Drawing.Point(49, 324);
             this.numDensity1.Name = "numDensity1";
             this.numDensity1.Size = new System.Drawing.Size(150, 27);
             this.numDensity1.TabIndex = 3;
@@ -105,7 +107,7 @@ namespace LabOOP1
             // 
             // buttonStop
             // 
-            this.buttonStop.Location = new System.Drawing.Point(80, 171);
+            this.buttonStop.Location = new System.Drawing.Point(80, 138);
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(94, 29);
             this.buttonStop.TabIndex = 1;
@@ -125,8 +127,10 @@ namespace LabOOP1
             // 
             // panel3
             // 
+            this.panel3.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.panel3.Controls.Add(this.pictureBox1);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel3.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.panel3.Location = new System.Drawing.Point(282, 0);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(1000, 1000);
@@ -139,6 +143,7 @@ namespace LabOOP1
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(1000, 1000);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
@@ -146,22 +151,12 @@ namespace LabOOP1
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // numDensity2
-            // 
-            this.numDensity2.Location = new System.Drawing.Point(49, 369);
-            this.numDensity2.Name = "numDensity2";
-            this.numDensity2.Size = new System.Drawing.Size(150, 27);
-            this.numDensity2.TabIndex = 6;
-            this.numDensity2.Value = new decimal(new int[] {
-            30,
-            0,
-            0,
-            0});
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
+            this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1282, 1000);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
@@ -169,12 +164,12 @@ namespace LabOOP1
             this.Name = "Form1";
             this.Text = "Form1";
             this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numDensity2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numResolution)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDensity1)).EndInit();
             this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numDensity2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -190,7 +185,6 @@ namespace LabOOP1
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.NumericUpDown numDensity1;
         private System.Windows.Forms.NumericUpDown numResolution;
-        public System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.NumericUpDown numDensity2;
     }
 }

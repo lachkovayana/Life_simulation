@@ -8,6 +8,7 @@ public class Animal
 
     public Animal((int, int) pos)
     {
+
         position = pos;
     }
     private void riseHealth()
@@ -35,19 +36,24 @@ public class Animal
             Die();
     }
 
-    void Die()
+    public void Die()
     {
         //deletefrommap
     }
 
-    public (int, int) getHP()
+    public (int, int) GetHP()
     {
         return (health, satiety);
     }
     //(getHp()).Item1..Item2
 
-    public (int, int) getPosition()
+    public (int, int) GetPosition()
     {
+        return position;
+    }
+    public (int, int) SetPosition((int,int) pos)
+    {
+        this.position = pos;
         return position;
     }
 

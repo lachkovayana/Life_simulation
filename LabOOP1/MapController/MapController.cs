@@ -11,45 +11,97 @@ using System.Windows.Forms;
 class MapController
 {
     private List<Animal> listOfAnimals = new List<Animal>();
+    private List<Animal> listOfDies = new List<Animal>();
+
     private List<Plant> listOfPlants = new List<Plant>();
-    int newRows;
-    int newCols;
-    int densityAnimals;
-    int densityPlants;
+    private List<Plant> listOfRemoves = new List<Plant>();
 
-    private int[,] newField;
+    private int rows;
+    private int cols;
+    private int densityAnimals;
+    private int densityPlants;
+    private int resolution;
 
-    public MapController(int rows, int cols, int density1, int density2)
+    private int[,] field;
+
+    private Rendering rendering;
+    private PictureBox pictureBox;
+
+    public MapController(int rows, int cols, int density1, int density2, int resolution, PictureBox pictureBox, Graphics graphics)
+
     {
-        newRows = rows;
-        newCols = cols;
+        this.pictureBox = pictureBox;
+        this.resolution = resolution;
+        this.rows = rows;
+        this.cols = cols;
         densityAnimals = density1;
         densityPlants = density2;
 
-        newField = new int[newRows, newCols];
-
+        field = GetField();
+        rendering = new Rendering(this.cols, this.rows, this.resolution, field, this.pictureBox, graphics);
     }
 
-    public int[,] GetField()
+    private int[,] GetField()
     {
+        int[,] tmpField = new int[cols, rows];
         Random random = new Random();
-        for (int x = 0; x < newCols; x++)
+        for (int x = 0; x < cols; x++)
         {
-            for (int y = 0; y < newRows; y++)
+            for (int y = 0; y < rows; y++)
             {
                 if (random.Next(densityAnimals) == 0)
                 {
-                    newField[x, y] = 1;
-                    listOfAnimals.Add(new Animal((x,y)));
+                    tmpField[x, y] = 1;
+
+                    listOfAnimals.Add(new Animal((x, y)));
+
                 }
                 else if (random.Next(densityPlants) == 0)
                 {
-                    newField[x, y] = 2;
+                    tmpField[x, y] = 2;
                     listOfPlants.Add(new Plant((x, y)));
                 }
             }
         }
-        return newField;
+        return tmpField;
+    }
+
+    public void DrawFirstGeneration()
+    {
+        rendering.DrawGeneration();
+
+    }
+
+    public void DrawAllChanges()
+    {
+        moveToRight();
+    }
+
+    private void moveToRight()
+    {
+        foreach (Animal an in listOfAnimals)
+        {
+            if (an.GetPosition().Item1 <= pictureBox.Width/resolution - 1)
+            {
+                rendering.removeFromField(an.GetPosition());
+                an.SetPosition((an.GetPosition().Item1 + 1, an.GetPosition().Item2));
+                rendering.Draw(an.GetPosition());
+            }
+            else
+            {
+                rendering.removeFromField(an.GetPosition());
+                listOfDies.Add(an);
+            }
+        }
+        foreach (Animal an in listOfDies)
+        {
+            listOfAnimals.Remove(an);
+        }
+    }
+
+    private void CheckAll()
+    {
+
     }
 
 }
