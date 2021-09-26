@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿
+using System;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LabOOP1
 {
     public partial class Form1 : Form
     {
-        private Graphics graphics;
         private int resolution;
         private int densityAnimals;
         private int densityPlants;
         private int rows;
         private int cols;
-        private MapController mapController;
+        private Graphics graphics;
+        private MapObjectsControl mapController;
 
         public Form1()
         {
@@ -72,7 +67,7 @@ namespace LabOOP1
             pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             graphics = Graphics.FromImage(pictureBox1.Image);
 
-            mapController = new MapController(rows, cols, densityAnimals, densityPlants, resolution, pictureBox1, graphics);
+            mapController = new MapObjectsControl(rows, cols, densityAnimals, densityPlants, resolution, pictureBox1, graphics);
             mapController.DrawFirstGeneration();
 
             timer1.Start();

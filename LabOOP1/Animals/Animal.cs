@@ -8,30 +8,32 @@ public class Animal
 
     public Animal((int, int) pos)
     {
-
         position = pos;
     }
-    private void riseHealth()
+    private void RiseHealth()
     {
-        health += 5;
+        if (health < 100)
+
+            health += 5;
     }
-    private void riseSatiety()
+    public void RiseSatiety()
     {
-        satiety += 5;
+        if (satiety < 100)
+            satiety += 5;
         if (health <= 95)
             health += 5;
     }
-    private void decreaseHealth()
+    private void DecreaseHealth()
     {
-        if (health - 5 == 0)
+        if (health - 5 >= 0)
             Die();
         else
             health -= 5;
     }
-    private void decreaseSatiety()
+    public void DecreaseSatiety()
     {
         if (satiety < 30 && satiety > 0)
-            decreaseHealth();
+            DecreaseHealth();
         else
             Die();
     }
@@ -51,7 +53,7 @@ public class Animal
     {
         return position;
     }
-    public (int, int) SetPosition((int,int) pos)
+    public (int, int) SetPosition((int, int) pos)
     {
         this.position = pos;
         return position;
