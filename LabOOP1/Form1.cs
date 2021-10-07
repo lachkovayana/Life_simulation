@@ -3,9 +3,10 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
+//передача значения таймера для определения созревания растения
+
 namespace LabOOP1
 {
-    
     public partial class Form1 : Form
     {
         private int timerCounter = 0;
@@ -20,7 +21,6 @@ namespace LabOOP1
         public Form1()
         {
             InitializeComponent();
-            //timer1.Tick += new EventHandler(timer1_Tick);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -58,7 +58,8 @@ namespace LabOOP1
 
         public void StartGame()
         {
-          
+
+            timerCounter = 0;
             buttonStart.Enabled = false;
             buttonContinue.Enabled = false;
             numResolution.Enabled = false;
@@ -75,7 +76,7 @@ namespace LabOOP1
             graphics = Graphics.FromImage(pictureBox1.Image);
 
             mapController = new MapObjectsControl(rows, cols, densityAnimals, densityPlants, resolution, pictureBox1, graphics);
-            mapController.CreateGeneration();
+            mapController.CreateFirstGeneration();
 
             timer1.Start();
         }

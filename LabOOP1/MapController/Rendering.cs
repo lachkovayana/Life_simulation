@@ -9,7 +9,6 @@ public class Rendering
     private int _resolution;
     private int _rows;
     private int _cols;
-    //private int[,] field;
     private PictureBox _pictureBox;
 
     public Rendering(int cols, int rows, int resolution, PictureBox pictureBox, Graphics graphics)
@@ -21,56 +20,144 @@ public class Rendering
         _graphics = graphics;
     }
 
-    public void DrawAnimal(int x, int y)
-    {
-        _graphics.FillRectangle(Brushes.Green, x * _resolution, y * _resolution, _resolution, _resolution);
-        _pictureBox.Refresh();
-
-    }
-    public void DrawPlant(int x, int y)
-    {
-        _graphics.FillRectangle(Brushes.Crimson, x * _resolution, y * _resolution, _resolution, _resolution);
-        _pictureBox.Refresh();
-
-    }
-
-
-    //public void UpdateField(int[,] field)
+    //public void DrawAnimal(int x, int y)
     //{
-    //    graphics.Clear(Color.Black);
-    //    for (int x = 0; x < cols; x++)
-    //    {
-    //        for (int y = 0; y < rows; y++)
-    //        {
-    //            if (field[x, y] == 1)
-    //            { graphics.FillRectangle(Brushes.Green, x * resolution, y * resolution, resolution, resolution); }
-    //            if (field[x, y] == 2)
-    //            { graphics.FillRectangle(Brushes.Crimson, x * resolution, y * resolution, resolution, resolution); }
+    //    _graphics.FillRectangle(Brushes.Green, x * _resolution, y * _resolution, _resolution, _resolution);
+    //    _pictureBox.Refresh();
 
-    //        }
-    //    }
+    //}
+    //public void DrawEdiblePlant(int x, int y)
+    //{
+    //    _graphics.FillRectangle(Brushes.Crimson, x * _resolution, y * _resolution, _resolution, _resolution);
+    //    _pictureBox.Refresh();
+
+    //}
+    //public void DrawInediblePlant(int x, int y)
+    //{
+    //    _graphics.FillRectangle(Brushes.Blue, x * _resolution, y * _resolution, _resolution, _resolution);
     //    _pictureBox.Refresh();
     //}
 
-    public void UpdateField(List<Animal> listOfAnimals, List<Plant> listOfPlants)
+    public void Draw(string element, int x, int y)
+    {
+        switch (element)
+        {
+            case "animal":
+                _graphics.FillRectangle(Brushes.Gray, x * _resolution, y * _resolution, _resolution, _resolution);
+                break;
+            case "ediblePlant":
+                _graphics.FillRectangle(Brushes.Green, x * _resolution, y * _resolution, _resolution, _resolution);
+                break;
+            case "inediblePlant":
+                _graphics.FillRectangle(Brushes.Crimson, x * _resolution, y * _resolution, _resolution, _resolution);
+                break;
+        }
+        _pictureBox.Refresh();
+
+
+    }
+
+    public void UpdateField(List<Animal> listOfAnimals, List<EdiblePlant> listOfEdiblePlants, List<InediblePlant> listOfInediblePlants)
     {
         _graphics.Clear(Color.Black);
-        foreach (Plant plant in listOfPlants)
+        foreach (EdiblePlant plant in listOfEdiblePlants)
+        {
+            int x = plant.GetPosition().Item1;
+            int y = plant.GetPosition().Item2;
+            switch (plant.stage)
+            {
+                case 1:
+                    _graphics.FillEllipse(Brushes.Green, x * _resolution, y * _resolution, _resolution, _resolution);
+                    break;
+                case 2:
+                    _graphics.FillRectangle(Brushes.Green, x * _resolution, y * _resolution, _resolution, _resolution);
+                    break;
+                case 3:
+                    _graphics.FillRectangle(Brushes.Blue, x * _resolution, y * _resolution, _resolution, _resolution);
+                    break;
+            }
+
+        }
+        foreach (InediblePlant plant in listOfInediblePlants)
         {
             int x = plant.GetPosition().Item1;
             int y = plant.GetPosition().Item2;
 
-            _graphics.FillRectangle(Brushes.Crimson, x * _resolution, y * _resolution, _resolution, _resolution);
+            switch (plant.stage)
+            {
+                case 1:
+                    _graphics.FillEllipse(Brushes.Crimson, x * _resolution, y * _resolution, _resolution, _resolution);
+                    break;
+                case 2:
+                    _graphics.FillRectangle(Brushes.Crimson, x * _resolution, y * _resolution, _resolution, _resolution);
+                    break;
+                case 3:
+                    _graphics.FillRectangle(Brushes.Blue, x * _resolution, y * _resolution, _resolution, _resolution);
+                    break;
+            }
         }
         foreach (Animal animal in listOfAnimals)
         {
             int x = animal.GetPosition().Item1;
             int y = animal.GetPosition().Item2;
 
-            _graphics.FillRectangle(Brushes.Green, x * _resolution, y * _resolution, _resolution, _resolution);
+            _graphics.FillRectangle(Brushes.Gray, x * _resolution, y * _resolution, _resolution, _resolution);
+        }
+        _pictureBox.Refresh();
+
+    }
+
+    internal void UpgradeField(List<Animal> listOfAnimals, List<Plant> listOfAllPlants)
+    {
+        _graphics.Clear(Color.Black);
+       
+        foreach (Plant plant in listOfAllPlants)
+        {
+            int x = plant.GetPosition().Item1;
+            int y = plant.GetPosition().Item2;
+            switch (plant)
+            {
+                case EdiblePlant:
+                    switch (plant.stage)
+                    {
+                        case 1:
+                            _graphics.FillEllipse(Brushes.Green, x * _resolution, y * _resolution, _resolution, _resolution);
+                            break;
+                        case 2:
+                            _graphics.FillRectangle(Brushes.Green, x * _resolution, y * _resolution, _resolution, _resolution);
+                            break;
+                        case 3:
+                            _graphics.FillRectangle(Brushes.Green, x * _resolution, y * _resolution, _resolution, _resolution);
+                            break;
+                    }
+                    break;
+                    case InediblePlant:
+                    switch (plant.stage)
+                    {
+                        case 1:
+                            _graphics.FillEllipse(Brushes.Crimson, x * _resolution, y * _resolution, _resolution, _resolution);
+                            break;
+                        case 2:
+                            _graphics.FillRectangle(Brushes.Crimson, x * _resolution, y * _resolution, _resolution, _resolution);
+                            break;
+                        case 3:
+                            _graphics.FillRectangle(Brushes.Blue, x * _resolution, y * _resolution, _resolution, _resolution);
+                            break;
+                    }
+                    break;
+            }
+            
+        }
+        foreach (Animal animal in listOfAnimals)
+        {
+            int x = animal.GetPosition().Item1;
+            int y = animal.GetPosition().Item2;
+
+            _graphics.FillRectangle(Brushes.Gray, x * _resolution, y * _resolution, _resolution, _resolution);
         }
         _pictureBox.Refresh();
 
     }
 }
+
 

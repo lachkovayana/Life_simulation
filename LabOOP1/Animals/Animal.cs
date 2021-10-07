@@ -7,9 +7,9 @@ public class Animal
     private (int, int) _position;
     private int _health = 100;
     private int _satiety = 100;
-    public bool isHungry = false;
     private int _rows;
     private int _cols;
+    public bool isHungry = false;
 
     public Animal(int rows, int cols, (int, int) pos)
     {
@@ -19,16 +19,13 @@ public class Animal
     }
     private void RiseHealth()
     {
-            _health += 15;
+        _health += 50;
     }
-    public void RiseSatiety()
+    private void RiseSatiety()
     {
-        if (_satiety >= 30)
-            isHungry = false;
-        if (_satiety < 100)
-            _satiety += 15;
-        if (_health <= 85)
-            RiseHealth();
+        _satiety = 100;
+        isHungry = false;
+        RiseHealth();
     }
     private void DecreaseHealth(List<Animal> removeList)
     {
@@ -38,46 +35,22 @@ public class Animal
             _health -= 5;
     }
 
-    public void DecreaseSatiety(List<Animal> removeList)
+    private void DecreaseSatiety(List<Animal> removeList)
     {
+        _satiety -= 5;
         if (_satiety <= 30)
         {
             isHungry = true;
             DecreaseHealth(removeList);
         }
-        _satiety -= 5;
     }
 
-    public void Die(List<Animal> removeList)
+    private void Die(List<Animal> removeList)
     {
         removeList.Add(this);
     }
 
-    public int GetHealth()
-    {
-        return _health;
-    }
-
-    public bool IsHungry()
-    {
-        if (_satiety < 30)
-        {
-            return true;
-        }
-        return false;
-    }
-
-    public (int, int) GetPosition()
-    {
-        return _position;
-    }
-    public (int, int) SetPosition((int, int) pos)
-    {
-        _position = pos;
-        return _position;
-    }
-
-    public void MoveToRandomCell()
+    private void MoveToRandomCell()
     {
         Random rnd = new Random();
 
@@ -98,23 +71,26 @@ public class Animal
 
     }
 
-    public void MoveToTarget(List<Plant> listOfPlants)
+    private void MoveToTarget(List<Plant> listOfAllPlants)
     {
         var posAn = _position;
         var min = 100000;
-        Plant target = new((-1, -1));
+        EdiblePlant target = new((-1, -1));
         (int, int) newPosAn = posAn;
 
-        foreach (Plant plant in listOfPlants)
+        foreach (Plant plant in listOfAllPlants)
         {
-            var posPl = plant.GetPosition();
-            var tmpx = Math.Abs(posAn.Item1 - posPl.Item1);
-            var tmpy = Math.Abs(posAn.Item2 - posPl.Item2);
-
-            if (tmpx + tmpy < min)
+            if (plant is EdiblePlant)
             {
-                min = tmpx + tmpx;
-                target = plant;
+                var posPl = plant.GetPosition();
+                var tmpx = Math.Abs(posAn.Item1 - posPl.Item1);
+                var tmpy = Math.Abs(posAn.Item2 - posPl.Item2);
+
+                if (tmpx + tmpy < min)
+                {
+                    min = tmpx + tmpx;
+                    target = (EdiblePlant)plant;
+                }
             }
         }
 
@@ -126,12 +102,12 @@ public class Animal
             if (disty > 0)
             {
                 newPosAn = MoveToDirection(posAn, "right");
-                newPosAn = MoveToDirection(posAn, "down");
+                newPosAn = MoveToDirection(newPosAn, "down");
             }
             else if (disty < 0)
             {
                 newPosAn = MoveToDirection(posAn, "right");
-                newPosAn = MoveToDirection(posAn, "up");
+                newPosAn = MoveToDirection(newPosAn, "up");
             }
             else
             {
@@ -143,7 +119,7 @@ public class Animal
             if (disty > 0)
             {
                 newPosAn = MoveToDirection(posAn, "left");
-                newPosAn = MoveToDirection(posAn, "down");
+                newPosAn = MoveToDirection(newPosAn, "down");
             }
             else if (disty < 0)
             {
@@ -171,16 +147,10 @@ public class Animal
             {
                 RiseSatiety();
 
-                listOfPlants.Remove(target);
-
-                //Plant newPlant = new Plant(FindFreeCell());
-                //listOfPlants[listOfPlants.FindIndex(ind => ind.Equals(target))] = newPlant;
-                //rendering.DrawPlant(newPlant.GetPosition().Item1, newPlant.GetPosition().Item2);
+                listOfAllPlants.Remove(target);
             }
         }
-        //rendering.removeFromField(posAn);
         SetPosition(newPosAn);
-        //rendering.Draw(newPosAn);
     }
 
     private (int, int) MoveToDirection((int, int) pos, string direction)
@@ -198,13 +168,31 @@ public class Animal
         }
         return (pos.Item1, pos.Item2);
     }
-
-
-    public void Move(List<Plant> listOfPlants)
+    private bool IsHungry()
     {
-        if (IsHungry() && listOfPlants.Count != 0)
+        if (_satiety < 20)
         {
-            MoveToTarget(listOfPlants);
+            return true;
+        }
+        return false;
+    }
+
+    public (int, int) GetPosition()
+    {
+        return _position;
+    }
+    public void SetPosition((int, int) pos)
+    {
+        _position = pos;
+    }
+
+    public void LiveAnimalCicle(List<Plant> listOfAllPlants, List<Animal> removeList)
+    {
+        DecreaseSatiety(removeList);
+
+        if (IsHungry() && listOfAllPlants.Count != 0)
+        {
+            MoveToTarget(listOfAllPlants);
         }
         else
         {

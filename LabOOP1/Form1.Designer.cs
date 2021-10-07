@@ -32,6 +32,7 @@ namespace LabOOP1
             this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.buttonContinue = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -44,7 +45,6 @@ namespace LabOOP1
             this.panel3 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numDensity2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numResolution)).BeginInit();
@@ -78,6 +78,13 @@ namespace LabOOP1
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(276, 1000);
             this.panel2.TabIndex = 2;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(70, 609);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(125, 27);
+            this.textBox1.TabIndex = 11;
             // 
             // buttonContinue
             // 
@@ -208,13 +215,6 @@ namespace LabOOP1
             // 
             this.timer1.Interval = 400;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(70, 609);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(125, 27);
-            this.textBox1.TabIndex = 11;
             // 
             // Form1
             // 

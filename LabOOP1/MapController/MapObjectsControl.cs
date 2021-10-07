@@ -7,6 +7,9 @@ class MapObjectsControl
 {
     private List<Animal> _listOfAnimals = new();
     private List<Plant> _listOfAllPlants = new();
+    private List<EdiblePlant> _listOfEdiblePlants = new();
+    private List<InediblePlant> _listOfInediblePlants = new();
+
     private List<Animal> _removeList = new();
 
 
@@ -34,7 +37,7 @@ class MapObjectsControl
         _rendering = new Rendering(_cols, _rows, _resolution, _pictureBox, graphics);
     }
 
-    public void CreateGeneration()
+    public void CreateFirstGeneration()
     {
         Random random = new();
         for (int x = 0; x < _cols; x++)
@@ -43,54 +46,56 @@ class MapObjectsControl
             {
                 if (random.Next(_densityAnimals) == 0)
                 {
-                    //_field[x, y] = 1;
-                    _rendering.DrawAnimal(x, y);
+                    _rendering.Draw("animal", x, y);
                     _listOfAnimals.Add(new Animal(_rows, _cols, (x, y)));
+                }
+                else if (random.Next(_densityPlants) == 1)
+                {
+                    _rendering.Draw("inediblePlant", x, y);
+                    _listOfAllPlants.Add(new InediblePlant((x, y)));
+                    _listOfInediblePlants.Add(new InediblePlant((x, y)));
+
                 }
                 else if (random.Next(_densityPlants) == 0)
                 {
-                    //_field[x, y] = 2;
-                    _rendering.DrawPlant(x, y);
-                    _listOfAllPlants.Add(new Plant((x, y)));
+                    _rendering.Draw("ediblePlant", x, y);
+                    _listOfAllPlants.Add(new EdiblePlant((x, y)));
+                    _listOfEdiblePlants.Add(new EdiblePlant((x, y)));
+
                 }
-                //else
-                //{
-                //_field[x, y] = 0;
-                //}
             }
         }
     }
 
-    public void LiveOneCicle()
-    {
-
-        LiveAnimalCicle();
-        LivePlantCicle();
-        _rendering.UpdateField(_listOfAnimals, _listOfAllPlants);
-
-
-    }
-
     private void LivePlantCicle()
     {
-        //foreach (Plant plant in _listOfAllPlants)
-        //{
-
-        //}
+        foreach (Plant plant in _listOfAllPlants)
+        {
+            plant.UpdateAge();
+        }
     }
 
-    private void LiveAnimalCicle()
+    private void UpdateAnimals()
     {
         foreach (Animal animal in _listOfAnimals)
         {
-            animal.DecreaseSatiety(_removeList);
-            animal.Move(_listOfAllPlants);
+            animal.LiveAnimalCicle(_listOfAllPlants, _removeList);
         }
         foreach (Animal animal in _removeList)
         {
             _listOfAnimals.Remove(animal);
         }
         _removeList = new();
+    }
+
+    public void LiveOneCicle()
+    {
+        UpdateAnimals();
+        LivePlantCicle();
+        //_rendering.UpdateField(_listOfAnimals, _listOfEdiblePlants, _listOfInediblePlants);
+        _rendering.UpgradeField(_listOfAnimals, _listOfAllPlants);
+
+
     }
 
 }
