@@ -20,24 +20,30 @@ public class Rendering
         _graphics = graphics;
     }
 
-  
-    public void Draw(MapObject mapObject, int x, int y)
+
+    public void DrawFirstGeneration(MapObject mapObject, int x, int y)
     {
-       
+
         switch (mapObject)
         {
             case MapObject.animal:
-            _graphics.FillRectangle(Brushes.Gray, x * _resolution, y * _resolution, _resolution, _resolution);
+                _graphics.FillRectangle(Brushes.Gray, x * _resolution, y * _resolution, _resolution, _resolution);
                 break;
             case MapObject.ediblePlantHealthy:
                 _graphics.FillEllipse(Brushes.Lime, x * _resolution, y * _resolution, _resolution, _resolution);
                 break;
+           
             case MapObject.ediblePlantPoisonous:
                 _graphics.FillEllipse(Brushes.Beige, x * _resolution, y * _resolution, _resolution, _resolution);
                 break;
-            case MapObject.inediblePlant:
-                _graphics.FillEllipse(Brushes.Red, x * _resolution, y * _resolution, _resolution, _resolution);
+            
+            case MapObject.inediblePlantHealthy:
+                _graphics.FillEllipse(Brushes.Tomato, x * _resolution, y * _resolution, _resolution, _resolution);
                 break;
+            case MapObject.inediblePlantPoisonous:
+                _graphics.FillEllipse(Brushes.Tan, x * _resolution, y * _resolution, _resolution, _resolution);
+                break;
+           
         }
         _pictureBox.Refresh();
 
@@ -54,31 +60,48 @@ public class Rendering
             switch (plant)
             {
                 case EdiblePlant:
-                    EdiblePlant pl = (EdiblePlant)plant;
                     switch (plant.Stage)
                     {
                         case PlantStage.seed:
-                            if (pl.IsHealthy() == true)
+                            if (plant.IsHealthy())
                                 _graphics.FillEllipse(Brushes.Lime, x * _resolution, y * _resolution, _resolution, _resolution);
                             else
                                 _graphics.FillEllipse(Brushes.Beige, x * _resolution, y * _resolution, _resolution, _resolution);
                             break;
                         case PlantStage.sprout:
-                            if (pl.IsHealthy() == true)
+                            if (plant.IsHealthy())
                                 _graphics.FillRectangle(Brushes.Lime, x * _resolution, y * _resolution, _resolution, _resolution);
                             else
                                 _graphics.FillRectangle(Brushes.Beige, x * _resolution, y * _resolution, _resolution, _resolution);
 
                             break;
                         case PlantStage.grown:
-                            if (pl.IsHealthy() == true)
-                                _graphics.FillRectangle(Brushes.Green, x * _resolution, y * _resolution, _resolution, _resolution);
+                            if (plant.IsHealthy())
+                            {
+                                if (plant.IsGrowth())
+                                {
+                                    _graphics.FillRectangle(Brushes.Green, x * _resolution, y * _resolution, _resolution, _resolution);
+                                }
+                                else
+                                {
+                                    _graphics.FillRectangle(Brushes.MediumSpringGreen, x * _resolution, y * _resolution, _resolution, _resolution);
+
+                                }
+                            }
                             else
+                                 if (plant.IsGrowth())
+                            {
                                 _graphics.FillRectangle(Brushes.White, x * _resolution, y * _resolution, _resolution, _resolution);
+                            }
+                            else
+                            {
+                                _graphics.FillRectangle(Brushes.LightGoldenrodYellow, x * _resolution, y * _resolution, _resolution, _resolution);
+
+                            }
 
                             break;
                         case PlantStage.dead:
-                            if (pl.IsHealthy() == true)
+                            if (plant.IsHealthy())
                                 _graphics.FillRectangle(Brushes.DarkOliveGreen, x * _resolution, y * _resolution, _resolution, _resolution);
                             else
                                 _graphics.FillRectangle(Brushes.Wheat, x * _resolution, y * _resolution, _resolution, _resolution);
@@ -86,21 +109,56 @@ public class Rendering
                             break;
                     }
                     break;
-
+            
                 case InediblePlant:
+
                     switch (plant.Stage)
                     {
                         case PlantStage.seed:
-                            _graphics.FillEllipse(Brushes.Red, x * _resolution, y * _resolution, _resolution, _resolution);
+                            if (plant.IsHealthy())
+                                _graphics.FillEllipse(Brushes.Tomato, x * _resolution, y * _resolution, _resolution, _resolution);
+                            else
+                                _graphics.FillEllipse(Brushes.Tan, x * _resolution, y * _resolution, _resolution, _resolution);
                             break;
                         case PlantStage.sprout:
-                            _graphics.FillRectangle(Brushes.Red, x * _resolution, y * _resolution, _resolution, _resolution);
+                            if (plant.IsHealthy())
+                                _graphics.FillRectangle(Brushes.Tomato, x * _resolution, y * _resolution, _resolution, _resolution);
+                            else
+                                _graphics.FillRectangle(Brushes.Tan, x * _resolution, y * _resolution, _resolution, _resolution);
                             break;
                         case PlantStage.grown:
-                            _graphics.FillRectangle(Brushes.Crimson, x * _resolution, y * _resolution, _resolution, _resolution);
+                            if (plant.IsHealthy())
+                            {
+                                if (plant.IsGrowth())
+                                {
+                                    _graphics.FillRectangle(Brushes.Red, x * _resolution, y * _resolution, _resolution, _resolution);
+                                }
+                                else
+                                {
+                                    _graphics.FillRectangle(Brushes.Crimson, x * _resolution, y * _resolution, _resolution, _resolution);
+
+                                }
+                            }
+                            else
+                            {
+                                if (plant.IsGrowth())
+                                {
+                                    _graphics.FillRectangle(Brushes.LightCoral, x * _resolution, y * _resolution, _resolution, _resolution);
+                                }
+                                else
+                                {
+                                    _graphics.FillRectangle(Brushes.Sienna, x * _resolution, y * _resolution, _resolution, _resolution);
+
+                                }
+                            }
+
                             break;
                         case PlantStage.dead:
-                            _graphics.FillRectangle(Brushes.Tomato, x * _resolution, y * _resolution, _resolution, _resolution);
+                            if (plant.IsHealthy())
+                                _graphics.FillRectangle(Brushes.Maroon, x * _resolution, y * _resolution, _resolution, _resolution);
+                            else
+                                _graphics.FillRectangle(Brushes.SaddleBrown, x * _resolution, y * _resolution, _resolution, _resolution);
+
                             break;
                     }
                     break;
@@ -120,7 +178,7 @@ public class Rendering
                 _graphics.DrawEllipse(new Pen(Color.BurlyWood, 3), x * _resolution, y * _resolution, _resolution, _resolution);
             }
 
-            
+
         }
         foreach (Animal animal in listOfAnimals)
         {

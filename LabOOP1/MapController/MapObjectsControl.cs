@@ -34,41 +34,7 @@ class MapObjectsControl
         _rendering = new Rendering(_cols, _rows, _resolution, _pictureBox, graphics);
     }
 
-    public void CreateFirstGeneration()
-    {
-        Random random = new();
-        for (int x = 0; x < _cols; x++)
-        {
-            for (int y = 0; y < _rows; y++)
-            {
-                if (random.Next(_densityAnimals) == 0)
-                {
-                    _listOfAnimals.Add(new Animal(_rows, _cols, (x, y)));
-                    _rendering.Draw(MapObject.animal, x, y);
-                }
-                else if (random.Next(_densityPlants) == 0)
-                {
-                    EdiblePlant newPlant = new EdiblePlant((x, y));
-                    _listOfAllPlants.Add(newPlant);
-                    if (newPlant.IsHealthy())
-                    {
-                        _rendering.Draw(MapObject.ediblePlantHealthy, x, y);
-                    }
-                    else
-                    {
-                        _rendering.Draw(MapObject.ediblePlantPoisonous, x, y);
-                    }
-                }
-                else if (random.Next(_densityPlants) == 1)
-                {
-                    _listOfAllPlants.Add(new InediblePlant((x, y)));
-                    _rendering.Draw(MapObject.inediblePlant, x, y);
-                }
-
-            }
-        }
-    }
-
+   
     private void UpdatePlants()
     {
         foreach (Plant plant in _listOfAllPlants)
@@ -102,6 +68,50 @@ class MapObjectsControl
         _rendering.UpgradeField(_listOfAnimals, _listOfAllPlants, _listOfFruits);
 
 
+    }
+    public void CreateFirstGeneration()
+    {
+        Random random = new();
+        for (int x = 0; x < _cols; x++)
+        {
+            for (int y = 0; y < _rows; y++)
+            {
+                if (random.Next(_densityAnimals) == 0)
+                {
+                    _listOfAnimals.Add(new Animal(_rows, _cols, (x, y)));
+                    _rendering.DrawFirstGeneration(MapObject.animal, x, y);
+                }
+                else if (random.Next(_densityPlants) == 0)
+                {
+                    EdiblePlant newPlant = new((x, y));
+                    _listOfAllPlants.Add(newPlant);
+                    if (newPlant.IsHealthy())
+                    {
+                       _rendering.DrawFirstGeneration(MapObject.ediblePlantHealthy, x, y);
+                    }
+                    else
+                    {
+                        _rendering.DrawFirstGeneration(MapObject.ediblePlantPoisonous, x, y);
+                    }
+                }
+                else if (random.Next(_densityPlants) == 1)
+                {
+                    //_listOfAllPlants.Add(new InediblePlant((x, y)));
+                    //_rendering.Draw(MapObject.inediblePlant, x, y);
+                    InediblePlant newPlant = new((x, y));
+                    _listOfAllPlants.Add(newPlant);
+                    if (newPlant.IsHealthy())
+                    {
+                       _rendering.DrawFirstGeneration(MapObject.inediblePlantHealthy, x, y);
+                    }
+                    else
+                    {
+                       _rendering.DrawFirstGeneration(MapObject.inediblePlantPoisonous, x, y);
+                    }
+                }
+
+            }
+        }
     }
 
 }

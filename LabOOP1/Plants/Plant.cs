@@ -3,13 +3,25 @@ using System.Collections.Generic;
 
 public abstract class Plant
 {
+    private const int _density = 3;
     private (int, int) _position;
     private int _age = 0;
+    private bool _isHealthy = true;
+    private bool _isGrowing = true;
     public PlantStage Stage = PlantStage.seed;
 
     public Plant((int, int) pos)
     {
         _position = pos;
+        Random random = new Random();
+        if (random.Next(_density) == 0)
+        {
+            _isHealthy = false;
+        }if (random.Next(_density) == 0)
+        {
+            _isGrowing = false;
+        }
+
     }
 
     private (int, int) FindNewCell()
@@ -31,7 +43,21 @@ public abstract class Plant
         return (x, y);
     }
 
+   
+    private void SetStatus(bool statusHealth, bool statusGrowth)
+    {
+        _isHealthy = statusHealth;
+        _isGrowing = statusGrowth;
 
+    }
+    public bool IsHealthy()
+    {
+        return _isHealthy;
+    }
+    public bool IsGrowth()
+    {
+        return _isGrowing;
+    }
     public (int, int) GetPosition()
     {
         return _position;
@@ -66,16 +92,16 @@ public abstract class Plant
 
     private void FormSeeds(List<Plant> listOfNewPlants)
     {
-        if (this is EdiblePlant plant1)
+        if (this is EdiblePlant)
         {
             var newPlant = new EdiblePlant(FindNewCell());
-            newPlant.SetStatus(((EdiblePlant)this).IsHealthy());
+            newPlant.SetStatus(IsHealthy(), IsGrowth());
             listOfNewPlants.Add(newPlant);
         }
         else
         {
             var newPlant = new InediblePlant(FindNewCell());
-            newPlant.SetStatus(((InediblePlant)this).GetStatus());
+            newPlant.SetStatus(IsHealthy(), IsGrowth());
             listOfNewPlants.Add(newPlant);
         }
     }
@@ -87,7 +113,7 @@ public abstract class Plant
         {
             Stage = PlantStage.sprout;
         }
-        if (_age == 35)
+        if (_age == 30)
         {
             Stage = PlantStage.grown;
         }
