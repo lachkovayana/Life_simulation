@@ -58,27 +58,27 @@ public class Rendering
                     switch (plant.Stage)
                     {
                         case PlantStage.seed:
-                            if (pl.IsHealthy == true)
+                            if (pl.IsHealthy() == true)
                                 _graphics.FillEllipse(Brushes.Lime, x * _resolution, y * _resolution, _resolution, _resolution);
                             else
                                 _graphics.FillEllipse(Brushes.Beige, x * _resolution, y * _resolution, _resolution, _resolution);
                             break;
                         case PlantStage.sprout:
-                            if (pl.IsHealthy == true)
+                            if (pl.IsHealthy() == true)
                                 _graphics.FillRectangle(Brushes.Lime, x * _resolution, y * _resolution, _resolution, _resolution);
                             else
                                 _graphics.FillRectangle(Brushes.Beige, x * _resolution, y * _resolution, _resolution, _resolution);
 
                             break;
                         case PlantStage.grown:
-                            if (pl.IsHealthy == true)
+                            if (pl.IsHealthy() == true)
                                 _graphics.FillRectangle(Brushes.Green, x * _resolution, y * _resolution, _resolution, _resolution);
                             else
                                 _graphics.FillRectangle(Brushes.White, x * _resolution, y * _resolution, _resolution, _resolution);
 
                             break;
                         case PlantStage.dead:
-                            if (pl.IsHealthy == true)
+                            if (pl.IsHealthy() == true)
                                 _graphics.FillRectangle(Brushes.DarkOliveGreen, x * _resolution, y * _resolution, _resolution, _resolution);
                             else
                                 _graphics.FillRectangle(Brushes.Wheat, x * _resolution, y * _resolution, _resolution, _resolution);
@@ -97,10 +97,10 @@ public class Rendering
                             _graphics.FillRectangle(Brushes.Red, x * _resolution, y * _resolution, _resolution, _resolution);
                             break;
                         case PlantStage.grown:
-                            _graphics.FillRectangle(Brushes.Maroon, x * _resolution, y * _resolution, _resolution, _resolution);
+                            _graphics.FillRectangle(Brushes.Crimson, x * _resolution, y * _resolution, _resolution, _resolution);
                             break;
                         case PlantStage.dead:
-                            _graphics.FillRectangle(Brushes.Crimson, x * _resolution, y * _resolution, _resolution, _resolution);
+                            _graphics.FillRectangle(Brushes.Tomato, x * _resolution, y * _resolution, _resolution, _resolution);
                             break;
                     }
                     break;
@@ -111,15 +111,13 @@ public class Rendering
         {
             int x = fruit.GetPosition().Item1;
             int y = fruit.GetPosition().Item2;
-            if (fruit.IsHealthy)
+            if (fruit.IsHealthy())
             {
-                Pen pen = new Pen(Color.Gold, 3);
-                _graphics.DrawEllipse(pen, x * _resolution, y * _resolution, _resolution, _resolution);
+                _graphics.DrawEllipse(new Pen(Color.Gold, 3), x * _resolution, y * _resolution, _resolution, _resolution);
             }
             else
             {
-                Pen pen = new Pen(Color.BurlyWood, 3);
-                _graphics.DrawEllipse(pen, x * _resolution, y * _resolution, _resolution, _resolution);
+                _graphics.DrawEllipse(new Pen(Color.BurlyWood, 3), x * _resolution, y * _resolution, _resolution, _resolution);
             }
 
             

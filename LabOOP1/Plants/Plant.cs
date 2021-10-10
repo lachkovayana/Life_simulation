@@ -66,13 +66,17 @@ public abstract class Plant
 
     private void FormSeeds(List<Plant> listOfNewPlants)
     {
-        if (this is EdiblePlant)
+        if (this is EdiblePlant plant1)
         {
-            listOfNewPlants.Add(new EdiblePlant(FindNewCell()));
+            var newPlant = new EdiblePlant(FindNewCell());
+            newPlant.SetStatus(((EdiblePlant)this).IsHealthy());
+            listOfNewPlants.Add(newPlant);
         }
         else
         {
-            listOfNewPlants.Add(new InediblePlant(FindNewCell()));
+            var newPlant = new InediblePlant(FindNewCell());
+            newPlant.SetStatus(((InediblePlant)this).GetStatus());
+            listOfNewPlants.Add(newPlant);
         }
     }
 
@@ -83,11 +87,11 @@ public abstract class Plant
         {
             Stage = PlantStage.sprout;
         }
-        if (_age == 25)
+        if (_age == 35)
         {
             Stage = PlantStage.grown;
         }
-        if (_age == 45)
+        if (_age == 55)
         {
             Stage = PlantStage.dead;
         }

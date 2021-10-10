@@ -50,7 +50,7 @@ class MapObjectsControl
                 {
                     EdiblePlant newPlant = new EdiblePlant((x, y));
                     _listOfAllPlants.Add(newPlant);
-                    if (newPlant.IsHealthy)
+                    if (newPlant.IsHealthy())
                     {
                         _rendering.Draw(MapObject.ediblePlantHealthy, x, y);
                     }

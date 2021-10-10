@@ -182,7 +182,7 @@ public class Animal
             {
                 if (target.Item3 == 2)
                 {
-                    if (targetPlant.IsHealthy)
+                    if (targetPlant.IsHealthy())
                     {
                         RiseSatiety();
                     }
@@ -195,7 +195,7 @@ public class Animal
                 }
                 else if (target.Item3 == 1)
                 {
-                    if (targetFruit.IsHealthy)
+                    if (targetFruit.IsHealthy())
                     {
                         RiseSatiety();
                     }

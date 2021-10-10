@@ -5,7 +5,7 @@ public class Fruit
     private (int, int) _position;
     private int _densityHealthyPlant = 4;
 
-    public bool IsHealthy = true;
+    public bool _isHealthy = true;
 
     public Fruit((int, int) pos)
     {
@@ -13,11 +13,20 @@ public class Fruit
         Random random = new();
         if (random.Next(_densityHealthyPlant) == 0)
         {
-            IsHealthy = false;
+            _isHealthy = false;
         }
     }
     public (int, int) GetPosition()
     {
         return _position;
+    }
+    
+    public bool IsHealthy()
+    {
+        return _isHealthy;
+    }
+    public void SetStatus(bool status)
+    {
+        _isHealthy = status;
     }
 }

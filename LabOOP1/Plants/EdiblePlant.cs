@@ -4,20 +4,24 @@ public class EdiblePlant : Plant
 {
 
     private const int _densityHealthyPlant = 4;
-    public bool IsHealthy = true;
+    private bool _isHealthy = true;
     public EdiblePlant((int, int) pos) : base(pos)
     {
         Random random = new();
         if (random.Next(_densityHealthyPlant) == 0)
         {
-            IsHealthy = false;
+            _isHealthy = false;
         }
         
     }
     
-    public bool GetStatus()
+    public bool IsHealthy()
     {
-        return IsHealthy;
+        return _isHealthy;
+    }
+    public void SetStatus(bool status)
+    {
+        _isHealthy = status;
     }
   
 }
