@@ -7,10 +7,8 @@ class MapObjectsControl
 {
     private List<Animal> _listOfAnimals = new();
     private List<Plant> _listOfAllPlants = new();
-
-    //private List<EdiblePlant> _listOfEdiblePlants = new();
-    //private List<InediblePlant> _listOfInediblePlants = new();
-
+    private List<Fruit> _listOfFruits = new();
+    //private List<Fruit> _listOfFood = new();
     private List<Animal> _removeList = new();
 
 
@@ -32,7 +30,6 @@ class MapObjectsControl
         _densityAnimals = density1;
         _densityPlants = density2;
 
-        _field = new int[cols, rows];
         _rendering = new Rendering(_cols, _rows, _resolution, _pictureBox, graphics);
     }
 
@@ -55,30 +52,27 @@ class MapObjectsControl
                     if (newPlant.IsHealthy)
                     {
                         _rendering.Draw(MapObject.ediblePlantHealthy, x, y);
-                    } else
+                    }
+                    else
                     {
                         _rendering.Draw(MapObject.ediblePlantPoisonous, x, y);
                     }
-                    //_listOfEdiblePlants.Add(new EdiblePlant((x, y)));
-
                 }
                 else if (random.Next(_densityPlants) == 1)
                 {
                     _listOfAllPlants.Add(new InediblePlant((x, y)));
                     _rendering.Draw(MapObject.inediblePlant, x, y);
-                    //_listOfInediblePlants.Add(new InediblePlant((x, y)));
-
                 }
-                
+
             }
         }
     }
 
-    private void LivePlantCicle()
+    private void UpdatePlants()
     {
         foreach (Plant plant in _listOfAllPlants)
         {
-            plant.UpdateAge();
+            plant.LivePlantCicle(_listOfAllPlants, _listOfFruits);
         }
     }
 
@@ -86,8 +80,7 @@ class MapObjectsControl
     {
         foreach (Animal animal in _listOfAnimals)
         {
-            // delete _removeList from here
-            animal.LiveAnimalCicle(_listOfAllPlants, _removeList);
+            animal.LiveAnimalCicle(_listOfAllPlants, _listOfFruits, _removeList);
         }
         foreach (Animal animal in _removeList)
         {
@@ -99,9 +92,8 @@ class MapObjectsControl
     public void LiveOneCicle()
     {
         UpdateAnimals();
-        LivePlantCicle();
-        //_rendering.UpdateField(_listOfAnimals, _listOfEdiblePlants, _listOfInediblePlants);
-        _rendering.UpgradeField(_listOfAnimals, _listOfAllPlants);
+        UpdatePlants();
+        _rendering.UpgradeField(_listOfAnimals, _listOfAllPlants, _listOfFruits);
 
 
     }

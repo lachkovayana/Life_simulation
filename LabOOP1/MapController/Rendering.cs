@@ -60,7 +60,7 @@ public class Rendering
 
 
     }
-    public void UpgradeField(List<Animal> listOfAnimals, List<Plant> listOfAllPlants)
+    public void UpgradeField(List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits)
     {
         _graphics.Clear(Color.Black);
 
@@ -72,7 +72,7 @@ public class Rendering
             {
                 case EdiblePlant:
                     EdiblePlant pl = (EdiblePlant)plant;
-                    switch (plant.stage)
+                    switch (plant.Stage)
                     {
                         case PlantStage.seed:
                             if (pl.IsHealthy == true)
@@ -105,7 +105,7 @@ public class Rendering
                     break;
 
                 case InediblePlant:
-                    switch (plant.stage)
+                    switch (plant.Stage)
                     {
                         case PlantStage.seed:
                             _graphics.FillEllipse(Brushes.Red, x * _resolution, y * _resolution, _resolution, _resolution);
@@ -123,6 +123,23 @@ public class Rendering
                     break;
             }
 
+        }
+        foreach (Fruit fruit in listOfFruits)
+        {
+            int x = fruit.GetPosition().Item1;
+            int y = fruit.GetPosition().Item2;
+            if (fruit.IsHealthy)
+            {
+                Pen pen = new Pen(Color.Gold, 3);
+                _graphics.DrawEllipse(pen, x * _resolution, y * _resolution, _resolution, _resolution);
+            }
+            else
+            {
+                Pen pen = new Pen(Color.BurlyWood, 3);
+                _graphics.DrawEllipse(pen, x * _resolution, y * _resolution, _resolution, _resolution);
+            }
+
+            
         }
         foreach (Animal animal in listOfAnimals)
         {

@@ -75,30 +75,62 @@ public class Animal
 
     }
 
-    private void MoveToTarget(List<Plant> listOfAllPlants)
+    private (int, int, int) ChooseTarget(Fruit targetFruit, Plant targetPlant, (int, int) posAn)
+    {
+        if ((targetFruit.GetPosition().Item1 + targetFruit.GetPosition().Item2) < (targetPlant.GetPosition().Item1 + targetPlant.GetPosition().Item2))
+        {
+            var x = posAn.Item1 - targetFruit.GetPosition().Item1;
+            var y = posAn.Item2 - targetFruit.GetPosition().Item2;
+            return (x, y, 1);
+        }
+        var distx = posAn.Item1 - targetPlant.GetPosition().Item1;
+        var disty = posAn.Item2 - targetPlant.GetPosition().Item2;
+        return (distx, disty, 2);
+
+    }
+
+    private void MoveToTarget(List<Plant> listOfAllPlants, List<Fruit> listOfFruits)
     {
         var posAn = _position;
-        var min = 100000;
-        EdiblePlant target = new((-1, -1));
+        var minPl = 100000;
+        var minFr = 100000;
+        EdiblePlant targetPlant = new((-1, -1));
+        Fruit targetFruit = new((1001, 1001));
         (int, int) newPosAn = posAn;
 
         foreach (Plant plant in listOfAllPlants)
         {
-            if (plant is EdiblePlant && plant.stage != PlantStage.seed) {
-                    var posPl = plant.GetPosition();
-                    var tmpx = Math.Abs(posAn.Item1 - posPl.Item1);
-                    var tmpy = Math.Abs(posAn.Item2 - posPl.Item2);
-                    if (tmpx + tmpy < min)
-                    {
-                        min = tmpx + tmpx;
-                        target = (EdiblePlant)plant;
-                    }
-                
+            if (plant is EdiblePlant && plant.Stage != PlantStage.seed)
+            {
+                var posPl = plant.GetPosition();
+                var tmpx = Math.Abs(posAn.Item1 - posPl.Item1);
+                var tmpy = Math.Abs(posAn.Item2 - posPl.Item2);
+                if (tmpx + tmpy < minPl)
+                {
+                    minPl = tmpx + tmpx;
+                    targetPlant = (EdiblePlant)plant;
+                }
             }
         }
-        
-        var distx = posAn.Item1 - target.GetPosition().Item1;
-        var disty = posAn.Item2 - target.GetPosition().Item2;
+        foreach (Fruit fruit in listOfFruits)
+        {
+            var posFr = fruit.GetPosition();
+            var tmpx = Math.Abs(posAn.Item1 - posFr.Item1);
+            var tmpy = Math.Abs(posAn.Item2 - posFr.Item2);
+            if (tmpx + tmpy < minFr)
+            {
+                minFr = tmpx + tmpx;
+                targetFruit = fruit;
+            }
+        }
+
+        var target = ChooseTarget(targetFruit, targetPlant, posAn);
+
+        var distx = target.Item1;
+        var disty = target.Item2;
+
+        //var distx = posAn.Item1 - targetFruit.GetPosition().Item1;
+        //var disty = posAn.Item2 - targetFruit.GetPosition().Item2;
 
         if (distx < 0)
         {
@@ -148,16 +180,32 @@ public class Animal
             }
             else
             {
-                if (target.IsHealthy)
+                if (target.Item3 == 2)
                 {
-                    RiseSatiety();
-                }
-                else
-                {
-                    DecreaseHealthByZero();
-                }
+                    if (targetPlant.IsHealthy)
+                    {
+                        RiseSatiety();
+                    }
+                    else
+                    {
+                        DecreaseHealthByZero();
+                    }
 
-                listOfAllPlants.Remove(target);
+                    listOfAllPlants.Remove(targetPlant);
+                }
+                else if (target.Item3 == 1)
+                {
+                    if (targetFruit.IsHealthy)
+                    {
+                        RiseSatiety();
+                    }
+                    else
+                    {
+                        DecreaseHealthByZero();
+                    }
+                    listOfFruits.Remove(targetFruit);
+
+                }
             }
         }
         SetPosition(newPosAn);
@@ -192,13 +240,13 @@ public class Animal
         return _position;
     }
 
-    public void LiveAnimalCicle(List<Plant> listOfAllPlants, List<Animal> removeList)
+    public void LiveAnimalCicle(List<Plant> listOfAllPlants, List<Fruit> listOfFruits, List<Animal> removeList)
     {
         DecreaseSatiety(removeList);
-        
+
         if (_isHungry)
         {
-            MoveToTarget(listOfAllPlants);
+            MoveToTarget(listOfAllPlants, listOfFruits);
         }
         else
         {
