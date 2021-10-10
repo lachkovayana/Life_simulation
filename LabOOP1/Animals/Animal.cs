@@ -9,7 +9,7 @@ public class Animal
     private int _satiety = 100;
     private int _rows;
     private int _cols;
-    public bool isHungry = false;
+    private bool _isHungry = false;
 
     public Animal(int rows, int cols, (int, int) pos)
     {
@@ -17,6 +17,7 @@ public class Animal
         _cols = cols;
         _position = pos;
     }
+
     private void RiseHealth()
     {
         _health += 50;
@@ -24,15 +25,18 @@ public class Animal
     private void RiseSatiety()
     {
         _satiety = 100;
-        isHungry = false;
+        _isHungry = false;
         RiseHealth();
     }
     private void DecreaseHealth(List<Animal> removeList)
     {
+        _health -= 5;
         if (_health <= 0)
             Die(removeList);
-        else
-            _health -= 5;
+    }
+    private void DecreaseHealthByZero()
+    {
+        _health = 0;
     }
 
     private void DecreaseSatiety(List<Animal> removeList)
@@ -40,7 +44,7 @@ public class Animal
         _satiety -= 5;
         if (_satiety <= 30)
         {
-            isHungry = true;
+            _isHungry = true;
             DecreaseHealth(removeList);
         }
     }
@@ -80,20 +84,19 @@ public class Animal
 
         foreach (Plant plant in listOfAllPlants)
         {
-            if (plant is EdiblePlant)
-            {
-                var posPl = plant.GetPosition();
-                var tmpx = Math.Abs(posAn.Item1 - posPl.Item1);
-                var tmpy = Math.Abs(posAn.Item2 - posPl.Item2);
-
-                if (tmpx + tmpy < min)
-                {
-                    min = tmpx + tmpx;
-                    target = (EdiblePlant)plant;
-                }
+            if (plant is EdiblePlant && plant.stage != PlantStage.seed) {
+                    var posPl = plant.GetPosition();
+                    var tmpx = Math.Abs(posAn.Item1 - posPl.Item1);
+                    var tmpy = Math.Abs(posAn.Item2 - posPl.Item2);
+                    if (tmpx + tmpy < min)
+                    {
+                        min = tmpx + tmpx;
+                        target = (EdiblePlant)plant;
+                    }
+                
             }
         }
-
+        
         var distx = posAn.Item1 - target.GetPosition().Item1;
         var disty = posAn.Item2 - target.GetPosition().Item2;
 
@@ -145,7 +148,14 @@ public class Animal
             }
             else
             {
-                RiseSatiety();
+                if (target.IsHealthy)
+                {
+                    RiseSatiety();
+                }
+                else
+                {
+                    DecreaseHealthByZero();
+                }
 
                 listOfAllPlants.Remove(target);
             }
@@ -155,42 +165,38 @@ public class Animal
 
     private (int, int) MoveToDirection((int, int) pos, string direction)
     {
+        int x = pos.Item1;
+        int y = pos.Item2;
+
         switch (direction)
         {
             case "right":
-                return (pos.Item1 + 1, pos.Item2);
+                return (x + 1, y);
             case "left":
-                return (pos.Item1 - 1, pos.Item2);
+                return (x - 1, y);
             case "up":
-                return (pos.Item1, pos.Item2 + 1);
+                return (x, y + 1);
             case "down":
-                return (pos.Item1, pos.Item2 - 1);
+                return (x, y - 1);
         }
-        return (pos.Item1, pos.Item2);
+        return (x, y);
     }
-    private bool IsHungry()
+
+    private void SetPosition((int, int) pos)
     {
-        if (_satiety < 20)
-        {
-            return true;
-        }
-        return false;
+        _position = pos;
     }
 
     public (int, int) GetPosition()
     {
         return _position;
     }
-    public void SetPosition((int, int) pos)
-    {
-        _position = pos;
-    }
 
     public void LiveAnimalCicle(List<Plant> listOfAllPlants, List<Animal> removeList)
     {
         DecreaseSatiety(removeList);
-
-        if (IsHungry() && listOfAllPlants.Count != 0)
+        
+        if (_isHungry)
         {
             MoveToTarget(listOfAllPlants);
         }

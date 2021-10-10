@@ -7,8 +7,9 @@ class MapObjectsControl
 {
     private List<Animal> _listOfAnimals = new();
     private List<Plant> _listOfAllPlants = new();
-    private List<EdiblePlant> _listOfEdiblePlants = new();
-    private List<InediblePlant> _listOfInediblePlants = new();
+
+    //private List<EdiblePlant> _listOfEdiblePlants = new();
+    //private List<InediblePlant> _listOfInediblePlants = new();
 
     private List<Animal> _removeList = new();
 
@@ -18,8 +19,6 @@ class MapObjectsControl
     private int _densityAnimals;
     private int _densityPlants;
     private int _resolution;
-
-    private int[,] _field;
 
     private Rendering _rendering;
     private PictureBox _pictureBox;
@@ -46,23 +45,31 @@ class MapObjectsControl
             {
                 if (random.Next(_densityAnimals) == 0)
                 {
-                    _rendering.Draw("animal", x, y);
                     _listOfAnimals.Add(new Animal(_rows, _cols, (x, y)));
-                }
-                else if (random.Next(_densityPlants) == 1)
-                {
-                    _rendering.Draw("inediblePlant", x, y);
-                    _listOfAllPlants.Add(new InediblePlant((x, y)));
-                    _listOfInediblePlants.Add(new InediblePlant((x, y)));
-
+                    _rendering.Draw(MapObject.animal, x, y);
                 }
                 else if (random.Next(_densityPlants) == 0)
                 {
-                    _rendering.Draw("ediblePlant", x, y);
-                    _listOfAllPlants.Add(new EdiblePlant((x, y)));
-                    _listOfEdiblePlants.Add(new EdiblePlant((x, y)));
+                    EdiblePlant newPlant = new EdiblePlant((x, y));
+                    _listOfAllPlants.Add(newPlant);
+                    if (newPlant.IsHealthy)
+                    {
+                        _rendering.Draw(MapObject.ediblePlantHealthy, x, y);
+                    } else
+                    {
+                        _rendering.Draw(MapObject.ediblePlantPoisonous, x, y);
+                    }
+                    //_listOfEdiblePlants.Add(new EdiblePlant((x, y)));
 
                 }
+                else if (random.Next(_densityPlants) == 1)
+                {
+                    _listOfAllPlants.Add(new InediblePlant((x, y)));
+                    _rendering.Draw(MapObject.inediblePlant, x, y);
+                    //_listOfInediblePlants.Add(new InediblePlant((x, y)));
+
+                }
+                
             }
         }
     }
@@ -79,6 +86,7 @@ class MapObjectsControl
     {
         foreach (Animal animal in _listOfAnimals)
         {
+            // delete _removeList from here
             animal.LiveAnimalCicle(_listOfAllPlants, _removeList);
         }
         foreach (Animal animal in _removeList)
