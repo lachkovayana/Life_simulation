@@ -20,24 +20,7 @@ public class Rendering
         _graphics = graphics;
     }
 
-    //public void DrawAnimal(int x, int y)
-    //{
-    //    _graphics.FillRectangle(Brushes.Green, x * _resolution, y * _resolution, _resolution, _resolution);
-    //    _pictureBox.Refresh();
-
-    //}
-    //public void DrawEdiblePlant(int x, int y)
-    //{
-    //    _graphics.FillRectangle(Brushes.Crimson, x * _resolution, y * _resolution, _resolution, _resolution);
-    //    _pictureBox.Refresh();
-
-    //}
-    //public void DrawInediblePlant(int x, int y)
-    //{
-    //    _graphics.FillRectangle(Brushes.Blue, x * _resolution, y * _resolution, _resolution, _resolution);
-    //    _pictureBox.Refresh();
-    //}
-
+  
     public void Draw(MapObject mapObject, int x, int y)
     {
        
@@ -114,10 +97,10 @@ public class Rendering
                             _graphics.FillRectangle(Brushes.Red, x * _resolution, y * _resolution, _resolution, _resolution);
                             break;
                         case PlantStage.grown:
-                            _graphics.FillRectangle(Brushes.Crimson, x * _resolution, y * _resolution, _resolution, _resolution);
+                            _graphics.FillRectangle(Brushes.Maroon, x * _resolution, y * _resolution, _resolution, _resolution);
                             break;
                         case PlantStage.dead:
-                            _graphics.FillRectangle(Brushes.Maroon, x * _resolution, y * _resolution, _resolution, _resolution);
+                            _graphics.FillRectangle(Brushes.Crimson, x * _resolution, y * _resolution, _resolution, _resolution);
                             break;
                     }
                     break;

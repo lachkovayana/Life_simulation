@@ -3,7 +3,7 @@
 public class EdiblePlant : Plant
 {
 
-    private int _densityHealthyPlant = 4;
+    private const int _densityHealthyPlant = 4;
     public bool IsHealthy = true;
     public EdiblePlant((int, int) pos) : base(pos)
     {

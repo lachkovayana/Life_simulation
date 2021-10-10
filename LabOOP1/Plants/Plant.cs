@@ -46,45 +46,58 @@ public abstract class Plant
             listOfFruits.Add(fruit);
         }
     }
-    //public void GrowSeed()
-    //{
-
-    //    Random rnd = new();
-    //    for (int i = 1; i < rnd.Next(4); i++)
-    //    {
-    //        FindNewCell();
-
-    //        // посев семени на клетку с найденными координатами
-    //    }
-    //}
-
-    public void CheckGrowing(List<Fruit> listOfFruits)
+    
+    private bool CheckGrowth()
     {
-        if (this is EdiblePlant && Stage == PlantStage.grown && (_age % 10 == 0))
+        if (Stage == PlantStage.grown && (_age % 10 == 0))
         {
-            GrowFruit(listOfFruits);
+            return true;
         }
+        return false;
     }
-        public void UpdateAge()
+    private bool CheckForm()
+    {
+        if (Stage == PlantStage.grown && (_age % 10 == 0))
         {
-            _age++;
-            if (_age == 10)
-            {
-                Stage = PlantStage.sprout;
-            }
-            if (_age == 18)
-            {
-                Stage = PlantStage.grown;
-            }
-            if (_age == 35)
-            {
-                Stage = PlantStage.dead;
-            }
+            return true;
         }
+        return false;
+    }
 
-        public void LivePlantCicle(List<Plant> listOfAllPlants, List<Fruit> listOfFruits)
+    private void FormSeeds(List<Plant> listOfNewPlants)
+    {
+        if (this is EdiblePlant)
         {
-            UpdateAge();
-            CheckGrowing(listOfFruits);
+            listOfNewPlants.Add(new EdiblePlant(FindNewCell()));
+        }
+        else
+        {
+            listOfNewPlants.Add(new InediblePlant(FindNewCell()));
         }
     }
+
+    private void UpdateAge()
+    {
+        _age++;
+        if (_age == 15)
+        {
+            Stage = PlantStage.sprout;
+        }
+        if (_age == 25)
+        {
+            Stage = PlantStage.grown;
+        }
+        if (_age == 45)
+        {
+            Stage = PlantStage.dead;
+        }
+    }
+
+
+    public void LivePlantCicle(List<Plant> listOfAllPlants, List<Fruit> listOfFruits, List<Plant> listOfNewPlants)
+    {
+        UpdateAge();
+        if (CheckGrowth()) { GrowFruit(listOfFruits); }
+        if (CheckForm()) { FormSeeds(listOfNewPlants); }
+    }
+}

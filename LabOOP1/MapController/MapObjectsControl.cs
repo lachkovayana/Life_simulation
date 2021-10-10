@@ -8,6 +8,7 @@ class MapObjectsControl
     private List<Animal> _listOfAnimals = new();
     private List<Plant> _listOfAllPlants = new();
     private List<Fruit> _listOfFruits = new();
+    private List<Plant> _listOfNewPlants = new();
     //private List<Fruit> _listOfFood = new();
     private List<Animal> _removeList = new();
 
@@ -72,8 +73,13 @@ class MapObjectsControl
     {
         foreach (Plant plant in _listOfAllPlants)
         {
-            plant.LivePlantCicle(_listOfAllPlants, _listOfFruits);
+            plant.LivePlantCicle(_listOfAllPlants, _listOfFruits, _listOfNewPlants);
         }
+        foreach (Plant plant in _listOfNewPlants)
+        {
+            _listOfAllPlants.Add(plant);
+        }
+            _listOfNewPlants = new();
     }
 
     private void UpdateAnimals()
