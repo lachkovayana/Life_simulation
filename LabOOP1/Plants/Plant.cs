@@ -7,7 +7,7 @@ public abstract class Plant
     private (int, int) _position;
     private int _age = 0;
     private bool _isHealthy = true;
-    private bool _isGrowing = true;
+    private bool _isFruiting = true;
     public PlantStage Stage = PlantStage.seed;
 
     public Plant((int, int) pos)
@@ -19,7 +19,7 @@ public abstract class Plant
             _isHealthy = false;
         }if (random.Next(_density) == 0)
         {
-            _isGrowing = false;
+            _isFruiting = false;
         }
 
     }
@@ -47,16 +47,16 @@ public abstract class Plant
     private void SetStatus(bool statusHealth, bool statusGrowth)
     {
         _isHealthy = statusHealth;
-        _isGrowing = statusGrowth;
+        _isFruiting = statusGrowth;
 
     }
     public bool IsHealthy()
     {
         return _isHealthy;
     }
-    public bool IsGrowth()
+    public bool IsFruiting()
     {
-        return _isGrowing;
+        return _isFruiting;
     }
     public (int, int) GetPosition()
     {
@@ -75,7 +75,7 @@ public abstract class Plant
     
     private bool CheckGrowth()
     {
-        if (Stage == PlantStage.grown && (_age % 10 == 0))
+        if (_isFruiting && Stage == PlantStage.grown && (_age % 10 == 0))
         {
             return true;
         }
@@ -95,13 +95,13 @@ public abstract class Plant
         if (this is EdiblePlant)
         {
             var newPlant = new EdiblePlant(FindNewCell());
-            newPlant.SetStatus(IsHealthy(), IsGrowth());
+            newPlant.SetStatus(IsHealthy(), IsFruiting());
             listOfNewPlants.Add(newPlant);
         }
         else
         {
             var newPlant = new InediblePlant(FindNewCell());
-            newPlant.SetStatus(IsHealthy(), IsGrowth());
+            newPlant.SetStatus(IsHealthy(), IsFruiting());
             listOfNewPlants.Add(newPlant);
         }
     }

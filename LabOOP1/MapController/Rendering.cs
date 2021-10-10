@@ -78,7 +78,7 @@ public class Rendering
                         case PlantStage.grown:
                             if (plant.IsHealthy())
                             {
-                                if (plant.IsGrowth())
+                                if (plant.IsFruiting())
                                 {
                                     _graphics.FillRectangle(Brushes.Green, x * _resolution, y * _resolution, _resolution, _resolution);
                                 }
@@ -89,7 +89,7 @@ public class Rendering
                                 }
                             }
                             else
-                                 if (plant.IsGrowth())
+                                 if (plant.IsFruiting())
                             {
                                 _graphics.FillRectangle(Brushes.White, x * _resolution, y * _resolution, _resolution, _resolution);
                             }
@@ -129,7 +129,7 @@ public class Rendering
                         case PlantStage.grown:
                             if (plant.IsHealthy())
                             {
-                                if (plant.IsGrowth())
+                                if (plant.IsFruiting())
                                 {
                                     _graphics.FillRectangle(Brushes.Red, x * _resolution, y * _resolution, _resolution, _resolution);
                                 }
@@ -141,7 +141,7 @@ public class Rendering
                             }
                             else
                             {
-                                if (plant.IsGrowth())
+                                if (plant.IsFruiting())
                                 {
                                     _graphics.FillRectangle(Brushes.LightCoral, x * _resolution, y * _resolution, _resolution, _resolution);
                                 }

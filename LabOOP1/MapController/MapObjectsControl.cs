@@ -9,7 +9,6 @@ class MapObjectsControl
     private List<Plant> _listOfAllPlants = new();
     private List<Fruit> _listOfFruits = new();
     private List<Plant> _listOfNewPlants = new();
-    //private List<Fruit> _listOfFood = new();
     private List<Animal> _removeList = new();
 
 
@@ -96,8 +95,6 @@ class MapObjectsControl
                 }
                 else if (random.Next(_densityPlants) == 1)
                 {
-                    //_listOfAllPlants.Add(new InediblePlant((x, y)));
-                    //_rendering.Draw(MapObject.inediblePlant, x, y);
                     InediblePlant newPlant = new((x, y));
                     _listOfAllPlants.Add(newPlant);
                     if (newPlant.IsHealthy())
