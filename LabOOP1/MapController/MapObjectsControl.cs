@@ -82,7 +82,7 @@ class MapObjectsControl
                 }
                 else if (random.Next(_densityPlants) == 0)
                 {
-                    EdiblePlant newPlant = new((x, y));
+                    EdiblePlant newPlant = new((x, y), _rows, _cols);
                     _listOfAllPlants.Add(newPlant);
                     if (newPlant.IsHealthy())
                     {
@@ -95,7 +95,7 @@ class MapObjectsControl
                 }
                 else if (random.Next(_densityPlants) == 1)
                 {
-                    InediblePlant newPlant = new((x, y));
+                    InediblePlant newPlant = new((x, y), _rows, _cols);
                     _listOfAllPlants.Add(newPlant);
                     if (newPlant.IsHealthy())
                     {

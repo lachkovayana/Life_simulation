@@ -94,7 +94,7 @@ public class Animal
         var posAn = _position;
         var minPl = 100000;
         var minFr = 100000;
-        EdiblePlant targetPlant = new((-1, -1));
+        EdiblePlant targetPlant = new((-1, -1), _rows, _cols);
         Fruit targetFruit = new((1001, 1001));
         (int, int) newPosAn = posAn;
 

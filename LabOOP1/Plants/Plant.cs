@@ -8,11 +8,15 @@ public abstract class Plant
     private int _age = 0;
     private bool _isHealthy = true;
     private bool _isFruiting = true;
+    private int _rows;
+    private int _cols;
     public PlantStage Stage = PlantStage.seed;
 
-    public Plant((int, int) pos)
+    public Plant((int, int) pos, int rows, int cols)
     {
         _position = pos;
+        _rows = rows;
+        _cols = cols;
         Random random = new Random();
         if (random.Next(_density) == 0)
         {
@@ -33,13 +37,13 @@ public abstract class Plant
         {
             x = _position.Item1 + rnd.Next(-1, 2);
         }
-        while (x < 0 || x >= 50);
+        while (x < 0 || x >= _cols);
 
         do
         {
             y = _position.Item2 + rnd.Next(-1, 2);
         }
-        while (y < 0 || y >= 50);
+        while (y < 0 || y >= _rows);
         return (x, y);
     }
 
@@ -48,31 +52,8 @@ public abstract class Plant
     {
         _isHealthy = statusHealth;
         _isFruiting = statusGrowth;
-
-    }
-    public bool IsHealthy()
-    {
-        return _isHealthy;
-    }
-    public bool IsFruiting()
-    {
-        return _isFruiting;
-    }
-    public (int, int) GetPosition()
-    {
-        return _position;
     }
 
-    public void GrowFruit(List<Fruit> listOfFruits)
-    {
-        Random rnd = new();
-        for (int i = 0; i < rnd.Next(3); i++)
-        {
-            Fruit fruit = new(FindNewCell());
-            listOfFruits.Add(fruit);
-        }
-    }
-    
     private bool CheckGrowth()
     {
         if (_isFruiting && Stage == PlantStage.grown && (_age % 10 == 0))
@@ -94,13 +75,13 @@ public abstract class Plant
     {
         if (this is EdiblePlant)
         {
-            var newPlant = new EdiblePlant(FindNewCell());
+            var newPlant = new EdiblePlant(FindNewCell(), _rows, _cols);
             newPlant.SetStatus(IsHealthy(), IsFruiting());
             listOfNewPlants.Add(newPlant);
         }
         else
         {
-            var newPlant = new InediblePlant(FindNewCell());
+            var newPlant = new InediblePlant(FindNewCell(), _rows, _cols);
             newPlant.SetStatus(IsHealthy(), IsFruiting());
             listOfNewPlants.Add(newPlant);
         }
@@ -109,7 +90,7 @@ public abstract class Plant
     private void UpdateAge()
     {
         _age++;
-        if (_age == 15)
+        if (_age == 10)
         {
             Stage = PlantStage.sprout;
         }
@@ -122,7 +103,27 @@ public abstract class Plant
             Stage = PlantStage.dead;
         }
     }
-
+    private void GrowFruit(List<Fruit> listOfFruits)
+    {
+        Random rnd = new();
+        for (int i = 0; i < rnd.Next(3); i++)
+        {
+            Fruit fruit = new(FindNewCell());
+            listOfFruits.Add(fruit);
+        }
+    }
+    public bool IsHealthy()
+    {
+        return _isHealthy;
+    }
+    public bool IsFruiting()
+    {
+        return _isFruiting;
+    }
+    public (int, int) GetPosition()
+    {
+        return _position;
+    }
 
     public void LivePlantCicle(List<Plant> listOfAllPlants, List<Fruit> listOfFruits, List<Plant> listOfNewPlants)
     {

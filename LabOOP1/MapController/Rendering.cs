@@ -27,7 +27,7 @@ public class Rendering
         switch (mapObject)
         {
             case MapObject.animal:
-                _graphics.FillRectangle(Brushes.Gray, x * _resolution, y * _resolution, _resolution, _resolution);
+                _graphics.FillRectangle(Brushes.Gold, x * _resolution, y * _resolution, _resolution, _resolution);
                 break;
             case MapObject.ediblePlantHealthy:
                 _graphics.FillEllipse(Brushes.Lime, x * _resolution, y * _resolution, _resolution, _resolution);
@@ -171,7 +171,7 @@ public class Rendering
             int y = fruit.GetPosition().Item2;
             if (fruit.IsHealthy())
             {
-                _graphics.DrawEllipse(new Pen(Color.Gold, 3), x * _resolution, y * _resolution, _resolution, _resolution);
+                _graphics.DrawEllipse(new Pen(Color.Chartreuse, 3), x * _resolution, y * _resolution, _resolution, _resolution);
             }
             else
             {
@@ -185,7 +185,7 @@ public class Rendering
             int x = animal.GetPosition().Item1;
             int y = animal.GetPosition().Item2;
 
-            _graphics.FillRectangle(Brushes.Gray, x * _resolution, y * _resolution, _resolution, _resolution);
+            _graphics.FillRectangle(Brushes.Gold, x * _resolution, y * _resolution, _resolution, _resolution);
         }
         _pictureBox.Refresh();
 
