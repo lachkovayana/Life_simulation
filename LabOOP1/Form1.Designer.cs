@@ -45,6 +45,8 @@ namespace LabOOP1
             this.panel3 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numDensity2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numResolution)).BeginInit();
@@ -63,6 +65,8 @@ namespace LabOOP1
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.panel2.Controls.Add(this.label5);
+            this.panel2.Controls.Add(this.label4);
             this.panel2.Controls.Add(this.textBox1);
             this.panel2.Controls.Add(this.buttonContinue);
             this.panel2.Controls.Add(this.label3);
@@ -108,31 +112,31 @@ namespace LabOOP1
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(55, 434);
+            this.label2.Location = new System.Drawing.Point(12, 434);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(151, 20);
+            this.label2.Size = new System.Drawing.Size(245, 20);
             this.label2.TabIndex = 8;
-            this.label2.Text = "Плотность растений";
+            this.label2.Text = "Вероятность появления растения";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(55, 346);
+            this.label1.Location = new System.Drawing.Point(12, 346);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(156, 20);
+            this.label1.Size = new System.Drawing.Size(257, 20);
             this.label1.TabIndex = 7;
-            this.label1.Text = "Плотность животных";
+            this.label1.Text = "Вероятность появления животного";
             // 
             // numDensity2
             // 
-            this.numDensity2.Location = new System.Drawing.Point(59, 457);
+            this.numDensity2.Location = new System.Drawing.Point(123, 457);
             this.numDensity2.Maximum = new decimal(new int[] {
-            500,
+            10000,
             0,
             0,
             0});
             this.numDensity2.Name = "numDensity2";
-            this.numDensity2.Size = new System.Drawing.Size(150, 27);
+            this.numDensity2.Size = new System.Drawing.Size(86, 27);
             this.numDensity2.TabIndex = 6;
             this.numDensity2.Value = new decimal(new int[] {
             70,
@@ -154,14 +158,14 @@ namespace LabOOP1
             // 
             // numDensity1
             // 
-            this.numDensity1.Location = new System.Drawing.Point(59, 369);
+            this.numDensity1.Location = new System.Drawing.Point(123, 369);
             this.numDensity1.Maximum = new decimal(new int[] {
-            500,
+            10000,
             0,
             0,
             0});
             this.numDensity1.Name = "numDensity1";
-            this.numDensity1.Size = new System.Drawing.Size(150, 27);
+            this.numDensity1.Size = new System.Drawing.Size(86, 27);
             this.numDensity1.TabIndex = 3;
             this.numDensity1.Value = new decimal(new int[] {
             80,
@@ -216,6 +220,24 @@ namespace LabOOP1
             this.timer1.Interval = 400;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(90, 371);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(27, 20);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "1 /";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(90, 459);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(27, 20);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "1 /";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -257,6 +279,8 @@ namespace LabOOP1
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button buttonContinue;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
     }
 }
 
