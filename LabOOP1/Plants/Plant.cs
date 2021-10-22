@@ -5,7 +5,7 @@ namespace LabOOP1
 {
     public abstract class Plant
     {
-        private const int _density = 6; 
+        private const int _density = 6;
         private (int, int) _position;
         private int _age = 0;
         internal bool _isFruiting = true;
@@ -15,9 +15,9 @@ namespace LabOOP1
         public Plant((int, int) pos)
         {
             _position = pos;
-            
+
             Random random = new();
-            
+
             if (random.Next(_density) == 0)
             {
                 _isFruiting = false;
@@ -62,10 +62,7 @@ namespace LabOOP1
             return false;
         }
 
-        public virtual void FormSeeds(List<Plant> listOfNewPlants)
-        {
-            
-        }
+        
 
         private void UpdateAge()
         {
@@ -92,7 +89,8 @@ namespace LabOOP1
                 listOfFruits.Add(fruit);
             }
         }
-        
+        public virtual void FormSeeds(List<Plant> listOfNewPlants) { }
+
         public bool IsFruiting()
         {
             return _isFruiting;

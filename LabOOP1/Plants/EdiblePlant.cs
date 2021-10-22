@@ -6,7 +6,7 @@ namespace LabOOP1
 {
     public class EdiblePlant : Plant
     {
-        private const int _density = 10;
+        private const int _density = 6;
         private bool _isHealthy = true;
 
         public EdiblePlant((int, int) pos) : base(pos)
