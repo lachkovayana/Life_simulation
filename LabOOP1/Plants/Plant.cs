@@ -1,134 +1,118 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public abstract class Plant
+namespace LabOOP1
 {
-    private const int _density = 3;
-    private (int, int) _position;
-    private int _age = 0;
-    private bool _isHealthy = true;
-    private bool _isFruiting = true;
-    private int _rows;
-    private int _cols;
-    public PlantStage Stage = PlantStage.seed;
+    public abstract class Plant
+    {
+        private const int _density = 6; 
+        private (int, int) _position;
+        private int _age = 0;
+        internal bool _isFruiting = true;
 
-    public Plant((int, int) pos, int rows, int cols)
-    {
-        _position = pos;
-        _rows = rows;
-        _cols = cols;
-        Random random = new Random();
-        if (random.Next(_density) == 0)
+        public PlantStage Stage = PlantStage.seed;
+
+        public Plant((int, int) pos)
         {
-            _isHealthy = false;
-        }if (random.Next(_density) == 0)
-        {
-            _isFruiting = false;
+            _position = pos;
+            
+            Random random = new();
+            
+            if (random.Next(_density) == 0)
+            {
+                _isFruiting = false;
+            }
+
         }
 
-    }
+        internal (int, int) FindNewCell()
+        {
+            Random rnd = new Random();
 
-    private (int, int) FindNewCell()
-    {
-        Random rnd = new Random();
+            int x, y;
+            do
+            {
+                x = _position.Item1 + rnd.Next(-1, 2);
+            }
+            while (x < 0 || x >= Form1.s_cols);
 
-        int x, y;
-        do
-        {
-            x = _position.Item1 + rnd.Next(-1, 2);
+            do
+            {
+                y = _position.Item2 + rnd.Next(-1, 2);
+            }
+            while (y < 0 || y >= Form1.s_rows);
+            return (x, y);
         }
-        while (x < 0 || x >= _cols);
 
-        do
-        {
-            y = _position.Item2 + rnd.Next(-1, 2);
-        }
-        while (y < 0 || y >= _rows);
-        return (x, y);
-    }
 
-   
-    private void SetStatus(bool statusHealth, bool statusGrowth)
-    {
-        _isHealthy = statusHealth;
-        _isFruiting = statusGrowth;
-    }
+        private bool CheckGrowth()
+        {
+            if (_isFruiting && Stage == PlantStage.grown && (_age % 10 == 0))
+            {
+                return true;
+            }
+            return false;
+        }
+        private bool CheckForm()
+        {
+            if (Stage == PlantStage.grown && (_age % 10 == 0))
+            {
+                return true;
+            }
+            return false;
+        }
 
-    private bool CheckGrowth()
-    {
-        if (_isFruiting && Stage == PlantStage.grown && (_age % 10 == 0))
+        public virtual void FormSeeds(List<Plant> listOfNewPlants)
         {
-            return true;
+            
         }
-        return false;
-    }
-    private bool CheckForm()
-    {
-        if (Stage == PlantStage.grown && (_age % 10 == 0))
-        {
-            return true;
-        }
-        return false;
-    }
 
-    private void FormSeeds(List<Plant> listOfNewPlants)
-    {
-        if (this is EdiblePlant)
+        private void UpdateAge()
         {
-            var newPlant = new EdiblePlant(FindNewCell(), _rows, _cols);
-            newPlant.SetStatus(IsHealthy(), IsFruiting());
-            listOfNewPlants.Add(newPlant);
+            _age++;
+            if (_age == 10)
+            {
+                Stage = PlantStage.sprout;
+            }
+            if (_age == 30)
+            {
+                Stage = PlantStage.grown;
+            }
+            if (_age == 55)
+            {
+                Stage = PlantStage.dead;
+            }
         }
-        else
+        private void GrowFruit(List<Fruit> listOfFruits)
         {
-            var newPlant = new InediblePlant(FindNewCell(), _rows, _cols);
-            newPlant.SetStatus(IsHealthy(), IsFruiting());
-            listOfNewPlants.Add(newPlant);
+            Random rnd = new();
+            for (int i = 0; i < rnd.Next(3); i++)
+            {
+                Fruit fruit = new(FindNewCell());
+                listOfFruits.Add(fruit);
+            }
         }
-    }
+        
+        public bool IsFruiting()
+        {
+            return _isFruiting;
+        }
+        public (int, int) GetPosition()
+        {
+            return _position;
+        }
 
-    private void UpdateAge()
-    {
-        _age++;
-        if (_age == 10)
+        public void LivePlantCicle(List<Fruit> listOfFruits, List<Plant> listOfNewPlants)
         {
-            Stage = PlantStage.sprout;
+            UpdateAge();
+            if (CheckGrowth())
+            {
+                GrowFruit(listOfFruits);
+            }
+            if (CheckForm())
+            {
+                FormSeeds(listOfNewPlants);
+            }
         }
-        if (_age == 30)
-        {
-            Stage = PlantStage.grown;
-        }
-        if (_age == 55)
-        {
-            Stage = PlantStage.dead;
-        }
-    }
-    private void GrowFruit(List<Fruit> listOfFruits)
-    {
-        Random rnd = new();
-        for (int i = 0; i < rnd.Next(3); i++)
-        {
-            Fruit fruit = new(FindNewCell());
-            listOfFruits.Add(fruit);
-        }
-    }
-    public bool IsHealthy()
-    {
-        return _isHealthy;
-    }
-    public bool IsFruiting()
-    {
-        return _isFruiting;
-    }
-    public (int, int) GetPosition()
-    {
-        return _position;
-    }
-
-    public void LivePlantCicle(List<Plant> listOfAllPlants, List<Fruit> listOfFruits, List<Plant> listOfNewPlants)
-    {
-        UpdateAge();
-        if (CheckGrowth()) { GrowFruit(listOfFruits); }
-        if (CheckForm()) { FormSeeds(listOfNewPlants); }
     }
 }

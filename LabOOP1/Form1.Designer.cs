@@ -181,7 +181,7 @@ namespace LabOOP1
             this.buttonStop.TabIndex = 1;
             this.buttonStop.Text = "Stop";
             this.buttonStop.UseVisualStyleBackColor = true;
-            this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
+            this.buttonStop.Click += new System.EventHandler(this.ButtonStop_Click);
             // 
             // buttonStart
             // 
@@ -191,7 +191,7 @@ namespace LabOOP1
             this.buttonStart.TabIndex = 0;
             this.buttonStart.Text = "Start";
             this.buttonStart.UseVisualStyleBackColor = true;
-            this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
+            this.buttonStart.Click += new System.EventHandler(this.ButtonStart_Click);
             // 
             // panel3
             // 
@@ -218,7 +218,7 @@ namespace LabOOP1
             // timer1
             // 
             this.timer1.Interval = 400;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
             // label4
             // 

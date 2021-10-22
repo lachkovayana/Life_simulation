@@ -3,193 +3,158 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Collections.Generic;
 
-public class Rendering
+namespace LabOOP1
 {
-    private Graphics _graphics;
-    private int _resolution;
-    private int _rows;
-    private int _cols;
-    private PictureBox _pictureBox;
-
-    public Rendering(int cols, int rows, int resolution, PictureBox pictureBox, Graphics graphics)
-    {
-        _rows = rows;
-        _cols = cols;
-        _pictureBox = pictureBox;
-        _resolution = resolution;
-        _graphics = graphics;
-    }
-
-
-    public void DrawFirstGeneration(MapObject mapObject, int x, int y)
+    public class Rendering
     {
 
-        switch (mapObject)
+        public Rendering()
         {
-            case MapObject.animal:
-                _graphics.FillRectangle(Brushes.Gold, x * _resolution, y * _resolution, _resolution, _resolution);
-                break;
-            case MapObject.ediblePlantHealthy:
-                _graphics.FillEllipse(Brushes.Lime, x * _resolution, y * _resolution, _resolution, _resolution);
-                break;
-           
-            case MapObject.ediblePlantPoisonous:
-                _graphics.FillEllipse(Brushes.Beige, x * _resolution, y * _resolution, _resolution, _resolution);
-                break;
-            
-            case MapObject.inediblePlantHealthy:
-                _graphics.FillEllipse(Brushes.Tomato, x * _resolution, y * _resolution, _resolution, _resolution);
-                break;
-            case MapObject.inediblePlantPoisonous:
-                _graphics.FillEllipse(Brushes.Tan, x * _resolution, y * _resolution, _resolution, _resolution);
-                break;
-           
         }
-        _pictureBox.Refresh();
 
 
-    }
-    public void UpgradeField(List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits)
-    {
-        _graphics.Clear(Color.Black);
-
-        foreach (Plant plant in listOfAllPlants)
+        public void DrawFirstGeneration(MapObject mapObject, int x, int y)
         {
-            int x = plant.GetPosition().Item1;
-            int y = plant.GetPosition().Item2;
-            switch (plant)
+
+            switch (mapObject)
             {
-                case EdiblePlant:
-                    switch (plant.Stage)
-                    {
-                        case PlantStage.seed:
-                            if (plant.IsHealthy())
-                                _graphics.FillEllipse(Brushes.Lime, x * _resolution, y * _resolution, _resolution, _resolution);
-                            else
-                                _graphics.FillEllipse(Brushes.Beige, x * _resolution, y * _resolution, _resolution, _resolution);
-                            break;
-                        case PlantStage.sprout:
-                            if (plant.IsHealthy())
-                                _graphics.FillRectangle(Brushes.Lime, x * _resolution, y * _resolution, _resolution, _resolution);
-                            else
-                                _graphics.FillRectangle(Brushes.Beige, x * _resolution, y * _resolution, _resolution, _resolution);
-
-                            break;
-                        case PlantStage.grown:
-                            if (plant.IsHealthy())
-                            {
-                                if (plant.IsFruiting())
-                                {
-                                    _graphics.FillRectangle(Brushes.Green, x * _resolution, y * _resolution, _resolution, _resolution);
-                                }
-                                else
-                                {
-                                    _graphics.FillRectangle(Brushes.MediumSpringGreen, x * _resolution, y * _resolution, _resolution, _resolution);
-
-                                }
-                            }
-                            else
-                                 if (plant.IsFruiting())
-                            {
-                                _graphics.FillRectangle(Brushes.White, x * _resolution, y * _resolution, _resolution, _resolution);
-                            }
-                            else
-                            {
-                                _graphics.FillRectangle(Brushes.LightGoldenrodYellow, x * _resolution, y * _resolution, _resolution, _resolution);
-
-                            }
-
-                            break;
-                        case PlantStage.dead:
-                            if (plant.IsHealthy())
-                                _graphics.FillRectangle(Brushes.DarkOliveGreen, x * _resolution, y * _resolution, _resolution, _resolution);
-                            else
-                                _graphics.FillRectangle(Brushes.Wheat, x * _resolution, y * _resolution, _resolution, _resolution);
-
-                            break;
-                    }
+                case MapObject.animal:
+                    Form1.s_graphics.FillRectangle(Brushes.Gold, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
                     break;
-            
-                case InediblePlant:
-
-                    switch (plant.Stage)
-                    {
-                        case PlantStage.seed:
-                            if (plant.IsHealthy())
-                                _graphics.FillEllipse(Brushes.Tomato, x * _resolution, y * _resolution, _resolution, _resolution);
-                            else
-                                _graphics.FillEllipse(Brushes.Tan, x * _resolution, y * _resolution, _resolution, _resolution);
-                            break;
-                        case PlantStage.sprout:
-                            if (plant.IsHealthy())
-                                _graphics.FillRectangle(Brushes.Tomato, x * _resolution, y * _resolution, _resolution, _resolution);
-                            else
-                                _graphics.FillRectangle(Brushes.Tan, x * _resolution, y * _resolution, _resolution, _resolution);
-                            break;
-                        case PlantStage.grown:
-                            if (plant.IsHealthy())
-                            {
-                                if (plant.IsFruiting())
-                                {
-                                    _graphics.FillRectangle(Brushes.Red, x * _resolution, y * _resolution, _resolution, _resolution);
-                                }
-                                else
-                                {
-                                    _graphics.FillRectangle(Brushes.Crimson, x * _resolution, y * _resolution, _resolution, _resolution);
-
-                                }
-                            }
-                            else
-                            {
-                                if (plant.IsFruiting())
-                                {
-                                    _graphics.FillRectangle(Brushes.LightCoral, x * _resolution, y * _resolution, _resolution, _resolution);
-                                }
-                                else
-                                {
-                                    _graphics.FillRectangle(Brushes.Sienna, x * _resolution, y * _resolution, _resolution, _resolution);
-
-                                }
-                            }
-
-                            break;
-                        case PlantStage.dead:
-                            if (plant.IsHealthy())
-                                _graphics.FillRectangle(Brushes.Maroon, x * _resolution, y * _resolution, _resolution, _resolution);
-                            else
-                                _graphics.FillRectangle(Brushes.SaddleBrown, x * _resolution, y * _resolution, _resolution, _resolution);
-
-                            break;
-                    }
+                case MapObject.ediblePlantHealthy:
+                    Form1.s_graphics.FillEllipse(Brushes.Lime, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
                     break;
+
+                case MapObject.ediblePlantPoisonous:
+                    Form1.s_graphics.FillEllipse(Brushes.Beige, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                    break;
+
+                case MapObject.inediblePlant:
+                    Form1.s_graphics.FillEllipse(Brushes.Tomato, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                    break;
+
             }
+            Form1.s_pictureBox.Refresh();
+
 
         }
-        foreach (Fruit fruit in listOfFruits)
+        public void UpgradeField(List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits)
         {
-            int x = fruit.GetPosition().Item1;
-            int y = fruit.GetPosition().Item2;
-            if (fruit.IsHealthy())
-            {
-                _graphics.DrawEllipse(new Pen(Color.Chartreuse, 3), x * _resolution, y * _resolution, _resolution, _resolution);
-            }
-            else
-            {
-                _graphics.DrawEllipse(new Pen(Color.BurlyWood, 3), x * _resolution, y * _resolution, _resolution, _resolution);
-            }
+            Form1.s_graphics.Clear(Color.Black);
 
+            foreach (Plant plant in listOfAllPlants)
+            {
+                int x = plant.GetPosition().Item1;
+                int y = plant.GetPosition().Item2;
+                switch (plant)
+                {
+                    case EdiblePlant plant1:
+                        switch (plant.Stage)
+                        {
+                            case PlantStage.seed:
+                                if (plant1.IsHealthy())
+                                    Form1.s_graphics.FillEllipse(Brushes.Lime, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                else
+                                    Form1.s_graphics.FillEllipse(Brushes.Beige, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                break;
+                            case PlantStage.sprout:
+                                if (plant1.IsHealthy())
+                                    Form1.s_graphics.FillRectangle(Brushes.Lime, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                else
+                                    Form1.s_graphics.FillRectangle(Brushes.Beige, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+
+                                break;
+                            case PlantStage.grown:
+                                if (plant1.IsHealthy())
+                                {
+                                    if (plant1.IsFruiting())
+                                    {
+                                        Form1.s_graphics.FillRectangle(Brushes.Green, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                    }
+                                    else
+                                    {
+                                        Form1.s_graphics.FillRectangle(Brushes.MediumSpringGreen, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+
+                                    }
+                                }
+                                else
+                                     if (plant1.IsFruiting())
+                                {
+                                    Form1.s_graphics.FillRectangle(Brushes.White, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                }
+                                else
+                                {
+                                    Form1.s_graphics.FillRectangle(Brushes.LightGoldenrodYellow, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+
+                                }
+
+                                break;
+                            case PlantStage.dead:
+                                if (plant1.IsHealthy())
+                                    Form1.s_graphics.FillRectangle(Brushes.DarkOliveGreen, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                else
+                                    Form1.s_graphics.FillRectangle(Brushes.Wheat, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+
+                                break;
+                        }
+                        break;
+
+                    case InediblePlant:
+
+                        switch (plant.Stage)
+                        {
+                            case PlantStage.seed:
+                                
+                                    Form1.s_graphics.FillEllipse(Brushes.Tomato, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                               break;
+                            case PlantStage.sprout:
+                               
+                                    Form1.s_graphics.FillRectangle(Brushes.Tomato, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                               break;
+                            case PlantStage.grown:
+                                if (plant.IsFruiting())
+                                    {
+                                        Form1.s_graphics.FillRectangle(Brushes.Red, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                    }
+                                    else
+                                    {
+                                        Form1.s_graphics.FillRectangle(Brushes.Crimson, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+
+                                    }
+                                break;
+                            case PlantStage.dead:
+                                
+                                    Form1.s_graphics.FillRectangle(Brushes.Maroon, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                               break;
+                        }
+                        break;
+                }
+
+            }
+            foreach (Fruit fruit in listOfFruits)
+            {
+                int x = fruit.GetPosition().Item1;
+                int y = fruit.GetPosition().Item2;
+                if (fruit.IsHealthy())
+                {
+                    Form1.s_graphics.DrawEllipse(new Pen(Color.Chartreuse, 3), x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                }
+                else
+                {
+                    Form1.s_graphics.DrawEllipse(new Pen(Color.BurlyWood, 3), x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                }
+
+
+            }
+            foreach (Animal animal in listOfAnimals)
+            {
+                int x = animal.GetPosition().Item1;
+                int y = animal.GetPosition().Item2;
+
+                Form1.s_graphics.FillRectangle(Brushes.Gold, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+            }
+            Form1.s_pictureBox.Refresh();
 
         }
-        foreach (Animal animal in listOfAnimals)
-        {
-            int x = animal.GetPosition().Item1;
-            int y = animal.GetPosition().Item2;
-
-            _graphics.FillRectangle(Brushes.Gold, x * _resolution, y * _resolution, _resolution, _resolution);
-        }
-        _pictureBox.Refresh();
-
     }
 }
-
-

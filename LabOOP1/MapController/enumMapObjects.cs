@@ -10,10 +10,8 @@ public enum MapObject
 	ediblePlantPoisonous,
 	ediblePlantPoisonousFruiting,
 
-	inediblePlantHealthy,
-	inediblePlantHealthyFruiting,
+	inediblePlantFruiting,
 
-	inediblePlantPoisonous,
-	inediblePlantPoisonousFruiting,
+	inediblePlant,
 
 }

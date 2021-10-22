@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -10,31 +9,35 @@ namespace LabOOP1
     public partial class Form1 : Form
     {
         private int timerCounter = 0;
-        private int resolution;
-        private int densityAnimals;
-        private int densityPlants;
-        private int rows;
-        private int cols;
-        private Graphics graphics;
-        private MapObjectsControl mapController;
+
+        public static int s_resolution;
+        public static int s_densityAnimals;
+        public static int s_densityPlants;
+        public static Graphics s_graphics;
+        public static int s_rows;
+        public static int s_cols;
+        public static PictureBox s_pictureBox;
+
+        private MapObjectsControl mapController; 
+
 
         public Form1()
         {
             InitializeComponent();
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void Timer1_Tick(object sender, EventArgs e)
         {
             textBox1.Text = (++timerCounter).ToString();
             mapController.LiveOneCicle();
         }
 
-        private void buttonStart_Click(object sender, EventArgs e)
+        private void ButtonStart_Click(object sender, EventArgs e)
         {
             StartGame();
         }
 
-        private void buttonStop_Click(object sender, EventArgs e)
+        private void ButtonStop_Click(object sender, EventArgs e)
         {
             StopGame();
         }
@@ -66,16 +69,18 @@ namespace LabOOP1
             numDensity1.Enabled = false;
             numDensity2.Enabled = false;
 
-            resolution = (int)numResolution.Value;
-            densityAnimals = (int)numDensity1.Value;
-            densityPlants = (int)numDensity2.Value;
-            rows = pictureBox1.Height / resolution;
-            cols = pictureBox1.Width / resolution;
+            s_resolution = (int)numResolution.Value;
+            s_densityAnimals = (int)numDensity1.Value;
+            s_densityPlants = (int)numDensity2.Value;
+            s_rows = pictureBox1.Height / s_resolution;
+            s_cols = pictureBox1.Width / s_resolution;
 
             pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
-            graphics = Graphics.FromImage(pictureBox1.Image);
+            s_graphics = Graphics.FromImage(pictureBox1.Image);
 
-            mapController = new MapObjectsControl(rows, cols, densityAnimals, densityPlants, resolution, pictureBox1, graphics);
+            s_pictureBox = pictureBox1;
+
+            mapController = new MapObjectsControl();
             mapController.CreateFirstGeneration();
 
             timer1.Start();
