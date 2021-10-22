@@ -3,16 +3,19 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Collections.Generic;
 
+/* 
+Gold золотой квадрат - животное
+Lime зеленый круг - здоровое съедобное растение в стадии семени
+Beige бежевый круг - ядовитое съедобное растение в стадии семени
+Tomato красный круг - несъедобное растение в стадии семени
+--------------------------
+
+*/
+
 namespace LabOOP1
 {
     public class Rendering
     {
-
-        public Rendering()
-        {
-        }
-
-
         public void DrawFirstGeneration(MapObject mapObject, int x, int y)
         {
 

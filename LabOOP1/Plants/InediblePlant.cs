@@ -7,20 +7,17 @@ namespace LabOOP1
     public class InediblePlant : Plant
     {
 
-        public InediblePlant((int, int) pos) : base(pos)
-        {
-
-        }
+        public InediblePlant((int, int) pos) : base(pos) {}
 
         private void SetStatus(bool status)
         {
             _isFruiting = status;
         }
-        public override void FormSeeds(List<Plant> listOfNewPlants)
+        public override void FormSeeds(List<Plant> listOfAllPlants)
         {
             InediblePlant newPlant = new(FindNewCell());
             newPlant.SetStatus(_isFruiting);
-            listOfNewPlants.Add(newPlant);
+            listOfAllPlants.Add(newPlant);
         }
     }
 }

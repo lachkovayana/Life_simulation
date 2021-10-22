@@ -33,31 +33,28 @@ namespace LabOOP1
             _isHungry = false;
             RiseHealth();
         }
-        private void DecreaseHealth(List<Animal> removeList)
+        private void DecreaseHealth(List<Animal> listOfAnimals)
         {
             _health -= 5;
             if (_health <= 0)
-                Die(removeList);
+                listOfAnimals.Remove(this);
         }
         private void DecreaseHealthByZero()
         {
             _health = 0;
         }
 
-        private void DecreaseSatiety(List<Animal> removeList)
+        private void DecreaseSatiety(List<Animal> listOfAnimals)
+
         {
             _satiety -= 5;
             if (_satiety <= 30)
             {
                 _isHungry = true;
-                DecreaseHealth(removeList);
+                DecreaseHealth(listOfAnimals);
             }
         }
 
-        private void Die(List<Animal> removeList)
-        {
-            removeList.Add(this);
-        }
 
         private void MoveToRandomCell()
         {
@@ -259,9 +256,9 @@ namespace LabOOP1
             return _position;
         }
 
-        public void LiveAnimalCicle(List<Plant> listOfAllPlants, List<Fruit> listOfFruits, List<Animal> removeList)
+        public void LiveAnimalCicle(List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits)
         {
-            DecreaseSatiety(removeList);
+            DecreaseSatiety(listOfAnimals);
 
             if (_isHungry)
             {

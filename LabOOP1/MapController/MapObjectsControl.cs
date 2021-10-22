@@ -11,41 +11,23 @@ namespace LabOOP1
         private List<Animal> _listOfAnimals = new();
         private List<Plant> _listOfAllPlants = new();
         private List<Fruit> _listOfFruits = new();
-        private List<Plant> _listOfNewPlants = new();
-        private List<Animal> _removeList = new();
 
-
-        private readonly Rendering _rendering;
-        public MapObjectsControl()
-        {
-            _rendering = new Rendering();
-        }
-
+        private readonly Rendering _rendering = new();
 
         private void UpdatePlants()
         {
-            foreach (Plant plant in _listOfAllPlants)
+            foreach (Plant plant in _listOfAllPlants.ToArray())
             {
-                plant.LivePlantCicle(_listOfFruits, _listOfNewPlants);
+                plant.LivePlantCicle(_listOfFruits, _listOfAllPlants);
             }
-            foreach (Plant plant in _listOfNewPlants)
-            {
-                _listOfAllPlants.Add(plant);
-            }
-            _listOfNewPlants = new();
         }
 
         private void UpdateAnimals()
         {
-            foreach (Animal animal in _listOfAnimals)
+            foreach (Animal animal in _listOfAnimals.ToArray())
             {
-                animal.LiveAnimalCicle(_listOfAllPlants, _listOfFruits, _removeList);
+                animal.LiveAnimalCicle(_listOfAnimals,_listOfAllPlants, _listOfFruits);
             }
-            foreach (Animal animal in _removeList)
-            {
-                _listOfAnimals.Remove(animal);
-            }
-            _removeList = new();
         }
 
         public void LiveOneCicle()

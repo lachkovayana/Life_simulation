@@ -26,11 +26,11 @@ namespace LabOOP1
             _isHealthy = statusHealth;
             _isFruiting = statusGrowth;
         }
-        public override void FormSeeds(List<Plant> listOfNewPlants)
+        public override void FormSeeds(List<Plant> listOfAllPlants)
         {
             EdiblePlant newPlant = new(FindNewCell());
             newPlant.SetStatus(_isHealthy, _isFruiting);
-            listOfNewPlants.Add(newPlant);
+            listOfAllPlants.Add(newPlant);
         }
     }
 }

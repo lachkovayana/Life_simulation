@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LabOOP1
 {
-    public abstract class Plant
+    public abstract class Plant 
     {
         private const int _density = 6;
         private (int, int) _position;
@@ -89,7 +89,7 @@ namespace LabOOP1
                 listOfFruits.Add(fruit);
             }
         }
-        public virtual void FormSeeds(List<Plant> listOfNewPlants) { }
+        public virtual void FormSeeds(List<Plant> listOfAllPlants) { }
 
         public bool IsFruiting()
         {
@@ -100,7 +100,7 @@ namespace LabOOP1
             return _position;
         }
 
-        public void LivePlantCicle(List<Fruit> listOfFruits, List<Plant> listOfNewPlants)
+        public void LivePlantCicle(List<Fruit> listOfFruits, List<Plant> listOfAllPlants)
         {
             UpdateAge();
             if (CheckGrowth())
@@ -109,7 +109,7 @@ namespace LabOOP1
             }
             if (CheckForm())
             {
-                FormSeeds(listOfNewPlants);
+                FormSeeds(listOfAllPlants);
             }
         }
     }

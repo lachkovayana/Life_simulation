@@ -2,7 +2,7 @@
 
 namespace LabOOP1
 {
-    public class Fruit
+    public class Fruit: FoodForHerbivores
     {
         private (int, int) _position;
         private int _densityHealthyPlant = 4;
