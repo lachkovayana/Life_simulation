@@ -10,7 +10,7 @@ namespace LabOOP1
         private List<Animal> _listOfAnimals = new();
         private List<Plant> _listOfAllPlants = new();
         private List<Fruit> _listOfFruits = new();
-        private List<FoodForHerbivores> _listOfFoodForHerbivores = new();
+        private List<FoodForherbivorous> _listOfFoodForherbivorous = new();
         private List<FoodForOmnivores> _listOfFoodForOmnivores = new();
 
         private readonly Rendering _rendering = new();
@@ -27,23 +27,26 @@ namespace LabOOP1
         {
             foreach (Animal animal in _listOfAnimals.ToArray())
             {
-                animal.LiveAnimalCicle(_listOfAnimals, _listOfAllPlants, _listOfFruits, _listOfFoodForHerbivores, _listOfFoodForOmnivores);
+                animal.LiveAnimalCicle(_listOfAnimals, _listOfAllPlants, _listOfFruits, _listOfFoodForherbivorous, _listOfFoodForOmnivores);
             }
         }
         private void UpdateFood()
         {
+            _listOfFoodForherbivorous = new();
+            _listOfFoodForOmnivores = new();
+
             foreach (Plant plant in _listOfAllPlants.ToArray())
             {
-                if (plant is EdiblePlant ePlant && plant.Stage != PlantStage.seed)
+                if (plant is EdiblePlant && plant.Stage != PlantStage.seed)
                 {
-                    _listOfFoodForHerbivores.Add(plant);
+                    _listOfFoodForherbivorous.Add(plant);
                 }
             }
             foreach (Fruit fruit in _listOfFruits)
             {
-                _listOfFoodForHerbivores.Add(fruit);
+                _listOfFoodForherbivorous.Add(fruit);
             }
-            foreach (FoodForHerbivores f in _listOfFoodForHerbivores)
+            foreach (FoodForherbivorous f in _listOfFoodForherbivorous)
             {
                 _listOfFoodForOmnivores.Add(f);
             }
@@ -71,8 +74,20 @@ namespace LabOOP1
                 {
                     if (random.Next(Form1.s_densityAnimals) == 0)
                     {
-                        _listOfAnimals.Add(new Animal((x, y)));
-                        _rendering.DrawFirstGeneration(MapObject.animal, x, y);
+                        Animal an = new Animal((x, y));
+                        _listOfAnimals.Add(an);
+                        switch (an.Nutrition)
+                        {
+                            case NutritionMethod.herbivorous:
+                                _rendering.DrawFirstGeneration(MapObject.animalHerbivorous, x, y);
+                                break;
+                            case NutritionMethod.carnivorous:
+                                _rendering.DrawFirstGeneration(MapObject.animalCarnivorous, x, y);
+                                break;
+                            case NutritionMethod.omnivorous:
+                                _rendering.DrawFirstGeneration(MapObject.animalOmnivorous, x, y);
+                                break;
+                        }
                     }
                     else if (random.Next(Form1.s_densityPlants) == 0)
                     {

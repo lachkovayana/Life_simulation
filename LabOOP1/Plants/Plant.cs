@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LabOOP1
 {
-    public abstract class Plant : FoodForHerbivores
+    public abstract class Plant : FoodForherbivorous
     {
         private const int _density = 6;
         private (int, int) _position;

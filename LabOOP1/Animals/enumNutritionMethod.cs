@@ -4,7 +4,7 @@ namespace LabOOP1
 {
     public enum NutritionMethod
     {
-        herbivore = 0,
+        herbivorous = 0,
         carnivorous = 1,
         omnivorous = 2
     }

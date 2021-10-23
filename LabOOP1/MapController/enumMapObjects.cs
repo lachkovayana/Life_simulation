@@ -2,16 +2,17 @@
 
 public enum MapObject
 {
-	animal,
+	animalHerbivorous,
+	animalOmnivorous,
+	animalCarnivorous,
 
 	ediblePlantHealthy,
 	ediblePlantHealthyFruiting,
 
 	ediblePlantPoisonous,
 	ediblePlantPoisonousFruiting,
-
-	inediblePlantFruiting,
-
+	
 	inediblePlant,
+	inediblePlantFruiting
 
 }

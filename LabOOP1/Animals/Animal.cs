@@ -17,18 +17,18 @@ namespace LabOOP1
 
         private bool _isHungry = false;
 
-        private NutritionMethod _nutritionMethod = NutritionMethod.herbivore;
+        public NutritionMethod Nutrition = NutritionMethod.herbivorous;
 
         public Animal((int, int) pos):base(pos)
         {
             _position = pos;
             Random random = new();
-            _nutritionMethod = (NutritionMethod)random.Next(0, 3);
+            Nutrition = (NutritionMethod)random.Next(0, 3);
         }
 
         private void RiseHealth()
         {
-            _health += 50;
+            _health += Math.Min(50, 100-_health);
         }
         private void RiseSatiety()
         {
@@ -38,9 +38,10 @@ namespace LabOOP1
         }
         private void DecreaseHealth(List<Animal> listOfAnimals)
         {
-            _health -= 5;
-            if (_health <= 0)
-                listOfAnimals.Remove(this);
+            _health = Math.Max(0, _health - 5);
+
+            //if (_health <= 0)
+            //    listOfAnimals.Remove(this);
         }
         private void DecreaseHealthByZero()
         {
@@ -50,7 +51,8 @@ namespace LabOOP1
         private void DecreaseSatiety(List<Animal> listOfAnimals)
 
         {
-            _satiety -= 5;
+            _satiety = Math.Max(0, _satiety-5);
+
             if (_satiety <= 30)
             {
                 _isHungry = true;
@@ -83,7 +85,7 @@ namespace LabOOP1
             return _position;
         }
 
-        private void MoveToTarget(List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits, List<FoodForHerbivores> listOfFoodForHerbivores, List<FoodForOmnivores> _listOfFoodForOmnivores)
+        private void MoveToTarget(List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits, List<FoodForherbivorous> listOfFoodForherbivorous, List<FoodForOmnivores> _listOfFoodForOmnivores)
         {
             var minDist = Constants.ImpVal;
             (int, int) newPosAn = _position;
@@ -93,9 +95,9 @@ namespace LabOOP1
            
             foreach (FoodForOmnivores f in _listOfFoodForOmnivores)
             {
-                if ((_nutritionMethod == NutritionMethod.herbivore && (f is Fruit || f is EdiblePlant)) ||
-                    (_nutritionMethod == NutritionMethod.carnivorous && f is Animal && !f.Equals(this)) ||
-                    (_nutritionMethod == NutritionMethod.omnivorous && !f.Equals(this)))
+                if ((Nutrition == NutritionMethod.herbivorous && (f is Fruit || f is EdiblePlant)) ||
+                    (Nutrition == NutritionMethod.carnivorous && f is Animal && !f.Equals(this)) ||
+                    (Nutrition == NutritionMethod.omnivorous && !f.Equals(this)))
                 {
                     var posFood = f.GetPosition();
                     var tmpx = Math.Abs(_position.Item1 - posFood.Item1);
@@ -159,7 +161,7 @@ namespace LabOOP1
                 }
                 else
                 {
-                    if (target is FoodForHerbivores f)
+                    if (target is FoodForherbivorous f)
                     {
                         if (f.IsHealthy())
                         {
@@ -218,14 +220,14 @@ namespace LabOOP1
         }
 
 
-        public void LiveAnimalCicle(List<Animal> listOfAnimals, List<Plant> listOfPlants, List<Fruit> listOfFruits, List<FoodForHerbivores> listOfFoodForHerbivores, List<FoodForOmnivores> listOfFoodForOmnivores)
+        public void LiveAnimalCicle(List<Animal> listOfAnimals, List<Plant> listOfPlants, List<Fruit> listOfFruits, List<FoodForherbivorous> listOfFoodForherbivorous, List<FoodForOmnivores> listOfFoodForOmnivores)
         {
             UpdateTime();
             DecreaseSatiety(listOfAnimals);
 
             if (_isHungry)
             {
-                MoveToTarget(listOfAnimals, listOfPlants, listOfFruits, listOfFoodForHerbivores, listOfFoodForOmnivores);
+                MoveToTarget(listOfAnimals, listOfPlants, listOfFruits, listOfFoodForherbivorous, listOfFoodForOmnivores);
             }
             else
             {
