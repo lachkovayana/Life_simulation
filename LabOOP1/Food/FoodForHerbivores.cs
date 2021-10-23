@@ -1,11 +1,11 @@
 ﻿using System;
 namespace LabOOP1
 {
-	public abstract class FoodForherbivorous: FoodForOmnivores
+	public abstract class FoodForHerbivorous: FoodForOmnivores
 	{
 		private readonly int _densityHealthyPlant = 4;
 		internal bool _isHealthy = true; //{get{}; set{}}
-		public FoodForherbivorous((int, int) pos) : base(pos)
+		public FoodForHerbivorous((int, int) pos) : base(pos)
 		{
 			Random random = new();
 			if (random.Next(_densityHealthyPlant) == 0)

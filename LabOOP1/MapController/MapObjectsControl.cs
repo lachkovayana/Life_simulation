@@ -10,7 +10,7 @@ namespace LabOOP1
         private List<Animal> _listOfAnimals = new();
         private List<Plant> _listOfAllPlants = new();
         private List<Fruit> _listOfFruits = new();
-        private List<FoodForherbivorous> _listOfFoodForherbivorous = new();
+        private List<FoodForHerbivorous> _listOfFoodForHerbivorous = new();
         private List<FoodForOmnivores> _listOfFoodForOmnivores = new();
 
         private readonly Rendering _rendering = new();
@@ -27,26 +27,26 @@ namespace LabOOP1
         {
             foreach (Animal animal in _listOfAnimals.ToArray())
             {
-                animal.LiveAnimalCicle(_listOfAnimals, _listOfAllPlants, _listOfFruits, _listOfFoodForherbivorous, _listOfFoodForOmnivores);
+                animal.LiveAnimalCicle(_listOfAnimals, _listOfAllPlants, _listOfFruits, _listOfFoodForOmnivores);
             }
         }
         private void UpdateFood()
         {
-            _listOfFoodForherbivorous = new();
+            _listOfFoodForHerbivorous = new();
             _listOfFoodForOmnivores = new();
 
             foreach (Plant plant in _listOfAllPlants.ToArray())
             {
                 if (plant is EdiblePlant && plant.Stage != PlantStage.seed)
                 {
-                    _listOfFoodForherbivorous.Add(plant);
+                    _listOfFoodForHerbivorous.Add(plant);
                 }
             }
             foreach (Fruit fruit in _listOfFruits)
             {
-                _listOfFoodForherbivorous.Add(fruit);
+                _listOfFoodForHerbivorous.Add(fruit);
             }
-            foreach (FoodForherbivorous f in _listOfFoodForherbivorous)
+            foreach (FoodForHerbivorous f in _listOfFoodForHerbivorous)
             {
                 _listOfFoodForOmnivores.Add(f);
             }

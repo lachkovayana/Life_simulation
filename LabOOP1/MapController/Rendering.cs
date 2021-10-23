@@ -23,14 +23,16 @@ namespace LabOOP1
             {
                 case MapObject.animalHerbivorous:
                     Form1.s_graphics.FillRectangle(Brushes.Yellow, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                    Form1.s_graphics.DrawRectangle(new Pen(Color.Chocolate, 3), x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
                     break;
                 case MapObject.animalCarnivorous:
-                    Form1.s_graphics.FillRectangle(Brushes.Orange, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                    Form1.s_graphics.FillRectangle(Brushes.Purple, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                    Form1.s_graphics.DrawRectangle(new Pen(Color.DarkSlateGray, 3), x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
                     break;
                 case MapObject.animalOmnivorous:
-                    Form1.s_graphics.FillRectangle(Brushes.Gold, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                    Form1.s_graphics.FillRectangle(Brushes.Cyan, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                    Form1.s_graphics.DrawRectangle(new Pen(Color.Purple, 3), x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
                     break;
-
                 case MapObject.ediblePlantHealthy:
                     Form1.s_graphics.FillEllipse(Brushes.Lime, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
                     break;
@@ -83,7 +85,7 @@ namespace LabOOP1
                                     }
                                     else
                                     {
-                                        Form1.s_graphics.FillRectangle(Brushes.MediumSpringGreen, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                        Form1.s_graphics.FillRectangle(Brushes.SeaGreen, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
 
                                     }
                                 }
