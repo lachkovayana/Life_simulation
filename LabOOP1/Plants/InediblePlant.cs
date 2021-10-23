@@ -6,8 +6,7 @@ namespace LabOOP1
 {
     public class InediblePlant : Plant
     {
-
-        public InediblePlant((int, int) pos) : base(pos) {}
+        public InediblePlant((int, int) pos) : base(pos) { }
 
         private void SetStatus(bool status)
         {

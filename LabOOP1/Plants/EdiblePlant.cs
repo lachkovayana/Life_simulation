@@ -7,7 +7,7 @@ namespace LabOOP1
     public class EdiblePlant : Plant
     {
         private const int _density = 6;
-        private bool _isHealthy = true;
+        //private bool _isHealthy = true;
 
         public EdiblePlant((int, int) pos) : base(pos)
         {
@@ -17,10 +17,10 @@ namespace LabOOP1
                 _isHealthy = false;
             }
         }
-        public bool IsHealthy()
-        {
-            return _isHealthy;
-        }
+        //public bool IsHealthy()
+        //{
+        //    return _isHealthy;
+        //}
         private void SetStatus(bool statusHealth, bool statusGrowth)
         {
             _isHealthy = statusHealth;

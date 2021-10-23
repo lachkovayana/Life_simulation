@@ -23,7 +23,6 @@ C:\Users\Пользователь\Source\Repos\OOP-LifeSimulation\LabOOP1\bin\De
 C:\Users\Пользователь\Source\Repos\OOP-LifeSimulation\LabOOP1\bin\Debug\net5.0-windows\LabOOP1.dll
 C:\Users\Пользователь\Source\Repos\OOP-LifeSimulation\LabOOP1\bin\Debug\net5.0-windows\ref\LabOOP1.dll
 C:\Users\Пользователь\Source\Repos\OOP-LifeSimulation\LabOOP1\bin\Debug\net5.0-windows\LabOOP1.pdb
-C:\Users\Пользователь\Source\Repos\OOP-LifeSimulation\LabOOP1\obj\Debug\net5.0-windows\LabOOP1.csprojAssemblyReference.cache
 C:\Users\Пользователь\Source\Repos\OOP-LifeSimulation\LabOOP1\obj\Debug\net5.0-windows\LabOOP1.csproj.GenerateResource.cache
 C:\Users\Пользователь\Source\Repos\OOP-LifeSimulation\LabOOP1\obj\Debug\net5.0-windows\LabOOP1.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Пользователь\Source\Repos\OOP-LifeSimulation\LabOOP1\obj\Debug\net5.0-windows\LabOOP1.AssemblyInfoInputs.cache
@@ -35,3 +34,4 @@ C:\Users\Пользователь\Source\Repos\OOP-LifeSimulation\LabOOP1\obj\De
 C:\Users\Пользователь\Source\Repos\OOP-LifeSimulation\LabOOP1\obj\Debug\net5.0-windows\LabOOP1.genruntimeconfig.cache
 C:\Users\Пользователь\Source\Repos\OOP-LifeSimulation\LabOOP1\obj\Debug\net5.0-windows\LabOOP1.Form1.resources
 C:\Users\Пользователь\Source\Repos\OOP-LifeSimulation\LabOOP1\obj\Debug\net5.0-windows\LabOOP1.Properties.Resources.resources
+C:\Users\Пользователь\source\repos\OOP-LifeSimulation\LabOOP1\obj\Debug\net5.0-windows\LabOOP1.csprojAssemblyReference.cache

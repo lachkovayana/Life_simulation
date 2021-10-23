@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -11,6 +10,8 @@ namespace LabOOP1
         private List<Animal> _listOfAnimals = new();
         private List<Plant> _listOfAllPlants = new();
         private List<Fruit> _listOfFruits = new();
+        private List<FoodForHerbivores> _listOfFoodForHerbivores = new();
+        private List<FoodForOmnivores> _listOfFoodForOmnivores = new();
 
         private readonly Rendering _rendering = new();
 
@@ -26,12 +27,35 @@ namespace LabOOP1
         {
             foreach (Animal animal in _listOfAnimals.ToArray())
             {
-                animal.LiveAnimalCicle(_listOfAnimals,_listOfAllPlants, _listOfFruits);
+                animal.LiveAnimalCicle(_listOfAnimals, _listOfAllPlants, _listOfFruits, _listOfFoodForHerbivores, _listOfFoodForOmnivores);
+            }
+        }
+        private void UpdateFood()
+        {
+            foreach (Plant plant in _listOfAllPlants.ToArray())
+            {
+                if (plant is EdiblePlant ePlant && plant.Stage != PlantStage.seed)
+                {
+                    _listOfFoodForHerbivores.Add(plant);
+                }
+            }
+            foreach (Fruit fruit in _listOfFruits)
+            {
+                _listOfFoodForHerbivores.Add(fruit);
+            }
+            foreach (FoodForHerbivores f in _listOfFoodForHerbivores)
+            {
+                _listOfFoodForOmnivores.Add(f);
+            }
+            foreach (Animal an in _listOfAnimals)
+            {
+                _listOfFoodForOmnivores.Add(an);
             }
         }
 
         public void LiveOneCicle()
         {
+            UpdateFood();
             UpdateAnimals();
             UpdatePlants();
             _rendering.UpgradeField(_listOfAnimals, _listOfAllPlants, _listOfFruits);

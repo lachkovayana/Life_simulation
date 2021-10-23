@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LabOOP1
 {
-    public abstract class Plant 
+    public abstract class Plant : FoodForHerbivores
     {
         private const int _density = 6;
         private (int, int) _position;
@@ -12,7 +12,7 @@ namespace LabOOP1
 
         public PlantStage Stage = PlantStage.seed;
 
-        public Plant((int, int) pos)
+        public Plant((int, int) pos) : base(pos)
         {
             _position = pos;
 
@@ -62,8 +62,6 @@ namespace LabOOP1
             return false;
         }
 
-        
-
         private void UpdateAge()
         {
             _age++;
@@ -94,10 +92,6 @@ namespace LabOOP1
         public bool IsFruiting()
         {
             return _isFruiting;
-        }
-        public (int, int) GetPosition()
-        {
-            return _position;
         }
 
         public void LivePlantCicle(List<Fruit> listOfFruits, List<Plant> listOfAllPlants)

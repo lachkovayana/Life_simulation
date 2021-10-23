@@ -107,28 +107,28 @@ namespace LabOOP1
                         switch (plant.Stage)
                         {
                             case PlantStage.seed:
-                                
-                                    Form1.s_graphics.FillEllipse(Brushes.Tomato, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
-                               break;
+
+                                Form1.s_graphics.FillEllipse(Brushes.Tomato, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                break;
                             case PlantStage.sprout:
-                               
-                                    Form1.s_graphics.FillRectangle(Brushes.Tomato, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
-                               break;
+
+                                Form1.s_graphics.FillRectangle(Brushes.Tomato, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                break;
                             case PlantStage.grown:
                                 if (plant.IsFruiting())
-                                    {
-                                        Form1.s_graphics.FillRectangle(Brushes.Red, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
-                                    }
-                                    else
-                                    {
-                                        Form1.s_graphics.FillRectangle(Brushes.Crimson, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                {
+                                    Form1.s_graphics.FillRectangle(Brushes.Red, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                }
+                                else
+                                {
+                                    Form1.s_graphics.FillRectangle(Brushes.Crimson, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
 
-                                    }
+                                }
                                 break;
                             case PlantStage.dead:
-                                
-                                    Form1.s_graphics.FillRectangle(Brushes.Maroon, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
-                               break;
+
+                                Form1.s_graphics.FillRectangle(Brushes.Maroon, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                break;
                         }
                         break;
                 }
