@@ -16,6 +16,7 @@ namespace LabOOP1
         private int _timeSinceBreeding = 0;
 
         private bool _isHungry = false;
+        private bool _isReadyToReproduce = false;
 
         Movement MoveWay = new();
 
@@ -149,7 +150,7 @@ namespace LabOOP1
             foreach (Animal animal in listOfAnimals)
             {
                 if (!(animal._isHungry) && animal.gender != gender &&
-                    !(animal.Equals(this)) && animal.Nutrition == Nutrition)
+                    !(animal.Equals(this)) && animal.Nutrition == Nutrition && animal._isReadyToReproduce)
                 {
                     var posPartner = animal.GetPosition();
                     var tmpx = Math.Abs(_position.Item1 - posPartner.Item1);
@@ -179,12 +180,23 @@ namespace LabOOP1
 
         private void SetNutrition(NutritionMethod nutrition)
         {
-            this.Nutrition = nutrition;
+            Nutrition = nutrition;
         }
 
-        private void UpdateTime()
+        private void UpdateReadiness()
         {
             _timeSinceBreeding++;
+            if (_timeSinceBreeding >= 5)
+            {
+                _isReadyToReproduce = true ;
+            }
+        }
+        public void UpdateTime(Animal partner)
+        {
+            _timeSinceBreeding = 0;
+            _isReadyToReproduce = false;
+            partner._timeSinceBreeding = 0;
+            partner._isReadyToReproduce = false;
         }
 
         private void SetPosition((int, int) pos)
@@ -192,10 +204,9 @@ namespace LabOOP1
             _position = pos;
         }
 
-
         public void LiveAnimalCicle(List<Animal> listOfAnimals, List<Plant> listOfPlants, List<Fruit> listOfFruits, List<FoodForOmnivores> listOfFoodForOmnivores)
         {
-            UpdateTime();
+            UpdateReadiness();
             DecreaseSatiety(listOfAnimals);
 
             if (_isHungry)
@@ -204,9 +215,10 @@ namespace LabOOP1
             }
             else
             {
-                if (_timeSinceBreeding >= 15)
+                if (_isReadyToReproduce)
                 {
                     var partner = FindPartner(listOfAnimals);
+
                     if (!partner.Equals(this))
                     {
                         MoveToPartner(listOfAnimals, partner);
@@ -214,6 +226,7 @@ namespace LabOOP1
                         if (partner.GetPosition() == _position && gender == Gender.female)
                         {
                             Reproduce(listOfAnimals);
+                            UpdateTime(partner);
                         }
                     }
                 }
