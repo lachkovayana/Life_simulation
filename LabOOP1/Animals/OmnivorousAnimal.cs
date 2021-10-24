@@ -10,16 +10,21 @@ namespace LabOOP1
     {
         private Movement MoveWay = new();
 
-        public OmnivorousAnimal((int, int) pos) : base(pos)
-        {
-        }
+        public OmnivorousAnimal((int, int) pos) : base(pos) {}
+
+        //--------------------------------------------------<override methods>---------------------------------------------------------------
+
+
         protected override void MoveToRandomCell()
         {
-            var newPosition = MoveWay.MoveToRandomCell1(position);
-            SetPosition(newPosition);
+            //Должно быть var newPosition = MoveWay.MoveToRandomCell3(this, listOFTargets);
+            var newPosAn = MoveWay.MoveToRandomCell1(position);
+            SetPosition(newPosAn);
         }
+
         protected override void MoveToFood(FoodForOmnivorous target)
         {
+            //var newPosAn = MoveWay.MoveToTarget3(position, target);
             var newPosAn = MoveWay.MoveToTarget1(position, target.GetPosition());
             SetPosition(newPosAn);
         }
@@ -31,7 +36,6 @@ namespace LabOOP1
                 if (food is Plant || (food is Animal && food.GetType() != GetType()))
                     return true;
             }
-
             return false;
         }
         protected override void SetNutrition()
@@ -40,11 +44,12 @@ namespace LabOOP1
         }
     }
 
+
+    //--------------------------------------------------<inheritor classes>---------------------------------------------------------------
+
     public class Bear : OmnivorousAnimal
     {
-        public Bear((int, int) pos) : base(pos)
-        {
-        }
+        public Bear((int, int) pos) : base(pos) {}
         protected override int MaxHealth { get { return 120; } }
         protected override int MaxSatiety { get { return 120; } }
         protected override void Reproduce(List<Animal> listOfAnimals)
@@ -55,9 +60,7 @@ namespace LabOOP1
 
     public class Pig : OmnivorousAnimal
     {
-        public Pig((int, int) pos) : base(pos)
-        {
-        }
+        public Pig((int, int) pos) : base(pos) {}
         protected override int MaxHealth { get { return 140; } }
         protected override int MaxSatiety { get { return 140; } }
         protected override void Reproduce(List<Animal> listOfAnimals)
@@ -69,15 +72,12 @@ namespace LabOOP1
 
     public class Rat : OmnivorousAnimal
     {
-        public Rat((int, int) pos) : base(pos)
-        {
-        }
+        public Rat((int, int) pos) : base(pos) {}
         protected override int MaxHealth { get { return 150; } }
         protected override int MaxSatiety { get { return 150; } }
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
             listOfAnimals.Add(new Rat(position));
-
         }
     }
 

@@ -32,7 +32,7 @@ namespace LabOOP1
 
         protected (int, int) BasisCellPosition;
 
-        //--------------------------------------------------<class constructot>---------------------------------------------------------------
+        //--------------------------------------------------<class constructor>---------------------------------------------------------------
 
 
         public Animal((int, int) pos) : base(pos)
@@ -143,7 +143,7 @@ namespace LabOOP1
                     CheckForOmniivorous(f))
                 {
                     double dist = CountDistL1(f);
-                    if (Nutrition == NutritionMethod.herbivorous)
+                    if (Nutrition == NutritionMethod.carnivorous)
                     {
                         dist = CountDistEuclid(f);
                     }

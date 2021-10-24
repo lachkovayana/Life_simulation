@@ -47,6 +47,38 @@ namespace LabOOP1
             return (x, y);
         }
 
+        // случайное движение с вероятностью 60% к средней точке по всем существам вида
+        public (int, int) MoveToRandomCell3(Animal thisAnimal, List<FoodForOmnivorous> listOfTargets)
+        {
+            int x = 0;
+            int y = 0;
+            int count = 0;
+            foreach (FoodForOmnivorous f in listOfTargets)
+            {
+                if (f is Animal && f.GetType() == thisAnimal.GetType())
+                {
+                    x += f.GetPosition().Item1;
+                    y += f.GetPosition().Item2;
+                    count++;
+                }
+            }
+            (int, int) averPoint = (x / count, y / count);
+            Random random = new();
+            int rand = random.Next(0, 100);
+            (int, int) newPosition = (0, 0);
+            if (rand < 60)
+            {
+                newPosition = MoveToTarget1(thisAnimal.GetPosition(), averPoint);
+            }
+            else
+            {
+                newPosition = MoveToRandomCell1(thisAnimal.GetPosition());
+            }
+
+
+            return newPosition;
+        }
+
         // движение к еде на 8 клеток
         public (int, int) MoveToTarget1((int, int) pos, (int, int) targetPos)
         {
@@ -126,37 +158,7 @@ namespace LabOOP1
             return newPosAn;
         }
 
-        // случайное движение с вероятностью 60% к средней точке по всем существам вида
-        public (int, int) MoveWithProbability(Animal thisAnimal, List<FoodForOmnivorous> listOfTargets)
-        {
-            int x = 0;
-            int y = 0;
-            int count = 0;
-            foreach (FoodForOmnivorous f in listOfTargets)
-            {
-                if (f is Animal && f.GetType() == thisAnimal.GetType())
-                {
-                    x += f.GetPosition().Item1;
-                    y += f.GetPosition().Item2;
-                    count++;
-                }
-            }
-            (int, int) averPoint = (x / count, y / count);
-            Random random = new();
-            int rand = random.Next(0, 100);
-            (int, int) newPosition = (0, 0);
-            if (rand < 60) 
-            {
-                newPosition = MoveToTarget1(thisAnimal.GetPosition(), averPoint);
-            }
-            else
-            {
-                newPosition = MoveToRandomCell1(thisAnimal.GetPosition());
-            }
-
-
-            return newPosition;
-        }
+        
 
         //вспомогательная функция
         private (int, int) MoveToDirection((int, int) pos, Direction direction)

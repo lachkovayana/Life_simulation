@@ -62,8 +62,6 @@ namespace LabOOP1
             UpdateAnimals();
             UpdatePlants();
             _rendering.UpgradeField(_listOfAnimals, _listOfAllPlants, _listOfFruits);
-
-
         }
         public void CreateFirstGeneration()
         {
