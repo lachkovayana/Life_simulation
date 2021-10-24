@@ -116,30 +116,29 @@ namespace LabOOP1
 
                         }
                     }
-                    else if (random.Next(Form1.s_densityPlants) == 0)
+                    else
                     {
-                        EdiblePlant newPlant = new((x, y));
-                        _listOfAllPlants.Add(newPlant);
-                        if (newPlant.IsHealthy())
+                        switch (random.Next(Form1.s_densityPlants))
                         {
-                            _rendering.DrawFirstGeneration(MapObject.ediblePlantHealthy, x, y);
+                            case 0:
+                                EdiblePlant newEPlant = new((x, y));
+                                _listOfAllPlants.Add(newEPlant);
+                                if (newEPlant.IsHealthy())
+                                    _rendering.DrawFirstGeneration(MapObject.ediblePlantHealthy, x, y);
+                                else
+                                    _rendering.DrawFirstGeneration(MapObject.ediblePlantPoisonous, x, y);
+                                break;
+
+                            case 1:
+                                _listOfAllPlants.Add(new InediblePlant((x, y)));
+                                _rendering.DrawFirstGeneration(MapObject.inediblePlant, x, y);
+                                break;
                         }
-                        else
-                        {
-                            _rendering.DrawFirstGeneration(MapObject.ediblePlantPoisonous, x, y);
-                        }
-                    }
-                    else if (random.Next(Form1.s_densityPlants) == 1)
-                    {
-                        InediblePlant newPlant = new((x, y));
-                        _listOfAllPlants.Add(newPlant);
-                        _rendering.DrawFirstGeneration(MapObject.inediblePlant, x, y);
 
                     }
-
                 }
             }
-        }
 
+        }
     }
 }

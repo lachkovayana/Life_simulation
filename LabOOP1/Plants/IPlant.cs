@@ -5,7 +5,7 @@ namespace LabOOP1
 {
     public interface IPlant
     {
-        internal (int, int) FindNewCell((int, int) position)
+        protected (int, int) FindNewCell((int, int) position)
         {
             Random rnd = new();
 
@@ -25,7 +25,7 @@ namespace LabOOP1
         }
 
 
-        internal bool CheckGrowth(bool isFruiting, PlantStage stage, int age)
+        protected bool CheckGrowth(bool isFruiting, PlantStage stage, int age)
         {
             if (isFruiting && stage == PlantStage.grown && (age % 10 == 0))
             {
@@ -33,7 +33,7 @@ namespace LabOOP1
             }
             return false;
         }
-        internal bool CheckForm(PlantStage stage, int age)
+        protected bool CheckForm(PlantStage stage, int age)
         {
             if (stage == PlantStage.grown && (age % 10 == 0))
             {
@@ -42,11 +42,11 @@ namespace LabOOP1
             return false;
         }
 
-        internal virtual void UpdateAge()
+        protected virtual void UpdateAge()
         {
         }
         
-        internal void GrowFruit(List<Fruit> listOfFruits, (int, int) position)
+        protected void GrowFruit(List<Fruit> listOfFruits, (int, int) position)
         {
             Random rnd = new();
             for (int i = 0; i < rnd.Next(3); i++)

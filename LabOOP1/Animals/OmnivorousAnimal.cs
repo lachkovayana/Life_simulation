@@ -12,17 +12,31 @@ namespace LabOOP1
 
         public OmnivorousAnimal((int, int) pos) : base(pos)
         {
-
         }
-        internal override void MoveToRandomCell()
+        protected override void MoveToRandomCell()
         {
-            var newPosition = MoveWay.MoveToRandomCell1(_position);
+            var newPosition = MoveWay.MoveToRandomCell1(position);
             SetPosition(newPosition);
         }
-        internal override void MoveToFood(FoodForOmnivorous target)
+        protected override void MoveToFood(FoodForOmnivorous target)
         {
-            var newPosAn = MoveWay.MoveToTarget1(_position, target);
+            var newPosAn = MoveWay.MoveToTarget1(position, target);
             SetPosition(newPosAn);
+        }
+        protected override bool CheckAbleToEat(List<FoodForOmnivorous> listOfFoodForOmnivorous)
+        {
+
+            foreach (FoodForOmnivorous food in listOfFoodForOmnivorous)
+            {
+                if (food is Plant || (food is Animal && food.GetType() != GetType()))
+                    return true;
+            }
+
+            return false;
+        }
+        protected override void SetNutrition()
+        {
+            Nutrition = NutritionMethod.omnivorous;
         }
     }
 
@@ -31,9 +45,11 @@ namespace LabOOP1
         public Bear((int, int) pos) : base(pos)
         {
         }
-        internal override void Reproduce(List<Animal> listOfAnimals)
+        protected override int MaxHealth { get { return 120; } }
+        protected override int MaxSatiety { get { return 120; } }
+        protected override void Reproduce(List<Animal> listOfAnimals)
         {
-            listOfAnimals.Add(new Bear(_position));
+            listOfAnimals.Add(new Bear(position));
         }
     }
 
@@ -42,9 +58,11 @@ namespace LabOOP1
         public Pig((int, int) pos) : base(pos)
         {
         }
-        internal override void Reproduce(List<Animal> listOfAnimals)
+        protected override int MaxHealth { get { return 140; } }
+        protected override int MaxSatiety { get { return 140; } }
+        protected override void Reproduce(List<Animal> listOfAnimals)
         {
-            listOfAnimals.Add(new Pig(_position));
+            listOfAnimals.Add(new Pig(position));
 
         }
     }
@@ -54,9 +72,11 @@ namespace LabOOP1
         public Rat((int, int) pos) : base(pos)
         {
         }
-        internal override void Reproduce(List<Animal> listOfAnimals)
+        protected override int MaxHealth { get { return 150; } }
+        protected override int MaxSatiety { get { return 150; } }
+        protected override void Reproduce(List<Animal> listOfAnimals)
         {
-            listOfAnimals.Add(new Rat(_position));
+            listOfAnimals.Add(new Rat(position));
 
         }
     }

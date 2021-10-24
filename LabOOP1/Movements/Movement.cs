@@ -83,7 +83,6 @@ namespace LabOOP1
             }
             return newPosAn;
         }
-
         private (int, int) MoveToDirection((int, int) pos, Direction direction)
         {
             int x = pos.Item1;

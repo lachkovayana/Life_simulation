@@ -2,13 +2,13 @@
 
 public abstract class FoodForOmnivorous
 {
-    private (int, int) _position;
+    protected (int, int) position;
     public FoodForOmnivorous((int, int) pos)
     {
-        _position = pos;
+        position = pos;
     }
-    internal virtual (int, int) GetPosition()
+    internal (int, int) GetPosition()
     {
-        return _position;
+        return position;
     }
 }

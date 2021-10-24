@@ -8,7 +8,7 @@ namespace LabOOP1
         private const int _density = 6;
         private (int, int) _position;
         private int _age = 0;
-        internal bool _isFruiting = true;
+        protected bool _isFruiting = true;
 
         public PlantStage Stage = PlantStage.seed;
 
@@ -25,7 +25,7 @@ namespace LabOOP1
 
         }
 
-        internal (int, int) FindNewCell()
+        protected (int, int) FindNewCell()
         {
             Random rnd = new Random();
 

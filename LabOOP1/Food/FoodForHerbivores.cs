@@ -4,7 +4,7 @@ namespace LabOOP1
 	public abstract class FoodForHerbivorous: FoodForOmnivorous
 	{
 		private readonly int _densityHealthyPlant = 4;
-		internal bool _isHealthy = true; //{get{}; set{}}
+		protected bool _isHealthy = true; 
 		public FoodForHerbivorous((int, int) pos) : base(pos)
 		{
 			Random random = new();
