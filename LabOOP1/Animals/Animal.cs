@@ -8,9 +8,9 @@ namespace LabOOP1
         public const int ImpVal = 1000000000;
     }
 
-    public class Animal : FoodForOmnivores
+    public abstract class Animal : FoodForOmnivorous
     {
-        private (int, int) _position;
+        internal (int, int) _position;
         private int _health = 100;
         private int _satiety = 100;
         private int _timeSinceBreeding = 0;
@@ -29,6 +29,10 @@ namespace LabOOP1
             Random random = new();
             Nutrition = (NutritionMethod)random.Next(0, 3);
             gender = (Gender)random.Next(0, 2);
+        }
+        internal override (int, int) GetPosition()
+        {
+            return _position;
         }
 
         private void RiseHealth()
@@ -51,12 +55,9 @@ namespace LabOOP1
         {
             _health = 0;
         }
-
         private void DecreaseSatiety(List<Animal> listOfAnimals)
-
         {
             _satiety = Math.Max(0, _satiety - 5);
-
             if (_satiety <= 30)
             {
                 _isHungry = true;
@@ -64,53 +65,43 @@ namespace LabOOP1
             }
         }
 
-        private void MoveToRandomCell()
-        {
-            var newPosition = MoveWay.MoveToRandomCell(_position);
-            SetPosition(newPosition);
-        }
-        public override (int, int) GetPosition()
-        {
-            return _position;
-        }
+        internal abstract void MoveToRandomCell();
+        internal abstract void MoveToFood(FoodForOmnivorous target);
+        internal abstract void Reproduce(List<Animal> listOfAnimals);
 
-        private void MoveToFood(List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits, List<FoodForOmnivores> _listOfFoodForOmnivores)
-        {
-            var target = FindFood(_listOfFoodForOmnivores);
 
-            var newPosAn = MoveWay.MoveToTarget(_position, target);
-            SetPosition(newPosAn);
-
-            if (target.GetPosition() == _position)
-                Eat(target, listOfAnimals, listOfAllPlants, listOfFruits);
-        }
-
-        private FoodForOmnivores FindFood(List<FoodForOmnivores> listOfFoodForOmnivores)
+        private FoodForOmnivorous FindFood(List<FoodForOmnivorous> listOfFoodForOmnivorous)
         {
             var minDist = Constants.ImpVal;
 
-            FoodForOmnivores target = this;
+            FoodForOmnivorous target = this;
 
-            foreach (FoodForOmnivores f in listOfFoodForOmnivores)
+            foreach (FoodForOmnivorous f in listOfFoodForOmnivorous)
             {
                 if ((Nutrition == NutritionMethod.herbivorous && (f is Fruit || f is EdiblePlant)) ||
                     (Nutrition == NutritionMethod.carnivorous && f is Animal animal && !f.Equals(this) && animal.Nutrition != Nutrition) ||
-                    (Nutrition == NutritionMethod.omnivorous &&  ((f is Fruit || f is EdiblePlant) || (f is Animal animal1 && !f.Equals(this) && animal1.Nutrition != Nutrition))))
+                    (Nutrition == NutritionMethod.omnivorous && ((f is Fruit || f is EdiblePlant) || (f is Animal animal1 && !f.Equals(this) && animal1.Nutrition != Nutrition))))
                 {
-                    var posFood = f.GetPosition();
-                    var tmpx = Math.Abs(_position.Item1 - posFood.Item1);
-                    var tmpy = Math.Abs(_position.Item2 - posFood.Item2);
-                    if (tmpx + tmpy < minDist)
+                    var dist = CountDist(f);
+                    if (dist < minDist)
                     {
-                        minDist = tmpx + tmpx;
+                        minDist = dist;
                         target = f;
                     }
                 }
             }
             return target;
         }
-       
-        private void Eat(FoodForOmnivores target, List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits)
+
+        private int CountDist(FoodForOmnivorous f)
+        {
+            var posFood = f.GetPosition();
+            var tmpx = Math.Abs(_position.Item1 - posFood.Item1);
+            var tmpy = Math.Abs(_position.Item2 - posFood.Item2);
+            return tmpx + tmpy;
+        }
+
+        private void Eat(FoodForOmnivorous target, List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits)
         {
             if (target is FoodForHerbivorous f)
             {
@@ -152,12 +143,10 @@ namespace LabOOP1
                 if (!(animal._isHungry) && animal.gender != gender &&
                     !(animal.Equals(this)) && animal.Nutrition == Nutrition && animal._isReadyToReproduce)
                 {
-                    var posPartner = animal.GetPosition();
-                    var tmpx = Math.Abs(_position.Item1 - posPartner.Item1);
-                    var tmpy = Math.Abs(_position.Item2 - posPartner.Item2);
-                    if (tmpx + tmpy < minDist)
+                    var dist = CountDist(animal);
+                    if (dist < minDist)
                     {
-                        minDist = tmpx + tmpx;
+                        minDist = dist;
                         partner = animal;
                     }
                 }
@@ -167,31 +156,21 @@ namespace LabOOP1
         }
         private void MoveToPartner(List<Animal> listOfAnimals, Animal partner)
         {
-            var newPosAn = MoveWay.MoveToTarget(_position, partner);
+            var newPosAn = MoveWay.MoveToTarget1(_position, partner);
             SetPosition(newPosAn);
         }
-        private void Reproduce(List<Animal> listOfAnimals)
-        {
-            Animal newAnimal = new(_position);
-            newAnimal.SetNutrition(Nutrition);
-            //newAnimal.SetKind(Kind);
-            listOfAnimals.Add(newAnimal);
-        }
 
-        private void SetNutrition(NutritionMethod nutrition)
-        {
-            Nutrition = nutrition;
-        }
+
 
         private void UpdateReadiness()
         {
             _timeSinceBreeding++;
             if (_timeSinceBreeding >= 5)
             {
-                _isReadyToReproduce = true ;
+                _isReadyToReproduce = true;
             }
         }
-        public void UpdateTime(Animal partner)
+        private void UpdateTime(Animal partner)
         {
             _timeSinceBreeding = 0;
             _isReadyToReproduce = false;
@@ -199,42 +178,46 @@ namespace LabOOP1
             partner._isReadyToReproduce = false;
         }
 
-        private void SetPosition((int, int) pos)
+        internal void SetPosition((int, int) pos)
         {
             _position = pos;
         }
 
-        public void LiveAnimalCicle(List<Animal> listOfAnimals, List<Plant> listOfPlants, List<Fruit> listOfFruits, List<FoodForOmnivores> listOfFoodForOmnivores)
+        public void LiveAnimalCicle(List<Animal> listOfAnimals, List<Plant> listOfPlants, List<Fruit> listOfFruits, List<FoodForOmnivorous> listOfFoodForOmnivorous)
         {
             UpdateReadiness();
             DecreaseSatiety(listOfAnimals);
 
             if (_isHungry)
             {
-                MoveToFood(listOfAnimals, listOfPlants, listOfFruits, listOfFoodForOmnivores);
-            }
-            else
-            {
-                if (_isReadyToReproduce)
+                var target = FindFood(listOfFoodForOmnivorous);
+
+                if (!target.Equals(this))
                 {
-                    var partner = FindPartner(listOfAnimals);
+                    MoveToFood(target);
+                    if (target.GetPosition() == _position)
+                        Eat(target, listOfAnimals, listOfPlants, listOfFruits);
+                }
+            }
+            else if (_isReadyToReproduce)
+            {
+                var partner = FindPartner(listOfAnimals);
 
-                    if (!partner.Equals(this))
+                if (!partner.Equals(this))
+                {
+                    MoveToPartner(listOfAnimals, partner);
+
+                    if (partner.GetPosition() == _position && gender == Gender.female)
                     {
-                        MoveToPartner(listOfAnimals, partner);
-
-                        if (partner.GetPosition() == _position && gender == Gender.female)
-                        {
-                            Reproduce(listOfAnimals);
-                            UpdateTime(partner);
-                        }
+                        Reproduce(listOfAnimals);
+                        UpdateTime(partner);
                     }
                 }
-                else
-                    MoveToRandomCell();
             }
+            else
+                MoveToRandomCell();
         }
-
-       
     }
+
+
 }

@@ -5,7 +5,7 @@ namespace LabOOP1
     public class Movement
     {
 
-        public (int, int) MoveToRandomCell((int, int) pos)
+        public (int, int) MoveToRandomCell1((int, int) pos)
         {
             Random rnd = new();
 
@@ -25,7 +25,7 @@ namespace LabOOP1
             return (x, y);
         }
 
-        public (int, int) MoveToTarget((int, int) pos, FoodForOmnivores target)
+        public (int, int) MoveToTarget1((int, int) pos, FoodForOmnivorous target)
         {
             (int, int) newPosAn = pos;
             var distx = pos.Item1 - target.GetPosition().Item1;
@@ -75,7 +75,6 @@ namespace LabOOP1
                 else if (disty < 0)
                 {
                     newPosAn = MoveToDirection(pos, Direction.up); ;
-
                 }
                 else
                 {
@@ -85,7 +84,7 @@ namespace LabOOP1
             return newPosAn;
         }
 
-        public (int, int) MoveToDirection((int, int) pos, Direction direction)
+        private (int, int) MoveToDirection((int, int) pos, Direction direction)
         {
             int x = pos.Item1;
             int y = pos.Item2;

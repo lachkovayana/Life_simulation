@@ -11,7 +11,7 @@ namespace LabOOP1
         private List<Plant> _listOfAllPlants = new();
         private List<Fruit> _listOfFruits = new();
         private List<FoodForHerbivorous> _listOfFoodForHerbivorous = new();
-        private List<FoodForOmnivores> _listOfFoodForOmnivores = new();
+        private List<FoodForOmnivorous> _listOfFoodForOmnivorous = new();
 
         private readonly Rendering _rendering = new();
 
@@ -27,13 +27,13 @@ namespace LabOOP1
         {
             foreach (Animal animal in _listOfAnimals.ToArray())
             {
-                animal.LiveAnimalCicle(_listOfAnimals, _listOfAllPlants, _listOfFruits, _listOfFoodForOmnivores);
+                animal.LiveAnimalCicle(_listOfAnimals, _listOfAllPlants, _listOfFruits, _listOfFoodForOmnivorous);
             }
         }
         private void UpdateFood()
         {
             _listOfFoodForHerbivorous = new();
-            _listOfFoodForOmnivores = new();
+            _listOfFoodForOmnivorous = new();
 
             foreach (Plant plant in _listOfAllPlants.ToArray())
             {
@@ -48,11 +48,11 @@ namespace LabOOP1
             }
             foreach (FoodForHerbivorous f in _listOfFoodForHerbivorous)
             {
-                _listOfFoodForOmnivores.Add(f);
+                _listOfFoodForOmnivorous.Add(f);
             }
             foreach (Animal an in _listOfAnimals)
             {
-                _listOfFoodForOmnivores.Add(an);
+                _listOfFoodForOmnivorous.Add(an);
             }
         }
 
@@ -74,19 +74,46 @@ namespace LabOOP1
                 {
                     if (random.Next(Form1.s_densityAnimals) == 0)
                     {
-                        Animal an = new Animal((x, y));
-                        _listOfAnimals.Add(an);
-                        switch (an.Nutrition)
+
+                        switch (random.Next(9))
                         {
-                            case NutritionMethod.herbivorous:
-                                _rendering.DrawFirstGeneration(MapObject.animalHerbivorous, x, y);
+                            case 0:
+                                _listOfAnimals.Add(new Rabbit((x, y)));
+                                _rendering.DrawFirstGeneration(MapObject.rabbit, x, y);
                                 break;
-                            case NutritionMethod.carnivorous:
-                                _rendering.DrawFirstGeneration(MapObject.animalCarnivorous, x, y);
+                            case 1:
+                                _listOfAnimals.Add(new Horse((x, y)));
+                                _rendering.DrawFirstGeneration(MapObject.horse, x, y);
                                 break;
-                            case NutritionMethod.omnivorous:
-                                _rendering.DrawFirstGeneration(MapObject.animalOmnivorous, x, y);
+                            case 2:
+                                _listOfAnimals.Add(new Giraffe((x, y)));
+                                _rendering.DrawFirstGeneration(MapObject.giraffe, x, y);
                                 break;
+                            case 3:
+                                _listOfAnimals.Add(new Leopard((x, y)));
+                                _rendering.DrawFirstGeneration(MapObject.leopard, x, y);
+                                break;
+                            case 4:
+                                _listOfAnimals.Add(new Wolf((x, y)));
+                                _rendering.DrawFirstGeneration(MapObject.wolf, x, y);
+                                break;
+                            case 5:
+                                _listOfAnimals.Add(new Fox((x, y)));
+                                _rendering.DrawFirstGeneration(MapObject.fox, x, y);
+                                break;
+                            case 6:
+                                _listOfAnimals.Add(new Bear((x, y)));
+                                _rendering.DrawFirstGeneration(MapObject.bear, x, y);
+                                break;
+                            case 7:
+                                _listOfAnimals.Add(new Pig((x, y)));
+                                _rendering.DrawFirstGeneration(MapObject.pig, x, y);
+                                break;
+                            case 8:
+                                _listOfAnimals.Add(new Rat((x, y)));
+                                _rendering.DrawFirstGeneration(MapObject.rat, x, y);
+                                break;
+
                         }
                     }
                     else if (random.Next(Form1.s_densityPlants) == 0)

@@ -2,9 +2,9 @@
 
 public enum MapObject
 {
-	animalHerbivorous,
-	animalOmnivorous,
-	animalCarnivorous,
+	rabbit, horse, giraffe,
+	leopard, wolf, fox,
+	bear, pig, rat,
 
 	ediblePlantHealthy,
 	ediblePlantHealthyFruiting,

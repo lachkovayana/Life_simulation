@@ -21,28 +21,54 @@ namespace LabOOP1
 
             switch (mapObject)
             {
-                case MapObject.animalHerbivorous:
-                    Form1.s_graphics.FillRectangle(Brushes.Yellow, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
-                    Form1.s_graphics.DrawRectangle(new Pen(Color.Chocolate, 3), x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                case MapObject.rabbit:
+                    FillColorRectangle(x, y, (Brushes.Goldenrod));
+                    DrawColorRectangle(x, y, new Pen(Color.Chocolate, 3));
                     break;
-                case MapObject.animalCarnivorous:
-                    Form1.s_graphics.FillRectangle(Brushes.Purple, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
-                    Form1.s_graphics.DrawRectangle(new Pen(Color.DarkSlateGray, 3), x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                case MapObject.horse:
+                    FillColorRectangle(x, y, (Brushes.Goldenrod));
+                    DrawColorRectangle(x, y, new Pen(Color.PowderBlue, 3));
                     break;
-                case MapObject.animalOmnivorous:
-                    Form1.s_graphics.FillRectangle(Brushes.Cyan, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
-                    Form1.s_graphics.DrawRectangle(new Pen(Color.Purple, 3), x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                case MapObject.giraffe:
+                    FillColorRectangle(x, y, (Brushes.Goldenrod));
+                    DrawColorRectangle(x, y, new Pen(Color.Firebrick, 3));
                     break;
+                case MapObject.leopard:
+                    FillColorRectangle(x, y, (Brushes.Purple));
+                    DrawColorRectangle(x, y, new Pen(Color.Chocolate, 3));
+                    break;
+                case MapObject.wolf:
+                    FillColorRectangle(x, y, (Brushes.Purple));
+                    DrawColorRectangle(x, y, new Pen(Color.PowderBlue, 3));
+                    break;
+                case MapObject.fox:
+                    FillColorRectangle(x, y, (Brushes.Purple));
+                    DrawColorRectangle(x, y, new Pen(Color.Firebrick, 3));
+                    break;
+                case MapObject.bear:
+                    FillColorRectangle(x, y, (Brushes.Pink));
+                    DrawColorRectangle(x, y, new Pen(Color.Chocolate, 3));
+                    break;
+                case MapObject.pig:
+                    FillColorRectangle(x, y, (Brushes.Pink));
+                    DrawColorRectangle(x, y, new Pen(Color.PowderBlue, 3));
+                    break;
+                case MapObject.rat:
+                    FillColorRectangle(x, y, (Brushes.Pink));
+                    DrawColorRectangle(x, y, new Pen(Color.Firebrick, 3));
+                    break;
+
+
                 case MapObject.ediblePlantHealthy:
-                    Form1.s_graphics.FillEllipse(Brushes.Lime, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                    FillColorEllipse(x, y, (Brushes.Lime));
                     break;
 
                 case MapObject.ediblePlantPoisonous:
-                    Form1.s_graphics.FillEllipse(Brushes.Beige, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                    FillColorEllipse(x, y, (Brushes.Beige));
                     break;
 
                 case MapObject.inediblePlant:
-                    Form1.s_graphics.FillEllipse(Brushes.Tomato, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                    FillColorEllipse(x, y, (Brushes.Tomato));
                     break;
 
             }
@@ -65,48 +91,39 @@ namespace LabOOP1
                         {
                             case PlantStage.seed:
                                 if (plant1.IsHealthy())
-                                    Form1.s_graphics.FillEllipse(Brushes.Lime, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                    FillColorEllipse(x, y, Brushes.Lime);
                                 else
-                                    Form1.s_graphics.FillEllipse(Brushes.Beige, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                    FillColorEllipse(x, y, Brushes.Beige);
                                 break;
                             case PlantStage.sprout:
                                 if (plant1.IsHealthy())
-                                    Form1.s_graphics.FillRectangle(Brushes.Lime, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                    FillColorRectangle(x, y, Brushes.Lime);
                                 else
-                                    Form1.s_graphics.FillRectangle(Brushes.Beige, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
-
+                                    FillColorRectangle(x, y, Brushes.Beige);
                                 break;
                             case PlantStage.grown:
                                 if (plant1.IsHealthy())
                                 {
                                     if (plant1.IsFruiting())
                                     {
-                                        Form1.s_graphics.FillRectangle(Brushes.Green, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                        FillColorRectangle(x, y, Brushes.Green);
                                     }
                                     else
                                     {
-                                        Form1.s_graphics.FillRectangle(Brushes.SeaGreen, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
-
+                                        FillColorRectangle(x, y, Brushes.SeaGreen);
                                     }
                                 }
+                                else if (plant1.IsFruiting())
+                                    FillColorRectangle(x, y, Brushes.White);
                                 else
-                                     if (plant1.IsFruiting())
-                                {
-                                    Form1.s_graphics.FillRectangle(Brushes.White, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
-                                }
-                                else
-                                {
-                                    Form1.s_graphics.FillRectangle(Brushes.LightGoldenrodYellow, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
-
-                                }
+                                    FillColorRectangle(x, y, Brushes.LightGoldenrodYellow);
 
                                 break;
                             case PlantStage.dead:
                                 if (plant1.IsHealthy())
-                                    Form1.s_graphics.FillRectangle(Brushes.DarkOliveGreen, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                    FillColorRectangle(x, y, Brushes.DarkOliveGreen);
                                 else
-                                    Form1.s_graphics.FillRectangle(Brushes.Wheat, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
-
+                                    FillColorRectangle(x, y, Brushes.Wheat);
                                 break;
                         }
                         break;
@@ -116,27 +133,19 @@ namespace LabOOP1
                         switch (plant.Stage)
                         {
                             case PlantStage.seed:
-
-                                Form1.s_graphics.FillEllipse(Brushes.Tomato, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                FillColorEllipse(x, y, Brushes.Tomato);
                                 break;
                             case PlantStage.sprout:
-
-                                Form1.s_graphics.FillRectangle(Brushes.Tomato, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                FillColorRectangle(x, y, Brushes.Tomato);
                                 break;
                             case PlantStage.grown:
                                 if (plant.IsFruiting())
-                                {
-                                    Form1.s_graphics.FillRectangle(Brushes.Red, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
-                                }
+                                    FillColorRectangle(x, y, Brushes.Red);
                                 else
-                                {
-                                    Form1.s_graphics.FillRectangle(Brushes.Crimson, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
-
-                                }
+                                    FillColorRectangle(x, y, Brushes.Crimson);
                                 break;
                             case PlantStage.dead:
-
-                                Form1.s_graphics.FillRectangle(Brushes.Maroon, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                                FillColorRectangle(x, y, Brushes.Maroon);
                                 break;
                         }
                         break;
@@ -149,11 +158,11 @@ namespace LabOOP1
                 int y = fruit.GetPosition().Item2;
                 if (fruit.IsHealthy())
                 {
-                    Form1.s_graphics.DrawEllipse(new Pen(Color.Chartreuse, 3), x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                    DrawColorEllipse(x, y, new Pen(Color.Chartreuse, 3));
                 }
                 else
                 {
-                    Form1.s_graphics.DrawEllipse(new Pen(Color.BurlyWood, 3), x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                    DrawColorEllipse(x, y, new Pen(Color.BurlyWood, 3));
                 }
 
 
@@ -162,24 +171,67 @@ namespace LabOOP1
             {
                 int x = animal.GetPosition().Item1;
                 int y = animal.GetPosition().Item2;
-                switch (animal.Nutrition)
+
+                switch (animal)
                 {
-                    case NutritionMethod.herbivorous:
-                        Form1.s_graphics.FillRectangle(Brushes.Yellow, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
-                        Form1.s_graphics.DrawRectangle(new Pen(Color.Chocolate, 3), x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                    case Rabbit:
+                        FillColorRectangle(x, y, (Brushes.Goldenrod));
+                        DrawColorRectangle(x, y, new Pen(Color.Chocolate, 3));
                         break;
-                    case NutritionMethod.carnivorous:
-                        Form1.s_graphics.FillRectangle(Brushes.Purple, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
-                        Form1.s_graphics.DrawRectangle(new Pen(Color.DarkSlateGray, 3), x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                    case Horse:
+                        FillColorRectangle(x, y, (Brushes.Goldenrod));
+                        DrawColorRectangle(x, y, new Pen(Color.PowderBlue, 3));
                         break;
-                    case NutritionMethod.omnivorous:
-                        Form1.s_graphics.FillRectangle(Brushes.Cyan, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
-                        Form1.s_graphics.DrawRectangle(new Pen(Color.Purple, 3), x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+                    case Giraffe:
+                        FillColorRectangle(x, y, (Brushes.Goldenrod));
+                        DrawColorRectangle(x, y, new Pen(Color.Firebrick, 3));
+                        break;
+                    case Leopard:
+                        FillColorRectangle(x, y, (Brushes.Purple));
+                        DrawColorRectangle(x, y, new Pen(Color.Chocolate, 3));
+                        break;
+                    case Wolf:
+                        FillColorRectangle(x, y, (Brushes.Purple));
+                        DrawColorRectangle(x, y, new Pen(Color.PowderBlue, 3));
+                        break;
+                    case Fox:
+                        FillColorRectangle(x, y, (Brushes.Purple));
+                        DrawColorRectangle(x, y, new Pen(Color.Firebrick, 3));
+                        break;
+                    case Bear:
+                        FillColorRectangle(x, y, (Brushes.Pink));
+                        DrawColorRectangle(x, y, new Pen(Color.Chocolate, 3));
+                        break;
+                    case Pig:
+                        FillColorRectangle(x, y, (Brushes.Pink));
+                        DrawColorRectangle(x, y, new Pen(Color.PowderBlue, 3));
+                        break;
+                    case Rat:
+                        FillColorRectangle(x, y, (Brushes.Pink));
+                        DrawColorRectangle(x, y, new Pen(Color.Firebrick, 3));
                         break;
                 }
-            }
-            Form1.s_pictureBox.Refresh();
 
+            }
+                Form1.s_pictureBox.Refresh();
         }
+        void FillColorEllipse(int x, int y, Brush br)
+        {
+            Form1.s_graphics.FillEllipse(br, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+        }
+
+        void FillColorRectangle(int x, int y, Brush br)
+        {
+            Form1.s_graphics.FillRectangle(br, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+        }
+        void DrawColorRectangle(int x, int y, Pen pen)
+        {
+            Form1.s_graphics.DrawRectangle(pen, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+        }
+        void DrawColorEllipse(int x, int y, Pen pen)
+        {
+            Form1.s_graphics.DrawEllipse(pen, x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+        }
+
     }
 }

@@ -1,13 +1,13 @@
 ﻿using System;
 
-public abstract class FoodForOmnivores
+public abstract class FoodForOmnivorous
 {
     private (int, int) _position;
-    public FoodForOmnivores((int, int) pos)
+    public FoodForOmnivorous((int, int) pos)
     {
         _position = pos;
     }
-    public virtual (int, int) GetPosition()
+    internal virtual (int, int) GetPosition()
     {
         return _position;
     }

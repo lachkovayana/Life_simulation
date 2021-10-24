@@ -1,7 +1,7 @@
 ﻿using System;
 namespace LabOOP1
 {
-	public abstract class FoodForHerbivorous: FoodForOmnivores
+	public abstract class FoodForHerbivorous: FoodForOmnivorous
 	{
 		private readonly int _densityHealthyPlant = 4;
 		internal bool _isHealthy = true; //{get{}; set{}}
