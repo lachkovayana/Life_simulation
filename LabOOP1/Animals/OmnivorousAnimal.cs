@@ -20,7 +20,7 @@ namespace LabOOP1
         }
         protected override void MoveToFood(FoodForOmnivorous target)
         {
-            var newPosAn = MoveWay.MoveToTarget1(position, target);
+            var newPosAn = MoveWay.MoveToTarget1(position, target.GetPosition());
             SetPosition(newPosAn);
         }
         protected override bool CheckAbleToEat(List<FoodForOmnivorous> listOfFoodForOmnivorous)

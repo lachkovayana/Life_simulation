@@ -7,8 +7,6 @@ public abstract class FoodForOmnivorous
     {
         position = pos;
     }
-    internal (int, int) GetPosition()
-    {
-        return position;
-    }
+    internal  (int, int) GetPosition()  => position;
+    
 }

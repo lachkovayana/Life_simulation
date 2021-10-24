@@ -3,21 +3,21 @@ using System.Collections.Generic;
 
 namespace LabOOP1
 {
+
     public class Constants
     {
-        public const int ImpVal = 1000000000;
+        public const double ImpVal = 1000000000;
     }
 
     public abstract class Animal : FoodForOmnivorous
     {
         //--------------------------------------------------<fields>---------------------------------------------------------------
 
-        protected abstract int MaxHealth { get;}
+        protected abstract int MaxHealth { get; }
         protected abstract int MaxSatiety { get; }
-        //protected virtual int CurrentHealth { get; set; }
-        //protected virtual int CurrentSatiety { get; set; }
 
         private int _timeSinceBreeding = 0;
+        //private (int, int) _position;
 
         private bool _isHungry = false;
         private bool _isReadyToReproduce = false;
@@ -28,20 +28,26 @@ namespace LabOOP1
         private int CurrentHealth;
 
         private Gender gender = Gender.female;
-        public NutritionMethod Nutrition = NutritionMethod.omnivorous;
+        protected NutritionMethod Nutrition = NutritionMethod.omnivorous;
+
+        protected (int, int) BasisCellPosition;
 
         //--------------------------------------------------<class constructot>---------------------------------------------------------------
 
 
         public Animal((int, int) pos) : base(pos)
         {
+            BasisCellPosition = pos;
+
             CurrentSatiety = MaxSatiety;
             CurrentHealth = MaxHealth;
-            
+
             Random random = new();
             gender = (Gender)random.Next(0, 2);
 
-            
+            //_position = pos; 
+
+            SetNutrition();
         }
 
 
@@ -52,6 +58,7 @@ namespace LabOOP1
         protected abstract void Reproduce(List<Animal> listOfAnimals);
         protected abstract bool CheckAbleToEat(List<FoodForOmnivorous> listOfFoodForOmnivorous);
         protected abstract void SetNutrition();
+        //protected abstract void GoToEat(List<Animal> listOfAnimals, List<Plant> listOfPlants, List<Fruit> listOfFruits, List<FoodForOmnivorous> listOfFoodForOmnivorous);
 
 
         //--------------------------------------------------<methods for update health and satiety>---------------------------------------------------------------
@@ -108,27 +115,39 @@ namespace LabOOP1
                 return true;
             return false;
         }
-
-        private int CountDist(FoodForOmnivorous f)
+        // Расстояние L1
+        protected int CountDistL1(FoodForOmnivorous f)
         {
             var posFood = f.GetPosition();
             var tmpx = Math.Abs(position.Item1 - posFood.Item1);
             var tmpy = Math.Abs(position.Item2 - posFood.Item2);
             return tmpx + tmpy;
         }
+        // Евклидово расстояние
+        protected double CountDistEuclid(FoodForOmnivorous f)
+        {
+            var posFood = f.GetPosition();
+            var tmpx = Math.Abs(position.Item1 - posFood.Item1);
+            var tmpy = Math.Abs(position.Item2 - posFood.Item2);
+            return Math.Sqrt(Math.Pow(tmpx, 2) + Math.Pow(tmpy, 2));
+        }
 
-        private FoodForOmnivorous FindFood(List<FoodForOmnivorous> listOfFoodForOmnivorous)
+        protected FoodForOmnivorous FindFood(List<FoodForOmnivorous> listOfFoodForOmnivorous)
         {
             var minDist = Constants.ImpVal;
             FoodForOmnivorous target = this;
-
             foreach (FoodForOmnivorous f in listOfFoodForOmnivorous)
             {
                 if (CheckForHerbivorous(f) ||
                     CheckForCarnivorous(f) ||
                     CheckForOmniivorous(f))
                 {
-                    var dist = CountDist(f);
+                    double dist = CountDistL1(f);
+                    if (Nutrition == NutritionMethod.herbivorous)
+                    {
+                        dist = CountDistEuclid(f);
+                    }
+
                     if (dist < minDist)
                     {
                         minDist = dist;
@@ -141,36 +160,30 @@ namespace LabOOP1
 
         //--------------------------------------------------<eating>---------------------------------------------------------------
 
-        private void Eat(FoodForOmnivorous target, List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits)
+        protected void Eat(FoodForOmnivorous target, List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits)
         {
             if (target is FoodForHerbivorous f)
             {
                 if (f.IsHealthy())
-                {
                     RiseSatiety();
-                }
                 else
-                {
                     DecreaseHealthByZero();
+
+                if (target is Fruit fruit)
+                {
+                    listOfFruits.Remove(fruit);
+                }
+                else if (target is EdiblePlant plant)
+                {
+                    listOfAllPlants.Remove(plant);
                 }
             }
-            if (target is Animal)
+            if (target is Animal animal)
             {
                 RiseSatiety();
-            }
-
-            if (target is Fruit fruit)
-            {
-                listOfFruits.Remove(fruit);
-            }
-            else if (target is EdiblePlant plant)
-            {
-                listOfAllPlants.Remove(plant);
-            }
-            else if (target is Animal animal)
-            {
                 listOfAnimals.Remove(animal);
             }
+            BasisCellPosition = target.GetPosition();
         }
 
         //--------------------------------------------------<find and move to partner>---------------------------------------------------------------
@@ -185,7 +198,7 @@ namespace LabOOP1
                 if (animal.gender != gender && !(animal.Equals(this))
                     && animal.Nutrition == Nutrition && animal._isReadyToReproduce)
                 {
-                    var dist = CountDist(animal);
+                    var dist = CountDistL1(animal);
                     if (dist < minDist)
                     {
                         minDist = dist;
@@ -198,7 +211,7 @@ namespace LabOOP1
         }
         private void MoveToPartner(Animal partner)
         {
-            var newPosAn = MoveWay.MoveToTarget1(position, partner);
+            var newPosAn = MoveWay.MoveToTarget1(position, partner.GetPosition());
             SetPosition(newPosAn);
         }
 
@@ -240,7 +253,12 @@ namespace LabOOP1
             position = pos;
         }
 
+        //--------------------------------------------------<get position again>---------------------------------------------------------------
 
+        //internal override (int, int) GetPosition()
+        //{
+        //    return _position;
+        //}
 
         //--------------------------------------------------<main part>---------------------------------------------------------------
         public void LiveAnimalCicle(List<Animal> listOfAnimals, List<Plant> listOfPlants, List<Fruit> listOfFruits, List<FoodForOmnivorous> listOfFoodForOmnivorous)
@@ -250,12 +268,16 @@ namespace LabOOP1
 
             if (_isHungry && CheckAbleToEat(listOfFoodForOmnivorous))
             {
-                var target = FindFood(listOfFoodForOmnivorous);
+                if (this is HerbivorousAnimal)
+                {
+                    var target = FindFood(listOfFoodForOmnivorous);
 
-                MoveToFood(target);
+                    MoveToFood(target);
 
-                if (target.GetPosition() == position)
-                    Eat(target, listOfAnimals, listOfPlants, listOfFruits);
+                    if (target.GetPosition() == position)
+                        Eat(target, listOfAnimals, listOfPlants, listOfFruits);
+                }
+                
             }
             else if (_isReadyToReproduce && CheckAbleToReoroduce(listOfAnimals))
             {
@@ -269,13 +291,11 @@ namespace LabOOP1
                     UpdateTime(partner);
                 }
 
-            }
-            else
+                }
+                else
                 MoveToRandomCell();
         }
 
 
     }
-
-
 }

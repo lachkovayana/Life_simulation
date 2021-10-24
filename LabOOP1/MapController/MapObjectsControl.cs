@@ -74,7 +74,6 @@ namespace LabOOP1
                 {
                     if (random.Next(Form1.s_densityAnimals) == 0)
                     {
-
                         switch (random.Next(9))
                         {
                             case 0:
@@ -113,7 +112,6 @@ namespace LabOOP1
                                 _listOfAnimals.Add(new Rat((x, y)));
                                 _rendering.DrawFirstGeneration(MapObject.rat, x, y);
                                 break;
-
                         }
                     }
                     else

@@ -9,18 +9,19 @@ namespace LabOOP1
     public abstract class HerbivorousAnimal : Animal
     {
         private Movement MoveWay = new();
-
+        FoodForOmnivorous tar = null;
         public HerbivorousAnimal((int, int) pos) : base(pos)
         {
         }
         protected override void MoveToRandomCell()
         {
             var newPosition = MoveWay.MoveToRandomCell1(position);
+            //var newPosition = MoveWay.MoveToRandomCell2(position, BasisCellPosition);
             SetPosition(newPosition);
         }
         protected override void MoveToFood(FoodForOmnivorous target)
         {
-            var newPosAn = MoveWay.MoveToTarget1(position, target);
+            var newPosAn = MoveWay.MoveToTarget1(position, target.GetPosition());
             SetPosition(newPosAn);
         }
         protected override bool CheckAbleToEat(List<FoodForOmnivorous> listOfFoodForOmnivorous)
@@ -36,6 +37,7 @@ namespace LabOOP1
         {
             Nutrition = NutritionMethod.herbivorous;
         }
+        
     }
 
     public class Rabbit : HerbivorousAnimal
