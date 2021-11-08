@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace LabOOP1
 {
@@ -10,5 +11,9 @@ namespace LabOOP1
 
         }
 
+        public void Die(List <Fruit> list)
+        {
+            list.Remove(this);
+        }
     }
 }

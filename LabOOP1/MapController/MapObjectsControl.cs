@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
 
 namespace LabOOP1
 {
@@ -14,6 +12,9 @@ namespace LabOOP1
         private List<FoodForOmnivorous> _listOfFoodForOmnivorous = new();
 
         private readonly Rendering _rendering = new();
+
+        public static List<Animal> listOfAnimalsCopy = new();
+
 
         private void UpdatePlants()
         {
@@ -58,10 +59,12 @@ namespace LabOOP1
 
         public void LiveOneCicle()
         {
-            UpdateFood();
+            //обнулить поле фиелд
             UpdateAnimals();
             UpdatePlants();
-            _rendering.UpgradeField(_listOfAnimals, _listOfAllPlants, _listOfFruits);
+            UpdateFood();
+            _rendering.UpdateField(_listOfAnimals, _listOfAllPlants, _listOfFruits);
+            listOfAnimalsCopy = _listOfAnimals;
         }
         public void CreateFirstGeneration()
         {
@@ -87,8 +90,8 @@ namespace LabOOP1
                                 _rendering.DrawFirstGeneration(MapObject.giraffe, x, y);
                                 break;
                             case 3:
-                                _listOfAnimals.Add(new Leopard((x, y)));
-                                _rendering.DrawFirstGeneration(MapObject.leopard, x, y);
+                                _listOfAnimals.Add(new Tiger((x, y)));
+                                _rendering.DrawFirstGeneration(MapObject.tiger, x, y);
                                 break;
                             case 4:
                                 _listOfAnimals.Add(new Wolf((x, y)));
@@ -132,6 +135,7 @@ namespace LabOOP1
                         }
 
                     }
+                    listOfAnimalsCopy = _listOfAnimals;
                 }
             }
 

@@ -3,7 +3,7 @@
 public enum MapObject
 {
 	rabbit, horse, giraffe,
-	leopard, wolf, fox,
+	tiger, wolf, fox,
 	bear, pig, rat,
 
 	ediblePlantHealthy,

@@ -5,7 +5,7 @@ namespace LabOOP1
 {
     public abstract class CarnivorousAnimal : Animal
     {
-        private Movement MoveWay = new(); 
+        private Movement movement = new(); 
 
         public CarnivorousAnimal((int, int) pos) : base(pos) {}
 
@@ -15,13 +15,13 @@ namespace LabOOP1
         protected override void MoveToRandomCell()
         {
             // верно
-            var newPosition = MoveWay.MoveToRandomCell1(position);
+            var newPosition = movement.MoveToRandomCell1(position);
             SetPosition(newPosition);
         }
         protected override void MoveToFood(FoodForOmnivorous target)
         {
             //верно, но в Animal нужно указать Евклидово расстояние 
-            var newPosAn = MoveWay.MoveToTarget1(position, target.GetPosition());
+            var newPosAn = movement.MoveToTarget1(position, target.GetPosition());
             SetPosition(newPosAn);
         }
         protected override bool CheckAbleToEat(List<FoodForOmnivorous> listOfFoodForOmnivorous)
@@ -46,14 +46,14 @@ namespace LabOOP1
 
 
 
-    public class Leopard : CarnivorousAnimal
+    public class Tiger : CarnivorousAnimal
     {
-        public Leopard((int, int) pos) : base(pos) {}
+        public Tiger((int, int) pos) : base(pos) {}
         protected override int MaxHealth { get { return 120; } }
         protected override int MaxSatiety { get { return 120; } }
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
-            listOfAnimals.Add(new Leopard(position));
+            listOfAnimals.Add(new Tiger(position));
         }
     }
 

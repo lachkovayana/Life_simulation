@@ -42,10 +42,6 @@ namespace LabOOP1
             return false;
         }
 
-        protected virtual void UpdateAge()
-        {
-        }
-        
         protected void GrowFruit(List<Fruit> listOfFruits, (int, int) position)
         {
             Random rnd = new();

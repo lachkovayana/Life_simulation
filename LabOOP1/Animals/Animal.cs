@@ -17,6 +17,7 @@ namespace LabOOP1
         protected abstract int MaxSatiety { get; }
 
         private int _timeSinceBreeding = 0;
+        private int _age = 0;
         //private (int, int) _position;
 
         private bool _isHungry = false;
@@ -31,6 +32,10 @@ namespace LabOOP1
         protected NutritionMethod Nutrition = NutritionMethod.omnivorous;
 
         protected (int, int) BasisCellPosition;
+
+        private Movement movement = new();
+
+        private bool _isDead = false;
 
         //--------------------------------------------------<class constructor>---------------------------------------------------------------
 
@@ -77,25 +82,21 @@ namespace LabOOP1
         {
             CurrentHealth = 0;
         }
-        private void DecreaseHealth(List<Animal> listOfAnimals)
+        private void DecreaseHealth()
         {
             CurrentHealth = Math.Max(0, CurrentHealth - 5);
-            if (CurrentHealth == 0)
-                listOfAnimals.Remove(this);
         }
-        private void DecreaseSatiety(List<Animal> listOfAnimals)
+        private void DecreaseSatiety()
         {
             CurrentSatiety = Math.Max(0, CurrentSatiety - 5);
             if (CurrentSatiety <= 30)
             {
                 _isHungry = true;
-                DecreaseHealth(listOfAnimals);
+                DecreaseHealth();
             }
         }
 
-
         //--------------------------------------------------<food search>---------------------------------------------------------------
-
 
         private bool CheckForHerbivorous(FoodForOmnivorous f)
         {
@@ -115,22 +116,7 @@ namespace LabOOP1
                 return true;
             return false;
         }
-        // Расстояние L1
-        protected int CountDistL1(FoodForOmnivorous f)
-        {
-            var posFood = f.GetPosition();
-            var tmpx = Math.Abs(position.Item1 - posFood.Item1);
-            var tmpy = Math.Abs(position.Item2 - posFood.Item2);
-            return tmpx + tmpy;
-        }
-        // Евклидово расстояние
-        protected double CountDistEuclid(FoodForOmnivorous f)
-        {
-            var posFood = f.GetPosition();
-            var tmpx = Math.Abs(position.Item1 - posFood.Item1);
-            var tmpy = Math.Abs(position.Item2 - posFood.Item2);
-            return Math.Sqrt(Math.Pow(tmpx, 2) + Math.Pow(tmpy, 2));
-        }
+
 
         protected FoodForOmnivorous FindFood(List<FoodForOmnivorous> listOfFoodForOmnivorous)
         {
@@ -142,10 +128,10 @@ namespace LabOOP1
                     CheckForCarnivorous(f) ||
                     CheckForOmniivorous(f))
                 {
-                    double dist = CountDistL1(f);
+                    double dist = movement.CountDistL1(position, f.GetPosition());
                     if (Nutrition == NutritionMethod.carnivorous)
                     {
-                        dist = CountDistEuclid(f);
+                        dist = movement.CountDistEuclid(position, f.GetPosition());
                     }
 
                     if (dist < minDist)
@@ -170,18 +156,14 @@ namespace LabOOP1
                     DecreaseHealthByZero();
 
                 if (target is Fruit fruit)
-                {
-                    listOfFruits.Remove(fruit);
-                }
+                    fruit.Die(listOfFruits);
                 else if (target is EdiblePlant plant)
-                {
-                    listOfAllPlants.Remove(plant);
-                }
+                    plant.Die(listOfAllPlants);
             }
             if (target is Animal animal)
             {
                 RiseSatiety();
-                listOfAnimals.Remove(animal);
+                animal.Die(listOfAnimals);
             }
             BasisCellPosition = target.GetPosition();
         }
@@ -196,9 +178,9 @@ namespace LabOOP1
             foreach (Animal animal in listOfAnimals)
             {
                 if (animal.gender != gender && !(animal.Equals(this))
-                    && animal.Nutrition == Nutrition && animal._isReadyToReproduce)
+                    && animal.Nutrition == Nutrition && animal._isReadyToReproduce && animal._isHungry == false)
                 {
-                    var dist = CountDistL1(animal);
+                    var dist = movement.CountDistL1(position, animal.GetPosition());
                     if (dist < minDist)
                     {
                         minDist = dist;
@@ -253,6 +235,21 @@ namespace LabOOP1
             position = pos;
         }
 
+        //--------------------------------------------------<age>---------------------------------------------------------------
+
+        protected void UpdateAge()
+        {
+            _age++;
+        }
+
+        //--------------------------------------------------<die>---------------------------------------------------------------
+
+        protected void Die(List<Animal> listOfAnimals)
+        {
+            listOfAnimals.Remove(this);
+            _isDead = true;
+        }
+
         //--------------------------------------------------<get position again>---------------------------------------------------------------
 
         //internal override (int, int) GetPosition()
@@ -264,11 +261,16 @@ namespace LabOOP1
         public void LiveAnimalCicle(List<Animal> listOfAnimals, List<Plant> listOfPlants, List<Fruit> listOfFruits, List<FoodForOmnivorous> listOfFoodForOmnivorous)
         {
             UpdateReadiness();
-            DecreaseSatiety(listOfAnimals);
+            UpdateAge();
+            DecreaseSatiety();
 
-            if (_isHungry && CheckAbleToEat(listOfFoodForOmnivorous))
+            if (CurrentHealth == 0 || _age > 100)
             {
-                if (this is HerbivorousAnimal)
+                Die(listOfAnimals);
+            }
+            else
+            {
+                if (_isHungry && CheckAbleToEat(listOfFoodForOmnivorous))
                 {
                     var target = FindFood(listOfFoodForOmnivorous);
 
@@ -276,26 +278,37 @@ namespace LabOOP1
 
                     if (target.GetPosition() == position)
                         Eat(target, listOfAnimals, listOfPlants, listOfFruits);
+
                 }
-                
-            }
-            else if (_isReadyToReproduce && CheckAbleToReoroduce(listOfAnimals))
-            {
-                var partner = FindPartner(listOfAnimals);
-
-                MoveToPartner(partner);
-
-                if (partner.GetPosition() == position && gender == Gender.female)
+                else if (_isReadyToReproduce && CheckAbleToReoroduce(listOfAnimals))
                 {
-                    Reproduce(listOfAnimals);
-                    UpdateTime(partner);
-                }
+                    var partner = FindPartner(listOfAnimals);
 
+                    MoveToPartner(partner);
+
+                    if (partner.GetPosition() == position && gender == Gender.female)
+                    {
+                        Reproduce(listOfAnimals);
+                        UpdateTime(partner);
+                    }
                 }
                 else
-                MoveToRandomCell();
+                {
+                    MoveToRandomCell();
+                }
+            }
         }
 
+        public override string GetTextInfo()
+        {
+            if (_isDead) { return "I'm dead... Sorry :("; }
+            string name = GetType().ToString()[(GetType().ToString().IndexOf(".") + 1)..].ToLower();
+            string result = string.Concat("Hey! I am a ", name, " and I'm an ", Nutrition.ToString(),
+                ".\r\n", "My health level is ", CurrentHealth,
+                ".\r\n", "My satiety level is ", CurrentSatiety,
+                ".\r\n", "My position now is ", position);
+            return result;
+        }
 
     }
 }

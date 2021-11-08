@@ -8,5 +8,6 @@ public abstract class FoodForOmnivorous
         position = pos;
     }
     internal  (int, int) GetPosition()  => position;
-    
+
+    public virtual string GetTextInfo() { return ""; }
 }

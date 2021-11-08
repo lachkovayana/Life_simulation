@@ -17,23 +17,24 @@ namespace LabOOP1
 
         protected override void MoveToRandomCell()
         {
-            //Должно быть var newPosition = MoveWay.MoveToRandomCell3(this, listOFTargets);
-            var newPosAn = MoveWay.MoveToRandomCell1(position);
-            SetPosition(newPosAn);
+            //Должно быть
+            var newPosition = MoveWay.MoveToRandomCell3(this);
+            //var newPosAn = MoveWay.MoveToRandomCell1(position);
+            SetPosition(newPosition);
         }
 
         protected override void MoveToFood(FoodForOmnivorous target)
         {
-            //var newPosAn = MoveWay.MoveToTarget3(position, target);
-            var newPosAn = MoveWay.MoveToTarget1(position, target.GetPosition());
-            SetPosition(newPosAn);
+            var newPosition = MoveWay.MoveToTarget2(position, target.GetPosition());
+            //var newPosAn = MoveWay.MoveToTarget1(position, target.GetPosition());
+            SetPosition(newPosition);
         }
         protected override bool CheckAbleToEat(List<FoodForOmnivorous> listOfFoodForOmnivorous)
         {
 
             foreach (FoodForOmnivorous food in listOfFoodForOmnivorous)
             {
-                if (food is Plant || (food is Animal && food.GetType() != GetType()))
+                if (food is FoodForHerbivorous || (food is Animal && food.GetType() != this.GetType()))
                     return true;
             }
             return false;

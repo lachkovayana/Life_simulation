@@ -32,26 +32,16 @@ namespace LabOOP1
             this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.buttonContinue = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.numDensity2 = new System.Windows.Forms.NumericUpDown();
-            this.numResolution = new System.Windows.Forms.NumericUpDown();
-            this.numDensity1 = new System.Windows.Forms.NumericUpDown();
             this.buttonStop = new System.Windows.Forms.Button();
             this.buttonStart = new System.Windows.Forms.Button();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numDensity2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numResolution)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numDensity1)).BeginInit();
-            this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -65,29 +55,34 @@ namespace LabOOP1
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.panel2.Controls.Add(this.label5);
-            this.panel2.Controls.Add(this.label4);
+            this.panel2.Controls.Add(this.textBox2);
+            this.panel2.Controls.Add(this.trackBar1);
             this.panel2.Controls.Add(this.textBox1);
             this.panel2.Controls.Add(this.buttonContinue);
-            this.panel2.Controls.Add(this.label3);
-            this.panel2.Controls.Add(this.label2);
-            this.panel2.Controls.Add(this.label1);
-            this.panel2.Controls.Add(this.numDensity2);
-            this.panel2.Controls.Add(this.numResolution);
-            this.panel2.Controls.Add(this.numDensity1);
             this.panel2.Controls.Add(this.buttonStop);
             this.panel2.Controls.Add(this.buttonStart);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(276, 1000);
+            this.panel2.Size = new System.Drawing.Size(276, 705);
             this.panel2.TabIndex = 2;
+            // 
+            // trackBar1
+            // 
+            this.trackBar1.Location = new System.Drawing.Point(59, 249);
+            this.trackBar1.Maximum = 4;
+            this.trackBar1.Minimum = 1;
+            this.trackBar1.Name = "trackBar1";
+            this.trackBar1.Size = new System.Drawing.Size(130, 56);
+            this.trackBar1.TabIndex = 12;
+            this.trackBar1.Value = 1;
+            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(70, 609);
+            this.textBox1.Location = new System.Drawing.Point(80, 25);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(125, 27);
+            this.textBox1.Size = new System.Drawing.Size(94, 27);
             this.textBox1.TabIndex = 11;
             // 
             // buttonContinue
@@ -99,79 +94,6 @@ namespace LabOOP1
             this.buttonContinue.Text = "Continue";
             this.buttonContinue.UseVisualStyleBackColor = true;
             this.buttonContinue.Click += new System.EventHandler(this.buttonRestart_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(59, 267);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(147, 20);
-            this.label3.TabIndex = 9;
-            this.label3.Text = "Размер клетки(в px)";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 434);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(245, 20);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "Вероятность появления растения";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 346);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(257, 20);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "Вероятность появления животного";
-            // 
-            // numDensity2
-            // 
-            this.numDensity2.Location = new System.Drawing.Point(123, 457);
-            this.numDensity2.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.numDensity2.Name = "numDensity2";
-            this.numDensity2.Size = new System.Drawing.Size(86, 27);
-            this.numDensity2.TabIndex = 6;
-            this.numDensity2.Value = new decimal(new int[] {
-            70,
-            0,
-            0,
-            0});
-            // 
-            // numResolution
-            // 
-            this.numResolution.Location = new System.Drawing.Point(59, 290);
-            this.numResolution.Name = "numResolution";
-            this.numResolution.Size = new System.Drawing.Size(150, 27);
-            this.numResolution.TabIndex = 4;
-            this.numResolution.Value = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            // 
-            // numDensity1
-            // 
-            this.numDensity1.Location = new System.Drawing.Point(123, 369);
-            this.numDensity1.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.numDensity1.Name = "numDensity1";
-            this.numDensity1.Size = new System.Drawing.Size(86, 27);
-            this.numDensity1.TabIndex = 3;
-            this.numDensity1.Value = new decimal(new int[] {
-            80,
-            0,
-            0,
-            0});
             // 
             // buttonStop
             // 
@@ -193,70 +115,45 @@ namespace LabOOP1
             this.buttonStart.UseVisualStyleBackColor = true;
             this.buttonStart.Click += new System.EventHandler(this.ButtonStart_Click);
             // 
-            // panel3
-            // 
-            this.panel3.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.panel3.Controls.Add(this.pictureBox1);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel3.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.panel3.Location = new System.Drawing.Point(282, 0);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1000, 1000);
-            this.panel3.TabIndex = 3;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.SystemColors.ControlText;
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1000, 1000);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            // 
             // timer1
             // 
             this.timer1.Interval = 400;
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
-            // label4
+            // pictureBox1
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(90, 371);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(27, 20);
-            this.label4.TabIndex = 12;
-            this.label4.Text = "1 /";
+            this.pictureBox1.BackColor = System.Drawing.Color.Gainsboro;
+            this.pictureBox1.Location = new System.Drawing.Point(282, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(1000, 700);
+            this.pictureBox1.TabIndex = 3;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseClick);
             // 
-            // label5
+            // textBox2
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(90, 459);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(27, 20);
-            this.label5.TabIndex = 13;
-            this.label5.Text = "1 /";
+            this.textBox2.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.textBox2.Location = new System.Drawing.Point(12, 351);
+            this.textBox2.Multiline = true;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(252, 272);
+            this.textBox2.TabIndex = 13;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1282, 1000);
-            this.Controls.Add(this.panel3);
+            this.ClientSize = new System.Drawing.Size(1298, 705);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numDensity2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numResolution)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numDensity1)).EndInit();
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
@@ -268,19 +165,12 @@ namespace LabOOP1
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button buttonStop;
         private System.Windows.Forms.Button buttonStart;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.NumericUpDown numDensity1;
-        private System.Windows.Forms.NumericUpDown numResolution;
-        private System.Windows.Forms.NumericUpDown numDensity2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button buttonContinue;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.TextBox textBox2;
     }
 }
 

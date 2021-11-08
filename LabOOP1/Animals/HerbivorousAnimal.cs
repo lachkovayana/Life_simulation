@@ -9,28 +9,30 @@ namespace LabOOP1
     public abstract class HerbivorousAnimal : Animal
     {
         private Movement MoveWay = new();
-        public HerbivorousAnimal((int, int) pos) : base(pos) {}
+        public HerbivorousAnimal((int, int) pos) : base(pos) { }
 
         //--------------------------------------------------<override methods>---------------------------------------------------------------
 
 
         protected override void MoveToRandomCell()
         {
-            //Должно быть var newPosition = MoveWay.MoveToRandomCell2(position, BasisCellPosition);
-            var newPosition = MoveWay.MoveToRandomCell1(position);
+            //Должно быть
+            var newPosition = MoveWay.MoveToRandomCell2(position, BasisCellPosition);
+            //var newPosition = MoveWay.MoveToRandomCell1(position);
             SetPosition(newPosition);
         }
         protected override void MoveToFood(FoodForOmnivorous target)
         {
-            //Должно быть var newPosAn = MoveWay.MoveToTarget2(position, target);
-            var newPosAn = MoveWay.MoveToTarget1(position, target.GetPosition());
+            //Должно быть
+            var newPosAn = MoveWay.MoveToTarget2(position, target.GetPosition());
+            //var newPosAn = MoveWay.MoveToTarget2(position, target.GetPosition());
             SetPosition(newPosAn);
         }
         protected override bool CheckAbleToEat(List<FoodForOmnivorous> listOfFoodForOmnivorous)
         {
             foreach (FoodForOmnivorous food in listOfFoodForOmnivorous)
             {
-                if (food is Plant) 
+                if (food is FoodForHerbivorous)
                     return true;
             }
             return false;
@@ -39,7 +41,7 @@ namespace LabOOP1
         {
             Nutrition = NutritionMethod.herbivorous;
         }
-        
+
     }
 
     //--------------------------------------------------<inheritor classes>---------------------------------------------------------------
@@ -48,7 +50,7 @@ namespace LabOOP1
     public class Rabbit : HerbivorousAnimal
     {
 
-        public Rabbit((int, int) pos) : base(pos) {}
+        public Rabbit((int, int) pos) : base(pos) { }
         protected override int MaxHealth { get { return 80; } }
         protected override int MaxSatiety { get { return 80; } }
         protected override void Reproduce(List<Animal> listOfAnimals)
@@ -56,11 +58,11 @@ namespace LabOOP1
             listOfAnimals.Add(new Rabbit(position));
         }
     }
-    
+
     public class Horse : HerbivorousAnimal
     {
 
-        public Horse((int, int) pos) : base(pos) {}
+        public Horse((int, int) pos) : base(pos) { }
         protected override int MaxHealth { get { return 100; } }
         protected override int MaxSatiety { get { return 100; } }
         protected override void Reproduce(List<Animal> listOfAnimals)
@@ -68,10 +70,10 @@ namespace LabOOP1
             listOfAnimals.Add(new Horse(position));
         }
     }
-    
+
     public class Giraffe : HerbivorousAnimal
     {
-        public Giraffe((int, int) pos) : base(pos){}
+        public Giraffe((int, int) pos) : base(pos) { }
         protected override int MaxHealth { get { return 90; } }
         protected override int MaxSatiety { get { return 90; } }
         protected override void Reproduce(List<Animal> listOfAnimals)

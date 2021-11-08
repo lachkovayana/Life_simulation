@@ -8,7 +8,6 @@ namespace LabOOP1
     {
         private const int _density = 6;
         //private bool _isHealthy = true;
-
         public EdiblePlant((int, int) pos) : base(pos)
         {
             Random random = new();
@@ -28,7 +27,7 @@ namespace LabOOP1
         }
         public override void FormSeeds(List<Plant> listOfAllPlants)
         {
-            EdiblePlant newPlant = new(FindNewCell());
+            EdiblePlant newPlant = new(movement.FindNewCell(position));
             newPlant.SetStatus(_isHealthy, _isFruiting);
             listOfAllPlants.Add(newPlant);
         }
