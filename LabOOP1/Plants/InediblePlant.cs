@@ -12,7 +12,7 @@ namespace LabOOP1
         {
             _isFruiting = status;
         }
-        public override void FormSeeds(List<Plant> listOfAllPlants)
+        protected override void FormSeeds(List<Plant> listOfAllPlants)
         {
             InediblePlant newPlant = new(movement.FindNewCell(currentPosition));
             newPlant.SetStatus(_isFruiting);

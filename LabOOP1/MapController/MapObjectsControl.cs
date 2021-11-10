@@ -10,25 +10,28 @@ namespace LabOOP1
         private List<Fruit> _listOfFruits = new();
         private List<FoodForHerbivorous> _listOfFoodForHerbivorous = new();
         private List<FoodForOmnivorous> _listOfFoodForOmnivorous = new();
-
         private readonly Rendering _rendering = new();
+
+        public static Season s_currentSeason = Season.summer;
 
         public static List<Animal> listOfAnimalsCopy = new();
 
+        private const int _densityAnimals = 8000;
+        private const int _densityPlants = 10;
 
-        private void UpdatePlants()
-        {
-            foreach (Plant plant in _listOfAllPlants.ToArray())
-            {
-                plant.LivePlantCicle(_listOfFruits, _listOfAllPlants);
-            }
-        }
 
         private void UpdateAnimals()
         {
             foreach (Animal animal in _listOfAnimals.ToArray())
             {
                 animal.LiveAnimalCicle(_listOfAnimals, _listOfAllPlants, _listOfFruits, _listOfFoodForOmnivorous);
+            }
+        }
+        private void UpdatePlants()
+        {
+            foreach (Plant plant in _listOfAllPlants.ToArray())
+            {
+                plant.LivePlantCicle(_listOfFruits, _listOfAllPlants);
             }
         }
         private void UpdateFood()
@@ -56,16 +59,23 @@ namespace LabOOP1
                 _listOfFoodForOmnivorous.Add(an);
             }
         }
-
-        public void LiveOneCicle()
+        private void UpdateSeason(int timerValue)
         {
-            //обнулить поле фиелд
+            if (timerValue % 5 == 0)
+                s_currentSeason = (timerValue % 10 == 0) ? Season.summer : Season.winter;
+        }
+
+        public void LiveOneCicle(int timerValue)
+        {
+            UpdateSeason(timerValue);
             UpdateAnimals();
             UpdatePlants();
             UpdateFood();
             _rendering.UpdateField(_listOfAnimals, _listOfAllPlants, _listOfFruits);
             listOfAnimalsCopy = _listOfAnimals;
         }
+
+
         public void CreateFirstGeneration()
         {
             Random random = new();
@@ -73,7 +83,7 @@ namespace LabOOP1
             {
                 for (int y = 0; y < Form1.s_rows; y++)
                 {
-                    if (random.Next(Form1.s_densityAnimals) == 0)
+                    if (random.Next(_densityAnimals) == 0)
                     {
                         switch (random.Next(9))
                         {
@@ -117,7 +127,7 @@ namespace LabOOP1
                     }
                     else
                     {
-                        switch (random.Next(Form1.s_densityPlants))
+                        switch (random.Next(_densityPlants))
                         {
                             case 0:
                                 EdiblePlant newEPlant = new((x, y));

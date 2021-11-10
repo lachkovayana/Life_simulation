@@ -8,20 +8,15 @@ namespace LabOOP1
 {
     public partial class Form1 : Form
     {
-        private int timerCounter = 0;
-
         public static int s_resolution = 35;
-        public static int s_densityAnimals = 10;
-        public static int s_densityPlants = 100;
         public static Graphics s_graphics;
         public static int s_rows;
         public static int s_cols;
         public static PictureBox s_pictureBox;
 
         private MapObjectsControl mapController;
-
-
         private FoodForOmnivorous currentObj = null;
+        private int timerValue = 0;
 
         private string startMessage = "There is nothing to show yet. \r\nClick on any object on the map!";
         public Form1()
@@ -32,8 +27,8 @@ namespace LabOOP1
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
-            textBox1.Text = (++timerCounter).ToString();
-            mapController.LiveOneCicle();
+            textBox1.Text = (++timerValue).ToString() ;
+            mapController.LiveOneCicle(timerValue);
             ShowMessage();
         }
 
@@ -71,8 +66,7 @@ namespace LabOOP1
 
         public void StartGame()
         {
-
-            timerCounter = 0;
+            timerValue = 0;
             currentObj = null;
             buttonStart.Enabled = false;
             buttonContinue.Enabled = false;
@@ -122,15 +116,15 @@ namespace LabOOP1
         {
             int CurX = e.X / s_resolution;
             int CurY = e.Y / s_resolution;
-            currentObj = Rendering.AllMapObjects[CurX, CurY];
+            currentObj = Rendering.FieldOfAllMapObjects[CurX, CurY];
            
-            if (Rendering.AllMapObjects[CurX, CurY] == null)
+            if (Rendering.FieldOfAllMapObjects[CurX, CurY] == null)
             {
                SetMessage("Whoops! Missclick! \r\nNothing at position (" + CurX + ";" + CurY + ")");
             }
             else
             {
-                SetMessage(Rendering.AllMapObjects[CurX, CurY].GetTextInfo());
+                SetMessage(Rendering.FieldOfAllMapObjects[CurX, CurY].GetTextInfo());
             }
 
         }

@@ -16,26 +16,25 @@ namespace LabOOP1
         protected abstract int MaxHealth { get; }
         protected abstract int MaxSatiety { get; }
 
+        protected (int, int) BasisCellPosition;
+
         private int _timeSinceBreeding = 0;
         private int _age = 0;
-        //private (int, int) _position;
 
         private bool _isHungry = false;
         private bool _isReadyToReproduce = false;
+        private bool _isDead = false;
+        private bool _isInHibernation = false;
 
-        Movement MoveWay = new();
+        private int _currentSatiety;
+        private int _currentHealth;
 
-        private int CurrentSatiety;
-        private int CurrentHealth;
-
+        private bool _isAbleToHibernate = false;
         private Gender gender = Gender.female;
         protected NutritionMethod Nutrition = NutritionMethod.omnivorous;
 
-        protected (int, int) BasisCellPosition;
-
         private Movement movement = new();
 
-        private bool _isDead = false;
 
         //--------------------------------------------------<class constructor>---------------------------------------------------------------
 
@@ -44,13 +43,12 @@ namespace LabOOP1
         {
             BasisCellPosition = pos;
 
-            CurrentSatiety = MaxSatiety;
-            CurrentHealth = MaxHealth;
+            _currentSatiety = MaxSatiety;
+            _currentHealth = MaxHealth;
 
             Random random = new();
+            _isAbleToHibernate = random.Next(100) <= 50 ? true : false;
             gender = (Gender)random.Next(0, 2);
-
-            //_position = pos; 
 
             SetNutrition();
         }
@@ -63,33 +61,32 @@ namespace LabOOP1
         protected abstract void Reproduce(List<Animal> listOfAnimals);
         protected abstract bool CheckAbleToEat(List<FoodForOmnivorous> listOfFoodForOmnivorous);
         protected abstract void SetNutrition();
-        //protected abstract void GoToEat(List<Animal> listOfAnimals, List<Plant> listOfPlants, List<Fruit> listOfFruits, List<FoodForOmnivorous> listOfFoodForOmnivorous);
 
 
         //--------------------------------------------------<methods for update health and satiety>---------------------------------------------------------------
 
         private void RiseHealth()
         {
-            CurrentHealth += Math.Min(50, MaxHealth - CurrentHealth);
+            _currentHealth += Math.Min(50, MaxHealth - _currentHealth);
         }
         private void RiseSatiety()
         {
-            CurrentSatiety = MaxSatiety;
+            _currentSatiety = MaxSatiety;
             _isHungry = false;
             RiseHealth();
         }
         private void DecreaseHealthByZero()
         {
-            CurrentHealth = 0;
+            _currentHealth = 0;
         }
         private void DecreaseHealth()
         {
-            CurrentHealth = Math.Max(0, CurrentHealth - 5);
+            _currentHealth = Math.Max(0, _currentHealth - 5);
         }
         private void DecreaseSatiety()
         {
-            CurrentSatiety = Math.Max(0, CurrentSatiety - 5);
-            if (CurrentSatiety <= 30)
+            _currentSatiety = Math.Max(0, _currentSatiety - 5);
+            if (_currentSatiety <= 30)
             {
                 _isHungry = true;
                 DecreaseHealth();
@@ -150,50 +147,23 @@ namespace LabOOP1
         {
             if (target is FoodForHerbivorous f)
             {
-                if (f.IsHealthy())
-                    RiseSatiety();
-                else
-                    DecreaseHealthByZero();
-
                 if (target is Fruit fruit)
                     fruit.Die(listOfFruits);
                 else if (target is EdiblePlant plant)
                     plant.Die(listOfAllPlants);
+
+                if (f.IsHealthy())
+                    RiseSatiety();
+                else
+                    DecreaseHealthByZero();
             }
-            if (target is Animal animal)
+
+            else if (target is Animal animal)
             {
-                RiseSatiety();
                 animal.Die(listOfAnimals);
+                RiseSatiety();
             }
-        }
-
-        //--------------------------------------------------<find and move to partner>---------------------------------------------------------------
-
-        private Animal FindPartner(List<Animal> listOfAnimals)
-        {
-            var minDist = Constants.ImpVal;
-            var partner = this;
-
-            foreach (Animal animal in listOfAnimals)
-            {
-                if (animal.gender != gender && !(animal.Equals(this))
-                    && animal.Nutrition == Nutrition && animal._isReadyToReproduce && animal._isHungry == false)
-                {
-                    var dist = movement.CountDistL1(currentPosition, animal.GetPosition());
-                    if (dist < minDist)
-                    {
-                        minDist = dist;
-                        partner = animal;
-                    }
-                }
-            }
-
-            return partner;
-        }
-        private void MoveToPartner(Animal partner)
-        {
-            var newPosAn = MoveWay.MoveToTarget1(currentPosition, partner.GetPosition());
-            SetPosition(newPosAn);
+            BasisCellPosition = currentPosition;
         }
 
         //--------------------------------------------------<reproduce characters>---------------------------------------------------------------
@@ -216,17 +186,50 @@ namespace LabOOP1
             partner._isReadyToReproduce = false;
         }
 
+        private bool CheckPartner(Animal animal)
+        {
+            if (animal.GetType() == GetType() && !animal.Equals(this) &&
+                animal.gender != gender && animal._isReadyToReproduce &&
+                !animal._isInHibernation && !animal._isHungry)
+                return true;
+            return false;
+        }
         private bool CheckAbleToReoroduce(List<Animal> listOfAnimals)
         {
             foreach (Animal animal in listOfAnimals)
             {
-                if (animal.GetType() == GetType() && !(animal.Equals(this)) &&
-                    animal.gender != gender && animal.Nutrition == Nutrition &&
-                    animal._isReadyToReproduce)
-
+                if (CheckPartner(animal))
                     return true;
             }
             return false;
+        }
+
+        //--------------------------------------------------<find and move to partner>---------------------------------------------------------------
+
+        private Animal FindPartner(List<Animal> listOfAnimals)
+        {
+            var minDist = Constants.ImpVal;
+            var partner = this;
+
+            foreach (Animal animal in listOfAnimals)
+            {
+                if (CheckPartner(animal))
+                {
+                    var dist = movement.CountDistL1(currentPosition, animal.GetPosition());
+                    if (dist < minDist)
+                    {
+                        minDist = dist;
+                        partner = animal;
+                    }
+                }
+            }
+
+            return partner;
+        }
+        private void MoveToPartner(Animal partner)
+        {
+            var newPosAn = movement.MoveToTarget1(currentPosition, partner.GetPosition());
+            SetPosition(newPosAn);
         }
 
         //--------------------------------------------------<set new position>---------------------------------------------------------------
@@ -251,70 +254,79 @@ namespace LabOOP1
             _isDead = true;
         }
 
-        //--------------------------------------------------<get position again>---------------------------------------------------------------
+        //--------------------------------------------------<check for hebirnation>---------------------------------------------------------------
 
-        //internal override (int, int) GetPosition()
-        //{
-        //    return _position;
-        //}
+        private void CheckSeason()
+        {
+            //_isInHibernation = (MapObjectsControl.s_currentSeason == Season.winter && _isAbleToHibernate);
+        }
+
+
+        //--------------------------------------------------<update the basis cell if the animal becomes hungry while going to the partner>---------------------------------------------------------------
+        private void UpdateBasisCell()
+        {
+            if (_isHungry && _timeSinceBreeding > 5)
+                BasisCellPosition = currentPosition;
+        }
 
         //--------------------------------------------------<main part>---------------------------------------------------------------
         public void LiveAnimalCicle(List<Animal> listOfAnimals, List<Plant> listOfPlants, List<Fruit> listOfFruits, List<FoodForOmnivorous> listOfFoodForOmnivorous)
         {
-            UpdateReadiness();
-            UpdateAge();
-            DecreaseSatiety();
+            CheckSeason();
+            if (_isInHibernation)
+                RiseHealth();
 
-            if (CurrentHealth == 0 || _age > 100)
-            {
-                Die(listOfAnimals);
-            }
             else
             {
-                if (_isHungry && CheckAbleToEat(listOfFoodForOmnivorous))
-                {
-                    var target = FindFood(listOfFoodForOmnivorous);
+                UpdateReadiness();
+                UpdateAge();
+                DecreaseSatiety();
 
-                    MoveToFood(target);
+                if (_currentHealth == 0 || _age > 100)
+                    Die(listOfAnimals);
 
-                    if (target.GetPosition() == currentPosition)
-                    {
-                        BasisCellPosition = currentPosition;
-                        Eat(target, listOfAnimals, listOfPlants, listOfFruits);
-                    }
-
-                }
-                else if (_isReadyToReproduce && CheckAbleToReoroduce(listOfAnimals))
-                {
-                    var partner = FindPartner(listOfAnimals);
-
-                    MoveToPartner(partner);
-
-                    if (partner.GetPosition() == currentPosition && gender == Gender.female)
-                    {
-                        Reproduce(listOfAnimals);
-                        UpdateReproduceCharacters(partner);
-                    }
-                }
                 else
                 {
-                    //костыль
-                    if (_isHungry && _timeSinceBreeding > 5)
-                        BasisCellPosition = currentPosition;
+                    if (_isHungry && CheckAbleToEat(listOfFoodForOmnivorous))
+                    {
+                        var target = FindFood(listOfFoodForOmnivorous);
 
-                    MoveToRandomCell();
-                    
+                        MoveToFood(target);
+
+                        if (target.GetPosition() == currentPosition)
+                            Eat(target, listOfAnimals, listOfPlants, listOfFruits);
+
+                    }
+                    else if (_isReadyToReproduce && CheckAbleToReoroduce(listOfAnimals))
+                    {
+                        var partner = FindPartner(listOfAnimals);
+
+                        MoveToPartner(partner);
+
+                        if (partner.GetPosition() == currentPosition && gender == Gender.female)
+                        {
+                            Reproduce(listOfAnimals);
+                            UpdateReproduceCharacters(partner);
+                        }
+                    }
+                    else
+                    {
+                        UpdateBasisCell();
+                        MoveToRandomCell();
+                    }
                 }
             }
         }
+
+        //--------------------------------------------------<textbox info>---------------------------------------------------------------
 
         public override string GetTextInfo()
         {
             if (_isDead) { return "I'm dead... Sorry :("; }
             string name = GetType().ToString()[(GetType().ToString().IndexOf(".") + 1)..].ToLower();
             string result = string.Concat("Hey! I am a ", name, " and I'm an ", Nutrition.ToString(),
-                ".\r\n", "My health level is ", CurrentHealth,
-                ".\r\n", "My satiety level is ", CurrentSatiety,
+                ".\r\n", "My health level is ", _currentHealth,
+                ".\r\n", "My satiety level is ", _currentSatiety,
                 ".\r\n", "My position now is ", currentPosition);
             return result;
         }

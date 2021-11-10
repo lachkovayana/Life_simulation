@@ -18,17 +18,17 @@ namespace LabOOP1
         Image tigerImg = Image.FromFile("../../../img/OneTigerCut.png");
         Image ratImg = Image.FromFile("../../../img/OneRatCut.png");
 
-        Image plantSeed = Image.FromFile("../../../img/plantSeed.png");
+        Image plantSeed = Image.FromFile("../../../img/seed.png");
         Image plantPoisonousSeed = Image.FromFile("../../../img/plantPoisonousSeed.png");
 
         Image ePLantHealthySprout = Image.FromFile("../../../img/plant1Sprout.png");
         Image ePLantHealthyFruitingSprout = Image.FromFile("../../../img/plant3Sprout.png");
-        Image ePLantPoisionousSprout = Image.FromFile("../../../img/plant2Sprout.png");
-        Image ePLantPoisonousFruitingSprout = Image.FromFile("../../../img/plant4Sprout.png");
+        Image ePLantPoisionousSprout = Image.FromFile("../../../img/plantPoisonousSprout.png");
+        Image ePLantPoisonousFruitingSprout = Image.FromFile("../../../img/plant2Sprout.png");
 
         Image ePLantHealthyGrown = Image.FromFile("../../../img/plant1.png");
         Image ePLantHealthyFruitingGrown = Image.FromFile("../../../img/plant3.png");
-        Image ePLantPoisonousGrown = Image.FromFile("../../../img/plant2.png");
+        Image ePLantPoisonousGrown = Image.FromFile("../../../img/cactus2.png");
         Image ePLantPoisonousFruitingGrown = Image.FromFile("../../../img/cactus1.png");
 
         Image ePLantHealthyDead = Image.FromFile("../../../img/plant1Dead.png");
@@ -47,62 +47,82 @@ namespace LabOOP1
         Image treeSeed = Image.FromFile("../../../img/treeSeed.png");
         Image treeSprout = Image.FromFile("../../../img/treeSprout.png");
 
-        public static FoodForOmnivorous[,] AllMapObjects = new FoodForOmnivorous[Form1.s_cols, Form1.s_rows];
+        public static FoodForOmnivorous[,] FieldOfAllMapObjects = new FoodForOmnivorous[Form1.s_cols, Form1.s_rows];
 
-        public void DrawFirstGeneration(MapObject mapObject, int x, int y)
-        {
-            switch (mapObject)
-            {
-                case MapObject.rabbit:
-                    Draw(rabbitImg, x, y);
-                    break;
-                case MapObject.horse:
-                    Draw(horseImg, x, y);
-                    break;
-                case MapObject.giraffe:
-                    Draw(giraffeImg, x, y);
-                    break;
-                case MapObject.tiger:
-                    Draw(tigerImg, x, y);
-                    break;
-                case MapObject.wolf:
-                    Draw(wolfImg, x, y);
-                    break;
-                case MapObject.fox:
-                    Draw(foxImg, x, y);
-                    break;
-                case MapObject.bear:
-                    Draw(bearImg, x, y);
-                    break;
-                case MapObject.pig:
-                    Draw(pigImg, x, y);
-                    break;
-                case MapObject.rat:
-                    Draw(ratImg, x, y);
-                    break;
-                case MapObject.ediblePlantHealthy:
-                    Draw(plantSeed, x, y);
-                    break;
-                case MapObject.ediblePlantPoisonous:
-                    Draw(plantPoisonousSeed, x, y);
-                    break;
-                case MapObject.inediblePlant:
-                    Draw(treeSeed, x, y);
-                    break;
-            }
-            Form1.s_pictureBox.Refresh();
-        }
+        Color seasonColor = Color.Gainsboro;
+
+
+        //public void DrawFirstGeneration(MapObject mapObject, int x, int y)
+        //{
+        //    switch (mapObject)
+        //    {
+        //        case MapObject.rabbit:
+        //            Draw(rabbitImg, x, y);
+        //            break;
+        //        case MapObject.horse:
+        //            Draw(horseImg, x, y);
+        //            break;
+        //        case MapObject.giraffe:
+        //            Draw(giraffeImg, x, y);
+        //            break;
+        //        case MapObject.tiger:
+        //            Draw(tigerImg, x, y);
+        //            break;
+        //        case MapObject.wolf:
+        //            Draw(wolfImg, x, y);
+        //            break;
+        //        case MapObject.fox:
+        //            Draw(foxImg, x, y);
+        //            break;
+        //        case MapObject.bear:
+        //            Draw(bearImg, x, y);
+        //            break;
+        //        case MapObject.pig:
+        //            Draw(pigImg, x, y);
+        //            break;
+        //        case MapObject.rat:
+        //            Draw(ratImg, x, y);
+        //            break;
+        //        case MapObject.ediblePlantHealthy:
+        //            Draw(plantSeed, x, y);
+        //            break;
+        //        case MapObject.ediblePlantPoisonous:
+        //            Draw(plantPoisonousSeed, x, y);
+        //            break;
+        //        case MapObject.inediblePlant:
+        //            Draw(treeSeed, x, y);
+        //            break;
+        //    }
+        //    Form1.s_pictureBox.Refresh();
+        //}
+
+
         public void UpdateField(List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits)
         {
-            AllMapObjects = new FoodForOmnivorous[Form1.s_cols, Form1.s_rows];
-            Form1.s_graphics.Clear(Color.Gainsboro);
+            UpdateSeasonColor();
+            RefreshField();
+            UpdatePlants(listOfAllPlants);
+            UpdateFruits(listOfFruits);
+            UpdateAnimals(listOfAnimals);
+        }
+        void UpdateSeasonColor()
+        {
+            seasonColor = (MapObjectsControl.s_currentSeason == Season.summer) ? Color.DarkSeaGreen : Color.Gainsboro;
+        }
+        void RefreshField()
+        {
+            FieldOfAllMapObjects = new FoodForOmnivorous[Form1.s_cols, Form1.s_rows];
+            Form1.s_graphics.Clear(seasonColor);
+        }
 
-            foreach (Plant plant in listOfAllPlants)
+        void UpdatePlants(List<Plant> listOfPlants)
+        {
+            foreach (Plant plant in listOfPlants)
             {
                 int x = plant.GetPosition().Item1;
                 int y = plant.GetPosition().Item2;
 
-                AllMapObjects[x, y] = plant;
+                FieldOfAllMapObjects[x, y] = plant;
 
                 switch (plant)
                 {
@@ -186,11 +206,16 @@ namespace LabOOP1
                 }
 
             }
+        }
+
+
+        void UpdateFruits(List<Fruit> listOfFruits)
+        {
             foreach (Fruit fruit in listOfFruits)
             {
                 int x = fruit.GetPosition().Item1;
                 int y = fruit.GetPosition().Item2;
-                AllMapObjects[x, y] = fruit;
+                FieldOfAllMapObjects[x, y] = fruit;
 
                 if (fruit.IsHealthy())
                 {
@@ -200,15 +225,17 @@ namespace LabOOP1
                 {
                     Draw(fruitPoisonous, x, y);
                 }
-
-
             }
+        }
+
+        void UpdateAnimals(List<Animal> listOfAnimals)
+        {
             foreach (Animal animal in listOfAnimals)
             {
                 int x = animal.GetPosition().Item1;
                 int y = animal.GetPosition().Item2;
 
-                AllMapObjects[x, y] = animal;
+                FieldOfAllMapObjects[x, y] = animal;
 
                 switch (animal)
                 {
@@ -244,7 +271,7 @@ namespace LabOOP1
             Form1.s_pictureBox.Refresh();
 
         }
-
+       
         void Draw(Image img, int x, int y)
         {
             Form1.s_graphics.DrawImage(img, x * Form1.s_resolution, y * Form1.s_resolution, new Rectangle(new Point(0, 0), new Size(35, 35)), GraphicsUnit.Pixel);

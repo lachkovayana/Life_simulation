@@ -5,32 +5,36 @@ namespace LabOOP1
 {
     public abstract class Plant : FoodForHerbivorous
     {
-        private const int _density = 10;
         private (int, int) _position;
         private int _age = 0;
         protected bool _isFruiting = true;
+        private bool _isAbleToSurviveTheWinter = true;
+        private bool _isStopsFruits = false;
 
-        public PlantStage Stage = PlantStage.seed;
         protected Movement movement = new();
+        public PlantStage Stage = PlantStage.seed;
 
         public Plant((int, int) pos) : base(pos)
         {
             _position = pos;
 
             Random random = new();
-
-            if (random.Next(_density) == 0)
-            {
-                _isFruiting = false;
-            }
-
+            _isFruiting = random.Next(10) <= 5;
+            _isAbleToSurviveTheWinter = random.Next(10) <= 3;
+            _isStopsFruits = random.Next(10) <= 5;
         }
 
         private bool CheckGrowth()
         {
             if (_isFruiting && Stage == PlantStage.grown && (_age % 10 == 0))
             {
-                return true;
+                if (MapObjectsControl.s_currentSeason == Season.winter)
+                {
+                    if (!_isStopsFruits)
+                        return true;
+                }
+                else 
+                    return true;
             }
             return false;
         }
@@ -68,7 +72,7 @@ namespace LabOOP1
                 listOfFruits.Add(fruit);
             }
         }
-        public virtual void FormSeeds(List<Plant> listOfAllPlants) { }
+        protected virtual void FormSeeds(List<Plant> listOfAllPlants) { }
 
         public bool IsFruiting()
         {
@@ -84,9 +88,10 @@ namespace LabOOP1
         {
             UpdateAge();
 
-            if (_age > 100)
+            if (_age > 100 || (MapObjectsControl.s_currentSeason == Season.winter && !_isAbleToSurviveTheWinter && Stage != PlantStage.seed))
                 Die(listOfAllPlants);
-            else
+
+            else if (!(MapObjectsControl.s_currentSeason == Season.winter && !_isAbleToSurviveTheWinter && Stage == PlantStage.seed))
             {
                 if (CheckGrowth())
                 {
@@ -101,6 +106,13 @@ namespace LabOOP1
         public override string GetTextInfo()
         {
             string name = GetType().ToString().Substring(GetType().ToString().IndexOf(".") + 1).ToLower();
+            if (this is EdiblePlant)
+            {
+                name = (_isHealthy ? "healthy" : "poisonous") + " " + name;
+            }
+             name += (_isAbleToSurviveTheWinter ? " and I am able to survive the winter" : " and I will die when winter comes... ");
+             name += "\r\n" + (_isStopsFruits ? "Also, I stop growing fruit" : "But I can grow fruit every season, you know!");
+            
             string result = string.Concat("Hey! I am an ", name,
                 ".\r\nI'm a ", Stage, " now",
                 ".\r\nMy position now is ", currentPosition);

@@ -62,6 +62,7 @@ namespace LabOOP1
                     count++;
                 }
             }
+
             // костыль
             if (count == 0) 
                 return (thisAnimal.GetPosition());

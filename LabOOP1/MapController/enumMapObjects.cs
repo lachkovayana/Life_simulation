@@ -1,18 +1,19 @@
-﻿using System;
-
-public enum MapObject
+﻿namespace LabOOP1
 {
-	rabbit, horse, giraffe,
-	tiger, wolf, fox,
-	bear, pig, rat,
+    public enum MapObject
+    {
+        rabbit, horse, giraffe,
+        tiger, wolf, fox,
+        bear, pig, rat,
 
-	ediblePlantHealthy,
-	ediblePlantHealthyFruiting,
+        ediblePlantHealthy,
+        ediblePlantHealthyFruiting,
 
-	ediblePlantPoisonous,
-	ediblePlantPoisonousFruiting,
-	
-	inediblePlant,
-	inediblePlantFruiting
+        ediblePlantPoisonous,
+        ediblePlantPoisonousFruiting,
 
+        inediblePlant,
+        inediblePlantFruiting
+
+    }
 }
