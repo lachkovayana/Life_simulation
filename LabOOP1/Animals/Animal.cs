@@ -128,10 +128,10 @@ namespace LabOOP1
                     CheckForCarnivorous(f) ||
                     CheckForOmniivorous(f))
                 {
-                    double dist = movement.CountDistL1(position, f.GetPosition());
+                    double dist = movement.CountDistL1(currentPosition, f.GetPosition());
                     if (Nutrition == NutritionMethod.carnivorous)
                     {
-                        dist = movement.CountDistEuclid(position, f.GetPosition());
+                        dist = movement.CountDistEuclid(currentPosition, f.GetPosition());
                     }
 
                     if (dist < minDist)
@@ -165,7 +165,6 @@ namespace LabOOP1
                 RiseSatiety();
                 animal.Die(listOfAnimals);
             }
-            BasisCellPosition = target.GetPosition();
         }
 
         //--------------------------------------------------<find and move to partner>---------------------------------------------------------------
@@ -180,7 +179,7 @@ namespace LabOOP1
                 if (animal.gender != gender && !(animal.Equals(this))
                     && animal.Nutrition == Nutrition && animal._isReadyToReproduce && animal._isHungry == false)
                 {
-                    var dist = movement.CountDistL1(position, animal.GetPosition());
+                    var dist = movement.CountDistL1(currentPosition, animal.GetPosition());
                     if (dist < minDist)
                     {
                         minDist = dist;
@@ -193,7 +192,7 @@ namespace LabOOP1
         }
         private void MoveToPartner(Animal partner)
         {
-            var newPosAn = MoveWay.MoveToTarget1(position, partner.GetPosition());
+            var newPosAn = MoveWay.MoveToTarget1(currentPosition, partner.GetPosition());
             SetPosition(newPosAn);
         }
 
@@ -207,10 +206,12 @@ namespace LabOOP1
                 _isReadyToReproduce = true;
             }
         }
-        private void UpdateTime(Animal partner)
+        private void UpdateReproduceCharacters(Animal partner)
         {
             _timeSinceBreeding = 0;
             _isReadyToReproduce = false;
+            BasisCellPosition = currentPosition;
+            partner.BasisCellPosition = partner.GetPosition();
             partner._timeSinceBreeding = 0;
             partner._isReadyToReproduce = false;
         }
@@ -232,7 +233,7 @@ namespace LabOOP1
 
         protected void SetPosition((int, int) pos)
         {
-            position = pos;
+            currentPosition = pos;
         }
 
         //--------------------------------------------------<age>---------------------------------------------------------------
@@ -276,8 +277,11 @@ namespace LabOOP1
 
                     MoveToFood(target);
 
-                    if (target.GetPosition() == position)
+                    if (target.GetPosition() == currentPosition)
+                    {
+                        BasisCellPosition = currentPosition;
                         Eat(target, listOfAnimals, listOfPlants, listOfFruits);
+                    }
 
                 }
                 else if (_isReadyToReproduce && CheckAbleToReoroduce(listOfAnimals))
@@ -286,15 +290,20 @@ namespace LabOOP1
 
                     MoveToPartner(partner);
 
-                    if (partner.GetPosition() == position && gender == Gender.female)
+                    if (partner.GetPosition() == currentPosition && gender == Gender.female)
                     {
                         Reproduce(listOfAnimals);
-                        UpdateTime(partner);
+                        UpdateReproduceCharacters(partner);
                     }
                 }
                 else
                 {
+                    //костыль
+                    if (_isHungry && _timeSinceBreeding > 5)
+                        BasisCellPosition = currentPosition;
+
                     MoveToRandomCell();
+                    
                 }
             }
         }
@@ -306,7 +315,7 @@ namespace LabOOP1
             string result = string.Concat("Hey! I am a ", name, " and I'm an ", Nutrition.ToString(),
                 ".\r\n", "My health level is ", CurrentHealth,
                 ".\r\n", "My satiety level is ", CurrentSatiety,
-                ".\r\n", "My position now is ", position);
+                ".\r\n", "My position now is ", currentPosition);
             return result;
         }
 

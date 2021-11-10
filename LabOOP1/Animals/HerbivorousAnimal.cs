@@ -17,14 +17,14 @@ namespace LabOOP1
         protected override void MoveToRandomCell()
         {
             //Должно быть
-            var newPosition = MoveWay.MoveToRandomCell2(position, BasisCellPosition);
-            //var newPosition = MoveWay.MoveToRandomCell1(position);
+            var newPosition = MoveWay.MoveToRandomCell2(currentPosition, BasisCellPosition);
+            //var newPosition = MoveWay.MoveToRandomCell1(currentPosition);
             SetPosition(newPosition);
         }
         protected override void MoveToFood(FoodForOmnivorous target)
         {
             //Должно быть
-            var newPosAn = MoveWay.MoveToTarget2(position, target.GetPosition());
+            var newPosAn = MoveWay.MoveToTarget2(currentPosition, target.GetPosition());
             //var newPosAn = MoveWay.MoveToTarget2(position, target.GetPosition());
             SetPosition(newPosAn);
         }
@@ -55,7 +55,7 @@ namespace LabOOP1
         protected override int MaxSatiety { get { return 80; } }
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
-            listOfAnimals.Add(new Rabbit(position));
+            listOfAnimals.Add(new Rabbit(currentPosition));
         }
     }
 
@@ -67,7 +67,7 @@ namespace LabOOP1
         protected override int MaxSatiety { get { return 100; } }
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
-            listOfAnimals.Add(new Horse(position));
+            listOfAnimals.Add(new Horse(currentPosition));
         }
     }
 
@@ -78,7 +78,7 @@ namespace LabOOP1
         protected override int MaxSatiety { get { return 90; } }
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
-            listOfAnimals.Add(new Giraffe(position));
+            listOfAnimals.Add(new Giraffe(currentPosition));
         }
     }
 

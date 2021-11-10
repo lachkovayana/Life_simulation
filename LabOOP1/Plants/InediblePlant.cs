@@ -14,7 +14,7 @@ namespace LabOOP1
         }
         public override void FormSeeds(List<Plant> listOfAllPlants)
         {
-            InediblePlant newPlant = new(movement.FindNewCell(position));
+            InediblePlant newPlant = new(movement.FindNewCell(currentPosition));
             newPlant.SetStatus(_isFruiting);
             listOfAllPlants.Add(newPlant);
         }

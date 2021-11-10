@@ -25,7 +25,7 @@ namespace LabOOP1
 
         protected override void MoveToFood(FoodForOmnivorous target)
         {
-            var newPosition = MoveWay.MoveToTarget2(position, target.GetPosition());
+            var newPosition = MoveWay.MoveToTarget2(currentPosition, target.GetPosition());
             //var newPosAn = MoveWay.MoveToTarget1(position, target.GetPosition());
             SetPosition(newPosition);
         }
@@ -55,7 +55,7 @@ namespace LabOOP1
         protected override int MaxSatiety { get { return 120; } }
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
-            listOfAnimals.Add(new Bear(position));
+            listOfAnimals.Add(new Bear(currentPosition));
         }
     }
 
@@ -66,7 +66,7 @@ namespace LabOOP1
         protected override int MaxSatiety { get { return 140; } }
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
-            listOfAnimals.Add(new Pig(position));
+            listOfAnimals.Add(new Pig(currentPosition));
 
         }
     }
@@ -78,7 +78,7 @@ namespace LabOOP1
         protected override int MaxSatiety { get { return 150; } }
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
-            listOfAnimals.Add(new Rat(position));
+            listOfAnimals.Add(new Rat(currentPosition));
         }
     }
 

@@ -79,39 +79,39 @@ namespace LabOOP1
                         {
                             case 0:
                                 _listOfAnimals.Add(new Rabbit((x, y)));
-                                _rendering.DrawFirstGeneration(MapObject.rabbit, x, y);
+                                //_rendering.DrawFirstGeneration(MapObject.rabbit, x, y);
                                 break;
                             case 1:
                                 _listOfAnimals.Add(new Horse((x, y)));
-                                _rendering.DrawFirstGeneration(MapObject.horse, x, y);
+                                //_rendering.DrawFirstGeneration(MapObject.horse, x, y);
                                 break;
                             case 2:
                                 _listOfAnimals.Add(new Giraffe((x, y)));
-                                _rendering.DrawFirstGeneration(MapObject.giraffe, x, y);
+                                //_rendering.DrawFirstGeneration(MapObject.giraffe, x, y);
                                 break;
                             case 3:
                                 _listOfAnimals.Add(new Tiger((x, y)));
-                                _rendering.DrawFirstGeneration(MapObject.tiger, x, y);
+                                //_rendering.DrawFirstGeneration(MapObject.tiger, x, y);
                                 break;
                             case 4:
                                 _listOfAnimals.Add(new Wolf((x, y)));
-                                _rendering.DrawFirstGeneration(MapObject.wolf, x, y);
+                                //_rendering.DrawFirstGeneration(MapObject.wolf, x, y);
                                 break;
                             case 5:
                                 _listOfAnimals.Add(new Fox((x, y)));
-                                _rendering.DrawFirstGeneration(MapObject.fox, x, y);
+                                //_rendering.DrawFirstGeneration(MapObject.fox, x, y);
                                 break;
                             case 6:
                                 _listOfAnimals.Add(new Bear((x, y)));
-                                _rendering.DrawFirstGeneration(MapObject.bear, x, y);
+                                //_rendering.DrawFirstGeneration(MapObject.bear, x, y);
                                 break;
                             case 7:
                                 _listOfAnimals.Add(new Pig((x, y)));
-                                _rendering.DrawFirstGeneration(MapObject.pig, x, y);
+                                //_rendering.DrawFirstGeneration(MapObject.pig, x, y);
                                 break;
                             case 8:
                                 _listOfAnimals.Add(new Rat((x, y)));
-                                _rendering.DrawFirstGeneration(MapObject.rat, x, y);
+                                //_rendering.DrawFirstGeneration(MapObject.rat, x, y);
                                 break;
                         }
                     }
@@ -122,15 +122,15 @@ namespace LabOOP1
                             case 0:
                                 EdiblePlant newEPlant = new((x, y));
                                 _listOfAllPlants.Add(newEPlant);
-                                if (newEPlant.IsHealthy())
-                                    _rendering.DrawFirstGeneration(MapObject.ediblePlantHealthy, x, y);
-                                else
-                                    _rendering.DrawFirstGeneration(MapObject.ediblePlantPoisonous, x, y);
+                                //if (newEPlant.IsHealthy())
+                                //    _rendering.DrawFirstGeneration(MapObject.ediblePlantHealthy, x, y);
+                                //else
+                                //    _rendering.DrawFirstGeneration(MapObject.ediblePlantPoisonous, x, y);
                                 break;
 
                             case 1:
                                 _listOfAllPlants.Add(new InediblePlant((x, y)));
-                                _rendering.DrawFirstGeneration(MapObject.inediblePlant, x, y);
+                                //_rendering.DrawFirstGeneration(MapObject.inediblePlant, x, y);
                                 break;
                         }
 

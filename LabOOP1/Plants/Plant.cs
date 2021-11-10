@@ -103,7 +103,7 @@ namespace LabOOP1
             string name = GetType().ToString().Substring(GetType().ToString().IndexOf(".") + 1).ToLower();
             string result = string.Concat("Hey! I am an ", name,
                 ".\r\nI'm a ", Stage, " now",
-                ".\r\nMy position now is ", position);
+                ".\r\nMy position now is ", currentPosition);
             return result;
         }
     }

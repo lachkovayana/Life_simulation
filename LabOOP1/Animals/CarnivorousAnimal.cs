@@ -15,13 +15,13 @@ namespace LabOOP1
         protected override void MoveToRandomCell()
         {
             // верно
-            var newPosition = movement.MoveToRandomCell1(position);
+            var newPosition = movement.MoveToRandomCell1(currentPosition);
             SetPosition(newPosition);
         }
         protected override void MoveToFood(FoodForOmnivorous target)
         {
             //верно, но в Animal нужно указать Евклидово расстояние 
-            var newPosAn = movement.MoveToTarget1(position, target.GetPosition());
+            var newPosAn = movement.MoveToTarget1(currentPosition, target.GetPosition());
             SetPosition(newPosAn);
         }
         protected override bool CheckAbleToEat(List<FoodForOmnivorous> listOfFoodForOmnivorous)
@@ -53,7 +53,7 @@ namespace LabOOP1
         protected override int MaxSatiety { get { return 120; } }
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
-            listOfAnimals.Add(new Tiger(position));
+            listOfAnimals.Add(new Tiger(currentPosition));
         }
     }
 
@@ -64,7 +64,7 @@ namespace LabOOP1
         protected override int MaxSatiety { get { return 130; } }
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
-            listOfAnimals.Add(new Wolf(position));
+            listOfAnimals.Add(new Wolf(currentPosition));
         }
     }
 
@@ -77,7 +77,7 @@ namespace LabOOP1
         protected override int MaxSatiety { get { return 110; } }
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
-            listOfAnimals.Add(new Fox(position));
+            listOfAnimals.Add(new Fox(currentPosition));
 
         }
     }

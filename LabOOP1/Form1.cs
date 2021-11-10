@@ -11,7 +11,7 @@ namespace LabOOP1
         private int timerCounter = 0;
 
         public static int s_resolution = 35;
-        public static int s_densityAnimals = 100;
+        public static int s_densityAnimals = 10;
         public static int s_densityPlants = 100;
         public static Graphics s_graphics;
         public static int s_rows;
@@ -23,11 +23,11 @@ namespace LabOOP1
 
         private FoodForOmnivorous currentObj = null;
 
-        private string message = "There is nothing to show yet. \r\nClick on any object on the map!";
+        private string startMessage = "There is nothing to show yet. \r\nClick on any object on the map!";
         public Form1()
         {
             InitializeComponent();
-            pictureBox1.Size = new Size(1000, 700);
+            pictureBox1.Size = new Size(1000,700);
         }
 
         private void Timer1_Tick(object sender, EventArgs e)
@@ -40,7 +40,7 @@ namespace LabOOP1
         protected virtual void ShowMessage()
         {
             if (currentObj == null)
-                SetMessage(message);
+                SetMessage(startMessage);
             else
                 SetMessage(currentObj.GetTextInfo());
         }
@@ -73,6 +73,7 @@ namespace LabOOP1
         {
 
             timerCounter = 0;
+            currentObj = null;
             buttonStart.Enabled = false;
             buttonContinue.Enabled = false;
 
@@ -86,7 +87,6 @@ namespace LabOOP1
 
             mapController = new MapObjectsControl();
             mapController.CreateFirstGeneration();
-
             timer1.Start();
         }
 
@@ -126,7 +126,7 @@ namespace LabOOP1
            
             if (Rendering.AllMapObjects[CurX, CurY] == null)
             {
-               SetMessage("Whoops! Missclick! \r\n Nothing at position (" + CurX + ";" + CurY + ")");
+               SetMessage("Whoops! Missclick! \r\nNothing at position (" + CurX + ";" + CurY + ")");
             }
             else
             {
