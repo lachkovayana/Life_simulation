@@ -85,7 +85,8 @@ namespace LabOOP1
         }
         private void DecreaseSatiety()
         {
-            _currentSatiety = Math.Max(0, _currentSatiety - 5);
+            int decreaseCoef = MapObjectsControl.s_currentSeason == Season.winter ? 5 : 3;
+            _currentSatiety = Math.Max(0, _currentSatiety - decreaseCoef);
             if (_currentSatiety <= 30)
             {
                 _isHungry = true;
@@ -258,7 +259,7 @@ namespace LabOOP1
 
         private void CheckSeason()
         {
-            //_isInHibernation = (MapObjectsControl.s_currentSeason == Season.winter && _isAbleToHibernate);
+            _isInHibernation = (MapObjectsControl.s_currentSeason == Season.winter && _isAbleToHibernate);
         }
 
 
