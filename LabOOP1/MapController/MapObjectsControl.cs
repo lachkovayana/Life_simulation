@@ -17,7 +17,7 @@ namespace LabOOP1
         public static List<Animal> listOfAnimalsCopy = new();
 
         private const int _densityAnimals = 80;
-        private const int _densityPlants = 80;
+        private const int _densityPlants = 50;
 
 
         private void UpdateAnimals()
@@ -61,8 +61,8 @@ namespace LabOOP1
         }
         private void UpdateSeason(int timerValue)
         {
-            if (timerValue % 10 == 0)
-                s_currentSeason = (timerValue % 20 == 0) ? Season.summer : Season.winter;
+            //if (timerValue % 10 == 0)
+            //    s_currentSeason = (timerValue % 20 == 0) ? Season.summer : Season.winter;
         }
 
         public void LiveOneCicle(int timerValue)

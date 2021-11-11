@@ -37,7 +37,7 @@ namespace LabOOP1
             if (currentObj == null)
                 SetMessage(startMessage);
             else
-                SetMessage(currentObj.GetTextInfo());
+                SetMessage(currentObj.GetInfoAndLight());
         }
 
         private void ButtonStart_Click(object sender, EventArgs e)
@@ -117,14 +117,14 @@ namespace LabOOP1
             int CurX = e.X / s_resolution;
             int CurY = e.Y / s_resolution;
             currentObj = Rendering.FieldOfAllMapObjects[CurX, CurY];
-           
+
             if (Rendering.FieldOfAllMapObjects[CurX, CurY] == null)
             {
                SetMessage("Whoops! Missclick! \r\nNothing at position (" + CurX + ";" + CurY + ")");
             }
             else
             {
-                SetMessage(Rendering.FieldOfAllMapObjects[CurX, CurY].GetTextInfo());
+                SetMessage(Rendering.FieldOfAllMapObjects[CurX, CurY].GetInfoAndLight());
             }
 
         }

@@ -8,27 +8,9 @@ namespace LabOOP1
 {
     public abstract class OmnivorousAnimal : Animal
     {
-        private Movement MoveWay = new();
-
         public OmnivorousAnimal((int, int) pos) : base(pos) {}
 
         //--------------------------------------------------<override methods>---------------------------------------------------------------
-
-
-        protected override void MoveToRandomCell()
-        {
-            //Должно быть
-            var newPosition = MoveWay.MoveToRandomCell3(this);
-            //var newPosAn = MoveWay.MoveToRandomCell1(position);
-            SetPosition(newPosition);
-        }
-
-        protected override void MoveToFood(FoodForOmnivorous target)
-        {
-            var newPosition = MoveWay.MoveToTarget2(currentPosition, target.GetPosition());
-            //var newPosAn = MoveWay.MoveToTarget1(position, target.GetPosition());
-            SetPosition(newPosition);
-        }
         protected override bool CheckAbleToEat(List<FoodForOmnivorous> listOfFoodForOmnivorous)
         {
 
@@ -38,6 +20,10 @@ namespace LabOOP1
                     return true;
             }
             return false;
+        }
+        protected override bool CheckForEating(FoodForOmnivorous food)
+        {
+            return (food is FoodForHerbivorous ||  (food is Animal animal && !food.Equals(this) && animal.GetType() != GetType()));
         }
         protected override void SetNutrition()
         {
@@ -57,6 +43,15 @@ namespace LabOOP1
         {
             listOfAnimals.Add(new Bear(currentPosition));
         }
+        protected override (int, int) MoveToRandomCellOver()
+        {
+            return movement.MoveToRCOrdinary(currentPosition);
+        }
+
+        protected override (int, int) MoveToTargetOver(FoodForOmnivorous target)
+        {
+            return movement.MoveToTargetFor4Cells(currentPosition, target.GetPosition());
+        }
     }
 
     public class Pig : OmnivorousAnimal
@@ -67,7 +62,15 @@ namespace LabOOP1
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
             listOfAnimals.Add(new Pig(currentPosition));
+        }
+        protected override (int, int) MoveToRandomCellOver()
+        {
+            return movement.MoveToRCNotGoingFar(currentPosition, BasisCellPosition);
+        }
 
+        protected override (int, int) MoveToTargetOver(FoodForOmnivorous target)
+        {
+            return movement.MoveToTargetFor8Cells(currentPosition, target.GetPosition());
         }
     }
 
@@ -79,6 +82,15 @@ namespace LabOOP1
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
             listOfAnimals.Add(new Rat(currentPosition));
+        }
+        protected override (int, int) MoveToRandomCellOver()
+        {
+            return movement.MoveToRCWithProbability(this);
+        }
+
+        protected override (int, int) MoveToTargetOver(FoodForOmnivorous target)
+        {
+            return movement.MoveToTarget3CellsForward(currentPosition, target.GetPosition());
         }
     }
 

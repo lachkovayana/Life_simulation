@@ -1,18 +1,18 @@
-﻿using System;
-
-public abstract class FoodForOmnivorous
+﻿namespace LabOOP1
 {
-    protected (int, int) currentPosition;
-    protected (int, int) birthPosiiton;
-    public FoodForOmnivorous((int, int) pos)
+    public abstract class FoodForOmnivorous
     {
-        //для статических элементов это актуальная позиция, для движущихся - точка рождения
-        birthPosiiton = pos;
-
-        //текущая позиция позиция
-        currentPosition = pos;
+        protected (int, int) currentPosition;
+        public FoodForOmnivorous((int, int) pos)
+        {
+            currentPosition = pos;
+        }
+        internal (int, int) GetPosition() => currentPosition;
+        public string GetInfoAndLight()
+        {
+            Rendering.LightChoosen(currentPosition.Item1, currentPosition.Item2);
+            return GetInfo();
+        }
+        protected virtual string GetInfo() { return ""; }
     }
-    internal  (int, int) GetPosition()  => currentPosition;
-
-    public virtual string GetTextInfo() { return ""; }
 }

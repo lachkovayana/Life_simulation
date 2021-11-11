@@ -51,51 +51,7 @@ namespace LabOOP1
 
         Color seasonColor = Color.Gainsboro;
 
-
-        //public void DrawFirstGeneration(MapObject mapObject, int x, int y)
-        //{
-        //    switch (mapObject)
-        //    {
-        //        case MapObject.rabbit:
-        //            Draw(rabbitImg, x, y);
-        //            break;
-        //        case MapObject.horse:
-        //            Draw(horseImg, x, y);
-        //            break;
-        //        case MapObject.giraffe:
-        //            Draw(giraffeImg, x, y);
-        //            break;
-        //        case MapObject.tiger:
-        //            Draw(tigerImg, x, y);
-        //            break;
-        //        case MapObject.wolf:
-        //            Draw(wolfImg, x, y);
-        //            break;
-        //        case MapObject.fox:
-        //            Draw(foxImg, x, y);
-        //            break;
-        //        case MapObject.bear:
-        //            Draw(bearImg, x, y);
-        //            break;
-        //        case MapObject.pig:
-        //            Draw(pigImg, x, y);
-        //            break;
-        //        case MapObject.rat:
-        //            Draw(ratImg, x, y);
-        //            break;
-        //        case MapObject.ediblePlantHealthy:
-        //            Draw(plantSeed, x, y);
-        //            break;
-        //        case MapObject.ediblePlantPoisonous:
-        //            Draw(plantPoisonousSeed, x, y);
-        //            break;
-        //        case MapObject.inediblePlant:
-        //            Draw(treeSeed, x, y);
-        //            break;
-        //    }
-        //    Form1.s_pictureBox.Refresh();
-        //}
-
+        public static (int, int) coorLight; 
 
         public void UpdateField(List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits)
         {
@@ -271,7 +227,11 @@ namespace LabOOP1
             Form1.s_pictureBox.Refresh();
 
         }
-       
+        public static void LightChoosen(int x, int y)
+        {
+            Form1.s_graphics.DrawRectangle(new Pen(Color.PowderBlue, 3), x * Form1.s_resolution, y * Form1.s_resolution, Form1.s_resolution, Form1.s_resolution);
+            Form1.s_pictureBox.Refresh();
+        }
         void Draw(Image img, int x, int y)
         {
             Form1.s_graphics.DrawImage(img, x * Form1.s_resolution, y * Form1.s_resolution, new Rectangle(new Point(0, 0), new Size(35, 35)), GraphicsUnit.Pixel);

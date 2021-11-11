@@ -7,6 +7,7 @@ namespace LabOOP1
     {
         private (int, int) _position;
         private int _age = 0;
+        private bool _isDead = false;
         protected bool _isFruiting = true;
         private bool _isAbleToSurviveTheWinter = true;
         private bool _isStopsFruits = false;
@@ -20,7 +21,7 @@ namespace LabOOP1
 
             Random random = new();
             _isFruiting = random.Next(10) <= 5;
-            _isAbleToSurviveTheWinter = random.Next(10) <= 3;
+            _isAbleToSurviveTheWinter = random.Next(10) <= 7;
             _isStopsFruits = random.Next(10) <= 5;
         }
 
@@ -68,7 +69,7 @@ namespace LabOOP1
             Random rnd = new();
             for (int i = 0; i < rnd.Next(2); i++)
             {
-                Fruit fruit = new(movement.FindNewCell(_position));
+                Fruit fruit = new(movement.GetClosestCell(_position));
                 listOfFruits.Add(fruit);
             }
         }
@@ -82,6 +83,7 @@ namespace LabOOP1
         public void Die(List<Plant> listOfAllPlants)
         {
             listOfAllPlants.Remove(this);
+            _isDead = true;
         }
 
         public void LivePlantCicle(List<Fruit> listOfFruits, List<Plant> listOfAllPlants)
@@ -103,20 +105,24 @@ namespace LabOOP1
                 }
             }
         }
-        public override string GetTextInfo()
+        protected override string GetInfo()
         {
-            string name = GetType().ToString().Substring(GetType().ToString().IndexOf(".") + 1).ToLower();
-            if (this is EdiblePlant)
+            if (_isDead) { return "I was eaten :("; }
+            else
             {
-                name = (_isHealthy ? "healthy" : "poisonous") + " " + name;
+                string name = GetType().ToString()[(GetType().ToString().IndexOf(".") + 1)..].ToLower();
+                if (this is EdiblePlant)
+                {
+                    name = (_isHealthy ? "healthy" : "poisonous") + " " + name;
+                }
+                name += (_isAbleToSurviveTheWinter ? " and I am able to survive the winter" : " and I will die when winter comes... ");
+                name += "\r\n" + (_isStopsFruits ? "Also, I stop growing fruit" : "But I can grow fruit every season, you know!");
+
+                string result = string.Concat("Hey! I am an ", name,
+                    ".\r\nI'm a ", Stage, " now",
+                    ".\r\nMy position now is ", currentPosition);
+                return result;
             }
-             name += (_isAbleToSurviveTheWinter ? " and I am able to survive the winter" : " and I will die when winter comes... ");
-             name += "\r\n" + (_isStopsFruits ? "Also, I stop growing fruit" : "But I can grow fruit every season, you know!");
-            
-            string result = string.Concat("Hey! I am an ", name,
-                ".\r\nI'm a ", Stage, " now",
-                ".\r\nMy position now is ", currentPosition);
-            return result;
         }
     }
 }

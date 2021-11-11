@@ -1,33 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using System.Collections.Generic;
 namespace LabOOP1
 {
     public abstract class HerbivorousAnimal : Animal
     {
-        private Movement MoveWay = new();
         public HerbivorousAnimal((int, int) pos) : base(pos) { }
 
         //--------------------------------------------------<override methods>---------------------------------------------------------------
-
-
-        protected override void MoveToRandomCell()
-        {
-            //Должно быть
-            var newPosition = MoveWay.MoveToRandomCell2(currentPosition, BasisCellPosition);
-            //var newPosition = MoveWay.MoveToRandomCell1(currentPosition);
-            SetPosition(newPosition);
-        }
-        protected override void MoveToFood(FoodForOmnivorous target)
-        {
-            //Должно быть
-            var newPosAn = MoveWay.MoveToTarget2(currentPosition, target.GetPosition());
-            //var newPosAn = MoveWay.MoveToTarget2(position, target.GetPosition());
-            SetPosition(newPosAn);
-        }
         protected override bool CheckAbleToEat(List<FoodForOmnivorous> listOfFoodForOmnivorous)
         {
             foreach (FoodForOmnivorous food in listOfFoodForOmnivorous)
@@ -36,6 +14,10 @@ namespace LabOOP1
                     return true;
             }
             return false;
+        }
+        protected override bool CheckForEating(FoodForOmnivorous food)
+        {
+            return (food is FoodForHerbivorous);
         }
         protected override void SetNutrition()
         {
@@ -57,6 +39,14 @@ namespace LabOOP1
         {
             listOfAnimals.Add(new Rabbit(currentPosition));
         }
+        protected override (int, int) MoveToRandomCellOver()
+        {
+            return movement.MoveToRCOrdinary(currentPosition);
+        }
+        protected override (int, int) MoveToTargetOver(FoodForOmnivorous target)
+        {
+            return movement.MoveToTarget3CellsForward(currentPosition, target.GetPosition());
+        }
     }
 
     public class Horse : HerbivorousAnimal
@@ -69,6 +59,14 @@ namespace LabOOP1
         {
             listOfAnimals.Add(new Horse(currentPosition));
         }
+        protected override (int, int) MoveToRandomCellOver()
+        {
+            return movement.MoveToRCNotGoingFar(currentPosition, BasisCellPosition);
+        }
+        protected override (int, int) MoveToTargetOver(FoodForOmnivorous target)
+        {
+            return movement.MoveToTargetFor8Cells(currentPosition, target.GetPosition());
+        }
     }
 
     public class Giraffe : HerbivorousAnimal
@@ -79,6 +77,14 @@ namespace LabOOP1
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
             listOfAnimals.Add(new Giraffe(currentPosition));
+        }
+        protected override (int, int) MoveToRandomCellOver()
+        {
+            return movement.MoveToRCWithProbability(this);
+        }
+        protected override (int, int) MoveToTargetOver(FoodForOmnivorous target)
+        {
+            return movement.MoveToTargetFor4Cells(currentPosition, target.GetPosition());
         }
     }
 
