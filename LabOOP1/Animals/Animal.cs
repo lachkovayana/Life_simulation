@@ -36,6 +36,7 @@ namespace LabOOP1
 
         protected Movement movement = new();
 
+        FoodForOmnivorous target;
 
         //--------------------------------------------------< class constructor >---------------------------------------------------------------
 
@@ -145,31 +146,32 @@ namespace LabOOP1
                     }
                 }
             }
+            this.target = target;
+
             return target;
         }
 
         //--------------------------------------------------< find a partner >---------------------------------------------------------------
 
-        //private Animal FindPartner(List<Animal> listOfAnimals)
-        //{
-        //    var minDist = Constants.ImpVal;
-        //    var partner = this;
+        private Animal FindPartner(List<Animal> listOfAnimals)
+        {
+            var minDist = Constants.ImpVal;
+            var partner = this;
 
-        //    foreach (Animal animal in listOfAnimals)
-        //    {
-        //        if (CheckPartner(animal))
-        //        {
-        //            var dist = movement.CountDistL1(currentPosition, animal.GetPosition());
-        //            if (dist < minDist)
-        //            {
-        //                minDist = dist;
-        //                partner = animal;
-        //            }
-        //        }
-        //    }
-
-        //    return partner;
-        //}
+            foreach (Animal animal in listOfAnimals)
+            {
+                if (CheckPartner(animal))
+                {
+                    var dist = movement.CountDistL1(currentPosition, animal.GetPosition());
+                    if (dist < minDist)
+                    {
+                        minDist = dist;
+                        partner = animal;
+                    }
+                }
+            }
+            return partner;
+        }
 
 
 
@@ -286,6 +288,7 @@ namespace LabOOP1
             myGoal = GoalOfTheLastStep.goingToPartner;
 
             Animal partner = (Animal)FindTarget(listOfFoodForOmnivorous, CheckPartner);
+            //Animal partner = FindPartner(listOfAnimals);
 
             MoveToTarget(partner);
 
@@ -357,7 +360,8 @@ namespace LabOOP1
             string result = string.Concat("Hey! I am a ", name, " and I'm an ", Nutrition.ToString(),
                 ".\r\n", "My health level is ", _currentHealth,
                 ".\r\n", "My satiety level is ", _currentSatiety,
-                ".\r\n", "My position now is ", currentPosition);
+                ".\r\n", "My position now is ", currentPosition,
+                ".\r\n", "And now I am ", myGoal);
 
             return result;
         }

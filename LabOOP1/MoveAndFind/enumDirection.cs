@@ -3,11 +3,11 @@
 	{
 		right,
 		left,
-		up,
 		down,
-		rightUp, 
-		rightDown,
-		leftUp,
-		leftDown
+		up,
+		rightDown, 
+		rightUp,
+		leftDown,
+		leftUp
 	}
 }

@@ -70,27 +70,27 @@ namespace LabOOP1
             if (distx < 0)
             {
                 if (disty > 0)
-                    newPosAn = MoveToDirection(pos, Direction.rightDown);
-                else if (disty < 0)
                     newPosAn = MoveToDirection(pos, Direction.rightUp);
+                else if (disty < 0)
+                    newPosAn = MoveToDirection(pos, Direction.rightDown);
                 else
                     newPosAn = MoveToDirection(pos, Direction.right);
             }
             else if (distx > 0)
             {
                 if (disty > 0)
-                    newPosAn = MoveToDirection(pos, Direction.leftDown);
-                else if (disty < 0)
                     newPosAn = MoveToDirection(pos, Direction.leftUp);
+                else if (disty < 0)
+                    newPosAn = MoveToDirection(pos, Direction.leftDown);
                 else
                     newPosAn = MoveToDirection(pos, Direction.left);
             }
             else
             {
                 if (disty > 0)
-                    newPosAn = MoveToDirection(pos, Direction.down); 
-                else if (disty < 0)
                     newPosAn = MoveToDirection(pos, Direction.up); 
+                else if (disty < 0)
+                    newPosAn = MoveToDirection(pos, Direction.down); 
             }
             return newPosAn;
         }
@@ -110,15 +110,15 @@ namespace LabOOP1
             else
             {
                 if (disty > 0)
-                    newPosAn = MoveToDirection(newPosAn, Direction.down);
-                else
-                    newPosAn = MoveToDirection(newPosAn, Direction.up);
+                    newPosAn = MoveToDirection(pos, Direction.up);
+                else if (disty < 0)
+                    newPosAn = MoveToDirection(pos, Direction.down);
             }
 
             return newPosAn;
         }
 
-        // придумать 
+        // Движение с шагом в 3 клетки
         public (int, int) MoveToTarget3CellsForward((int, int) pos, (int, int) targetPos)
         {
             (int, int) newPosAn = pos;
@@ -207,17 +207,17 @@ namespace LabOOP1
                     return (x + 1, y);
                 case Direction.left:
                     return (x - 1, y);
-                case Direction.up:
-                    return (x, y + 1);
                 case Direction.down:
+                    return (x, y + 1);
+                case Direction.up:
                     return (x, y - 1);
-                case Direction.rightUp:
-                    return (x + 1, y + 1);
                 case Direction.rightDown:
+                    return (x + 1, y + 1);
+                case Direction.rightUp:
                     return (x + 1, y - 1);
-                case Direction.leftUp:
-                    return (x - 1, y + 1);
                 case Direction.leftDown:
+                    return (x - 1, y + 1);
+                case Direction.leftUp:
                     return (x - 1, y - 1);
                 default:
                     break;

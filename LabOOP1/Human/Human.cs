@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace LabOOP1.Human
 {
-    public class Human
+    public class Human 
     {
         (int, int) humanPosition;
+
         public Human((int, int) pos)
         {
             humanPosition = pos;

@@ -16,7 +16,7 @@ namespace LabOOP1
 
         public static List<Animal> listOfAnimalsCopy = new();
 
-        private const int _densityAnimals = 80;
+        private const int _densityAnimals = 20;
         private const int _densityPlants = 50;
 
 
