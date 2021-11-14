@@ -58,7 +58,7 @@ namespace LabOOP1
 
         public static (int, int) coorLight;
 
-        public void UpdateField(List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits, List<Human> listOfHumans)
+        public void UpdateField(List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits, List<Animal> listOfHumans)
         {
             UpdateSeasonColor();
             ClearField();
@@ -79,7 +79,7 @@ namespace LabOOP1
             FieldOfAllMapObjects = new FoodForOmnivorous[Form1.s_cols, Form1.s_rows];
             Form1.s_graphics.Clear(seasonColor);
         }
-        private void UpdateHumans(List<Human> listOfHumans)
+        private void UpdateHumans(List<Animal> listOfHumans)
         {
             foreach (Human h in listOfHumans)
             {

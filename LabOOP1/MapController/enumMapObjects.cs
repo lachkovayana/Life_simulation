@@ -14,6 +14,5 @@
 
         inediblePlant,
         inediblePlantFruiting
-
     }
 }

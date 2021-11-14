@@ -8,7 +8,7 @@ namespace LabOOP1
         private List<Animal> _listOfAnimals = new();
         private List<Plant> _listOfAllPlants = new();
         private List<Fruit> _listOfFruits = new();
-        private List<Human> _listOfHumans = new();
+        private List<Animal> _listOfHumans = new();
         private List<FoodForHerbivorous> _listOfFoodForHerbivorous = new();
         private List<FoodForOmnivorous> _listOfFoodForOmnivorous = new();
         private readonly Rendering _rendering = new();
@@ -19,7 +19,7 @@ namespace LabOOP1
 
         private const int _densityAnimals = 20;
         private const int _densityPlants = 50;
-        private const int _densityHumans = 80;
+        private const int _densityHumans = 150;
 
 
         private void UpdateAnimals()

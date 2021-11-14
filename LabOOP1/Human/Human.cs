@@ -15,15 +15,19 @@ namespace LabOOP1
             { FoodTypes.fruit, 0 },
             { FoodTypes.plant, 0 }
         };
-        private Dictionary<MapObject, int> _domesticatedAnimal = new()
+        private Dictionary<Type, Animal> _domesticatedAnimal = new()
         {
-            { MapObject.wolf, 0 },
-            { MapObject.horse, 0 },
-            { MapObject.sheep, 0 }
+            { typeof(Wolf), null },
+            { typeof(Horse), null },
+            { typeof(Sheep), null }
         };
-        private const int MaxCountOfStock = 3;
+
+        List<FoodTypes> desiredFoodTypesList = new();
+
+        private Human partner = null;
+
         protected override int MaxHealth { get { return 130; } }
-        protected override int MaxSatiety { get { return 80; } }
+        protected override int MaxSatiety { get { return 130; } }
 
 
         public Human((int, int) pos) : base(pos)
@@ -44,141 +48,336 @@ namespace LabOOP1
             return movement.MoveToTargetFor8Cells(currentPosition, target.GetPosition());
         }
 
-        public void LiveHumanCicle(List<Human> listOfHumans, List<FoodForOmnivorous> listOfFood, List<Animal> listOfAnimals, List<Plant> listOfPlants, List<Fruit> listOfFruits)
+        public void LiveHumanCicle(List<Animal> listOfHumans, List<FoodForOmnivorous> listOfFoodForOmnivorous, List<Animal> listOfAnimals, List<Plant> listOfPlants, List<Fruit> listOfFruits)
         {
+
             if (CheckTimeToDie())
                 DieHuman(listOfHumans);
 
             if (!IsDead)
             {
-                GeneralVoidsForLiveCicle(15);
+                GeneralVoidsForLiveCicle(20);
                 if (_isHungry)
                 {
                     if (CheckStocks())
                     {
                         EatSmthFromStocks(this);
-                        myGoal = GoalOfTheLastStep.goingToRandomCell;
+                        myGoal = PurposeOfMovement.goingToRandomCell;
                     }
                     else
                     {
-                        myGoal = GoalOfTheLastStep.goingToFood;
-                        FindingAndEatingProcess(listOfFood, listOfAnimals, listOfPlants, listOfFruits);
+                        FindingAndEatingProcess(listOfFoodForOmnivorous, listOfPlants, listOfFruits);
                     }
                 }
-                //else if (CheckTimeForRepr && ableToReproduce) Reproduce || FindTarget(partner)
+                else if (_isReadyToReproduce)
+                {
+                    if (CheckHavePartner())
+                    {
+                        if (CheckPartnerReadiness(partner))
+                        {
+                            MoveToTarget(partner);
+                            myGoal = PurposeOfMovement.goingToPartner;
+                        }
+                    }
+                    else
+                    {
+                        var target = FindPartner(listOfHumans);
+                        if (target != null)
+                        {
+                            MoveToTarget(target);
+                            myGoal = PurposeOfMovement.goingToPartner;
+
+                            if (target.GetPosition() == currentPosition && gender == Gender.female)
+                            {
+                                partner = target;
+                                target.partner = this;
+                                Reproduce(listOfHumans);
+                                UpdateReproduceCharacters(target);
+                            }
+                        }
+                    }
+                }
 
                 else
                 {
-                    //if !CheckStocksLimit()
-                    myGoal = GoalOfTheLastStep.goingToRandomCell;
-                    MoveToRandomCell();
+                    //if (!CheckDomesticatedAnimalFullness())
+                    //{
+                    //    GoTameAnimals(listOfFoodForOmnivorous);
+                    //}
+                    //else
+
+                    GetListOfDesiredFood();
+                    var i = 0;
+                    if (desiredFoodTypesList.Count != 0)
+                    {
+                        if (CheckStockNotReachedLimit(FoodTypes.plant) && CheckAbleToFindPlant(listOfFoodForOmnivorous))
+                        {
+                            GoCollectPlantsMyself(listOfFoodForOmnivorous, listOfPlants, listOfFruits, (food) => food is Plant pl && pl.IsHealthy());
+                        }
+                        else if (CheckStockNotReachedLimit(FoodTypes.fruit) && CheckAbleToFindFruit(listOfFoodForOmnivorous))
+                        {
+                            GoCollectPlantsMyself(listOfFoodForOmnivorous, listOfPlants, listOfFruits, (food) => food is Fruit fr && fr.IsHealthy());
+                        }
+                        else if (CheckStockNotReachedLimit(FoodTypes.meat) && CheckAbleToFindMeat(listOfFoodForOmnivorous))
+                        {
+                            GoCollectPlantsMyself(listOfFoodForOmnivorous, listOfPlants, listOfFruits, (food) => food is Animal an && an.IsDead);
+
+                        }
+                    }
+                    if (myGoal != PurposeOfMovement.goingToCollectFood)
+                    {
+                        MoveToRandomCell();
+                        myGoal = PurposeOfMovement.goingToRandomCell;
+                    }
                 }
             }
-            //HuntWithWolf();
+        }
+
+        private bool CheckAbleToFindPlant(List<FoodForOmnivorous> listOfFoodForOmnivorous)
+        {
+            foreach (FoodForOmnivorous food in listOfFoodForOmnivorous)
+            {
+                if (food is EdiblePlant f && f.IsHealthy() && f.Stage != PlantStage.seed)
+                    return true;
+            }
+            return false;
+        }
+        private bool CheckAbleToFindFruit(List<FoodForOmnivorous> listOfFoodForOmnivorous)
+        {
+            foreach (FoodForOmnivorous food in listOfFoodForOmnivorous)
+            {
+                if (food is Fruit f && f.IsHealthy())
+                    return true;
+            }
+            return false;
+        }
+
+        private bool CheckAbleToFindMeat(List<FoodForOmnivorous> listOfFoodForOmnivorous)
+        {
+            foreach (FoodForOmnivorous food in listOfFoodForOmnivorous)
+            {
+                if (food is Animal an && an.IsDead)
+                    return true;
+            }
+            return false;
+        }
+
+        private void GoHuntWithWolf(List<FoodForOmnivorous> listOfFoodForOmnivorous, List<Plant> listOfAllPlants, List<Fruit> listOfFruits)
+        {
+            var target = FindTarget(listOfFoodForOmnivorous, (food) => food is Animal a && !a.IsDomesticated);
+            if (target != null)
+            {
+                CallWolfForHelp(target);
+                MoveToTarget(target);
+                myGoal = PurposeOfMovement.goingToCollectFood;
+                if (currentPosition == target.GetPosition() && _domesticatedAnimal[typeof(Wolf)].GetPosition() == target.GetPosition())
+                {
+                    CollectFood(target, listOfAllPlants, listOfFruits);
+                }
+            }
+            myGoal = PurposeOfMovement.standing;
+
+        }
+        private void GoCollectPlantsMyself(List<FoodForOmnivorous> listOfFoodForOmnivorous, List<Plant> listOfAllPlants, List<Fruit> listOfFruits, Func<FoodForOmnivorous, bool> myFunc)
+        {
+
+            var target = FindTarget(listOfFoodForOmnivorous, myFunc);
+
+            if (target != null)
+            {
+                MoveToTarget(target);
+                myGoal = PurposeOfMovement.goingToCollectFood;
+                if (currentPosition == target.GetPosition())
+                {
+                    CollectFood(target, listOfAllPlants, listOfFruits);
+                }
+            }
+            else
+                myGoal = PurposeOfMovement.standing;
+        }
+
+        private void GoTameAnimals(List<FoodForOmnivorous> listOfFoodForOmnivorous)
+        {
+            var desiredAnimal = GetMissingAnimal();
+            Animal target = (Animal)FindTarget(listOfFoodForOmnivorous, (obj) => obj.GetType() == desiredAnimal);
+            if (target != null)
+            {
+                myGoal = PurposeOfMovement.goingToTame;
+                MoveToTarget(target);
+                if (currentPosition == target.GetPosition())
+                {
+                    TameAnimal(target);
+                }
+            }
+        }
+
+        private Type GetMissingAnimal()
+        {
+            foreach (var pair in _domesticatedAnimal)
+            {
+                if (pair.Value == null)
+                    return pair.Key;
+            }
+            return null;
+        }
+
+        private void TameAnimal(Animal target)
+        {
+            target.IsDomesticated = true;
+            _domesticatedAnimal[target.GetType()] = target;
+        }
+
+        private bool CheckDomesticatedAnimalFullness()
+        {
+            foreach (var pair in _domesticatedAnimal)
+            {
+                if (pair.Value == null)
+                    return false;
+            }
+            return true;
+        }
+        private bool CheckPartnerReadiness(Human h)
+        {
+            return h._isReadyToReproduce;
+        }
+
+        private Human FindPartner(List<Animal> listOfHumans)
+        {
+            var minDist = Constants.ImpVal;
+            Human target = null;
+
+            foreach (Human h in listOfHumans)
+            {
+                if (CheckPartner(h))
+                {
+                    double dist = movement.CountDistL1(currentPosition, h.GetPosition());
+
+                    if (dist < minDist)
+                    {
+                        minDist = dist;
+                        target = h;
+                    }
+                }
+            }
+
+            return target;
+        }
+
+        private bool CheckPartner(Human p)
+        {
+            return (p.partner == null && p.gender != gender && !p._isHungry && !p.Equals(this) && p._age > 20);
+        }
+
+        private bool CheckHavePartner()
+        {
+            return partner != null;
         }
 
         //съедание
-        private void EatTarget(FoodForOmnivorous target, List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits)
+        private void EatTarget(FoodForOmnivorous target, List<Plant> listOfAllPlants, List<Fruit> listOfFruits)
         {
             if (target is Fruit fruit)
                 fruit.Die(listOfFruits);
             else if (target is EdiblePlant plant)
                 plant.Die(listOfAllPlants);
             else if (target is Animal animal)
-                animal.RemoveFromList(listOfAnimals);
+                animal.WasEaten = true;
             RiseSatiety();
-            //RiseSatiety(target.);
         }
 
         //процесс: нахождение еды, движение к ней, съедание 
-        private void FindingAndEatingProcess(List<FoodForOmnivorous> listOfFood, List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits)
+        private void FindingAndEatingProcess(List<FoodForOmnivorous> listOfFood, List<Plant> listOfAllPlants, List<Fruit> listOfFruits)
         {
             var target = FindTarget(listOfFood, CheckForHumanEating);
+            if (target != null)
+            {
+                MoveToTarget(target);
+                myGoal = PurposeOfMovement.goingToFood;
 
-            MoveToTarget(target);
-
-            if (target.GetPosition() == currentPosition)
-                EatTarget(target, listOfAnimals, listOfAllPlants, listOfFruits);
+                if (target.GetPosition() == currentPosition)
+                    EatTarget(target, listOfAllPlants, listOfFruits);
+            }
         }
 
 
         //проверка на то, подходит ли объект в качестве еды для человека
         private bool CheckForHumanEating(FoodForOmnivorous t)
         {
-            return (t is EdiblePlant pl && pl.IsHealthy()) || (t is Fruit fr && fr.IsHealthy()) || t is Animal && t.GetType() != GetType();
+            return (t is FoodForHerbivorous f && f.IsHealthy()) || (t is Animal an && t.GetType() != GetType() && an.IsDead);
         }
 
         //проверка на то, можно ли добавить еду в конкретный запас
-        private bool CheckStocksLimit(FoodTypes ft)
+        private bool CheckStockNotReachedLimit(FoodTypes ft)
         {
-            return _stocks[ft] < 4;
+            return _stocks[ft] < Constants.MaxCountOfStock;
         }
 
         //проверка на то, заполнены ли все запасы
-        private bool CheckStocksFullness()
+        private void GetListOfDesiredFood()
         {
+            desiredFoodTypesList = new();
+
             foreach (var pair in _stocks)
             {
-                if (pair.Value != MaxCountOfStock) return false;
+                if (pair.Value != Constants.MaxCountOfStock)
+                    desiredFoodTypesList.Add(pair.Key);
             }
-            return true;
         }
-        //private void HuntWithWolf()
-        //{
-        //    if (_domesticatedAnimal[MapObject.wolf] != 0)
-        //    {
 
-        //    }
-        //}
 
-        //private void CallWolfForHelp()
-        //{
+        private void CallWolfForHelp(FoodForOmnivorous target)
+        {
 
-        //}
-        //private void CollectFood(FoodForOmnivorous target)
-        //{
-        //    if (target is Plant)
-        //    {
-        //        _stocks[FoodTypes.plant] += 1;
-        //    }
-        //    else if (target is Fruit)
-        //    {
-        //        _stocks[FoodTypes.fruit] += 1;
-        //    }
-        //    else if (target is Animal)
-        //    {
-        //        switch (target)
-        //        {
-        //            case Rabbit:
-        //                _stocks[FoodTypes.meat] += 1;
-        //                break;
-        //            case Horse:
-        //                _stocks[FoodTypes.meat] += 4;
-        //                break;
-        //            case Sheep:
-        //                _stocks[FoodTypes.meat] += 2;
-        //                break;
-        //            case Tiger:
-        //                _stocks[FoodTypes.meat] += 2;
-        //                break;
-        //            case Wolf:
-        //                _stocks[FoodTypes.meat] += 2;
-        //                break;
-        //            case Fox:
-        //                _stocks[FoodTypes.meat] += 2;
-        //                break;
-        //            case Bear:
-        //                _stocks[FoodTypes.meat] += 5;
-        //                break;
-        //            case Pig:
-        //                _stocks[FoodTypes.meat] += 3;
-        //                break;
-        //            case Rat:
-        //                _stocks[FoodTypes.meat] += 1;
-        //                break;
-        //        }
-        //    }
-        //}
+        }
+        private void CollectFood(FoodForOmnivorous target, List<Plant> listOfAllPlants, List<Fruit> listOfFruits)
+        {
+            if (target is Plant pl)
+            {
+                _stocks[FoodTypes.plant]++;
+                pl.Die(listOfAllPlants);
+            }
+            else if (target is Fruit fr)
+            {
+                fr.Die(listOfFruits);
+                _stocks[FoodTypes.fruit]++;
+            }
+            else if (target is Animal an)
+            {
+                an.WasEaten = true;
+                _stocks[FoodTypes.meat]++;
+
+                //switch (target)
+                //{
+                //    case Rabbit:
+                //        _stocks[FoodTypes.meat] += 1;
+                //        break;
+                //    case Horse:
+                //        _stocks[FoodTypes.meat] += 4;
+                //        break;
+                //    case Sheep:
+                //        _stocks[FoodTypes.meat] += 2;
+                //        break;
+                //    case Tiger:
+                //        _stocks[FoodTypes.meat] += 2;
+                //        break;
+                //    case Wolf:
+                //        _stocks[FoodTypes.meat] += 2;
+                //        break;
+                //    case Fox:
+                //        _stocks[FoodTypes.meat] += 2;
+                //        break;
+                //    case Bear:
+                //        _stocks[FoodTypes.meat] += 5;
+                //        break;
+                //    case Pig:
+                //        _stocks[FoodTypes.meat] += 3;
+                //        break;
+                //    case Rat:
+                //        _stocks[FoodTypes.meat] += 1;
+                //        break;
+                //}
+            }
+        }
 
         //съесть либо запас, количество которого превышает остальные,
         //либо заданный запас (для человека или животного, которое он кормит)
@@ -226,7 +425,7 @@ namespace LabOOP1
             return _stocks.OrderByDescending(z => z.Value).ToDictionary(a => a, s => s).First().Value;
         }
 
-        private void DieHuman(List<Human> listOfHumans)
+        private void DieHuman(List<Animal> listOfHumans)
         {
             SetPosition((0, 0));
 
@@ -237,15 +436,26 @@ namespace LabOOP1
         protected override string GetInfo()
         {
             if (IsDead) { return "I'm dead... :("; }
-            var lines = _stocks.Select(kvp => kvp.Key + ": " + kvp.Value.ToString());
-            //string name = GetType().ToString()[(GetType().ToString().IndexOf(".") + 1)..].ToLower();
+            var linesS = _stocks.Select(kvp => "- " + kvp.Key + ": " + kvp.Value.ToString() + "/" + Constants.MaxCountOfStock);
+            string animals = "";
+            foreach (var pair in _domesticatedAnimal)
+            {
+                if (pair.Value != null)
+                {
+                    animals += pair.Key.Name + " (" + pair.Value.GetPosition() + "), ";
+                }
+            }
+
             string result = string.Concat("Hey! I am a ", gender, " and I'm an ", Nutrition.ToString(),
                 "\r\n", "My health level is ", _currentHealth,
                 "\r\n", "My satiety level is ", _currentSatiety,
                 "\r\n", "My position is ", currentPosition,
+                "\r\n", "My age is ", _age,
                 "\r\n", "Now I am ", myGoal,
-                "\r\n", "And my stocks is\r\n", string.Join(Environment.NewLine, lines),
-                "\r\n", "Max count of food in stocks is ", MaxCountOfStock);
+                "\r\n", partner == null ? "No partner yet" : "My patner's coordinate: " + partner.GetPosition(),
+                "\r\n", "My stocks:\r\n", string.Join(Environment.NewLine, linesS),
+                "\r\n", "And my animals:\r\n", animals);
+            //"\r\n", "Max count of food in stocks is ", Constants.MaxCountOfStock);
 
             return result;
         }

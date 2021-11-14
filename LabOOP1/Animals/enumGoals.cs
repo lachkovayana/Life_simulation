@@ -1,9 +1,12 @@
 ﻿namespace LabOOP1
 {
-    public enum GoalOfTheLastStep
+    public enum PurposeOfMovement
     {
         goingToFood,
         goingToPartner,
-        goingToRandomCell
+        goingToRandomCell,
+        goingToTame,
+        goingToCollectFood,
+        standing
     }
 }

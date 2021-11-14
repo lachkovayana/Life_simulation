@@ -3,11 +3,6 @@ using System.Collections.Generic;
 
 namespace LabOOP1
 {
-    public class Constants
-    {
-        public const double ImpVal = 1000000000;
-    }
-
     public abstract class Animal : FoodForOmnivorous
     {
         //--------------------------------------------------< fields >---------------------------------------------------------------
@@ -16,8 +11,8 @@ namespace LabOOP1
         private bool _isAbleToHibernate = false;
         private bool _wasEaten = false;
         private bool _isDead = false;
-
-        protected GoalOfTheLastStep myGoal = GoalOfTheLastStep.goingToRandomCell;
+        private bool _isDomesticated = false;
+        protected PurposeOfMovement myGoal = PurposeOfMovement.goingToRandomCell;
 
         protected Movement movement = new();
         protected int _timeSinceBreeding = 0;
@@ -37,6 +32,7 @@ namespace LabOOP1
         protected abstract int MaxSatiety { get; }
         public bool WasEaten { get => _wasEaten; set { _wasEaten = value; } }
         public bool IsDead { get => _isDead; set { _isDead = value; } }
+        public bool IsDomesticated { get => _isDomesticated; set { _isDomesticated = value; } }
 
         //--------------------------------------------------< class constructor >---------------------------------------------------------------
 
@@ -110,10 +106,10 @@ namespace LabOOP1
         //-------------< update the basis cell if the animal became hungry or its target dead while it going to the previous goal >-----------------
         private void CheckForUpdatingCellAndGoal()
         {
-            if (myGoal == GoalOfTheLastStep.goingToFood || myGoal == GoalOfTheLastStep.goingToPartner)
+            if (myGoal == PurposeOfMovement.goingToFood || myGoal == PurposeOfMovement.goingToPartner)
             {
                 BasisCellPosition = currentPosition;
-                myGoal = GoalOfTheLastStep.goingToRandomCell;
+                myGoal = PurposeOfMovement.goingToRandomCell;
             }
         }
 
@@ -124,7 +120,7 @@ namespace LabOOP1
         protected FoodForOmnivorous FindTarget(List<FoodForOmnivorous> listOfFoodForOmnivorous, Func<FoodForOmnivorous, bool> Check)
         {
             var minDist = Constants.ImpVal;
-            FoodForOmnivorous target = this;
+            FoodForOmnivorous target = null;
 
             foreach (FoodForOmnivorous f in listOfFoodForOmnivorous)
             {
@@ -186,7 +182,7 @@ namespace LabOOP1
 
             else if (target is Animal animal)
             {
-                animal.RemoveFromList(listOfAnimals);
+                animal.DieImmediately(listOfAnimals);
                 RiseSatiety();
             }
 
@@ -246,7 +242,7 @@ namespace LabOOP1
             return (_currentHealth == 0 || _age == 100);
         }
 
-        public void RemoveFromList(List<Animal> listOfAnimals)
+        public void DieImmediately(List<Animal> listOfAnimals)
         {
             listOfAnimals.Remove(this);
             //_isDead = true;
@@ -278,10 +274,9 @@ namespace LabOOP1
 
         private void ReproducingProcess(List<FoodForOmnivorous> listOfFoodForOmnivorous, List<Animal> listOfAnimals)
         {
-            myGoal = GoalOfTheLastStep.goingToPartner;
+            myGoal = PurposeOfMovement.goingToPartner;
 
-            Animal partner = (Animal)FindTarget(listOfFoodForOmnivorous, CheckPartner);
-            //Animal partner = FindPartner(listOfAnimals); 
+            Animal partner = (Animal)FindTarget(listOfFoodForOmnivorous, CheckPartner); 
 
             MoveToTarget(partner);
 
@@ -294,14 +289,16 @@ namespace LabOOP1
 
         private void EatingProcess(List<Animal> listOfAnimals, List<Plant> listOfPlants, List<Fruit> listOfFruits, List<FoodForOmnivorous> listOfFoodForOmnivorous)
         {
-            myGoal = GoalOfTheLastStep.goingToFood;
+            myGoal = PurposeOfMovement.goingToFood;
 
             var target = FindTarget(listOfFoodForOmnivorous, CheckForEating);
+            if (target != null)
+            {
+                MoveToTarget(target);
 
-            MoveToTarget(target);
-
-            if (target.GetPosition() == currentPosition)
-                Eat(target, listOfAnimals, listOfPlants, listOfFruits);
+                if (target.GetPosition() == currentPosition)
+                    Eat(target, listOfAnimals, listOfPlants, listOfFruits);
+            }
         }
 
 
@@ -318,7 +315,7 @@ namespace LabOOP1
             {
                 if (_wasEaten)
                 {
-                    RemoveFromList(listOfAnimals);
+                    DieImmediately(listOfAnimals);
                 }
                 else
                 {
@@ -356,7 +353,7 @@ namespace LabOOP1
         {
             if (_timeSinceDeath > 15)
             {
-                RemoveFromList(listOfAnimals);
+                DieImmediately(listOfAnimals);
             }
         }
 
@@ -377,6 +374,7 @@ namespace LabOOP1
                 ".\r\n", "My health level is ", _currentHealth,
                 ".\r\n", "My satiety level is ", _currentSatiety,
                 ".\r\n", "My position now is ", currentPosition,
+                "\r\n", "My age is ", _age,
                 ".\r\n", "And now I am ", myGoal);
 
             return result;
