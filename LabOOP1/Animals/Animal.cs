@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace LabOOP1
@@ -10,7 +10,6 @@ namespace LabOOP1
         private bool _isInHibernation = false;
         private bool _isAbleToHibernate = false;
         private bool _wasEaten = false;
-        private bool _wasCalled = false;
         private bool _isDead = false;
         private bool _isDomesticated = false;
         protected PurposeOfMovement myGoal = PurposeOfMovement.goingToRandomCell;
@@ -32,11 +31,8 @@ namespace LabOOP1
         protected abstract int MaxHealth { get; }
         protected abstract int MaxSatiety { get; }
         public bool WasEaten { get => _wasEaten; set { _wasEaten = value; } }
-        public bool WasCalled { get => _wasCalled; set { _wasCalled = value; } }
         public bool IsDead { get => _isDead; set { _isDead = value; } }
         public bool IsDomesticated { get => _isDomesticated; set { _isDomesticated = value; } }
-
-        public Human Owner;
 
         //--------------------------------------------------< class constructor >---------------------------------------------------------------
 
@@ -280,7 +276,7 @@ namespace LabOOP1
         {
             myGoal = PurposeOfMovement.goingToPartner;
 
-            Animal partner = (Animal)FindTarget(listOfFoodForOmnivorous, CheckPartner);
+            Animal partner = (Animal)FindTarget(listOfFoodForOmnivorous, CheckPartner); 
 
             MoveToTarget(partner);
 
@@ -315,22 +311,8 @@ namespace LabOOP1
             if (_isInHibernation)
                 RiseHealth();
 
-            //else if (_isDomesticated)
-            //{
-            //    if (movement.CountDistL1(currentPosition, Owner.GetPosition()) > 2)
-            //    {
-            //        MoveToTarget(Owner);
-            //    }
-            //    else
-            //    {
-            //        BasisCellPosition = Owner.GetPosition();
-            //    }
-            //}
-
-
             else
             {
-
                 if (_wasEaten)
                 {
                     DieImmediately(listOfAnimals);
@@ -343,37 +325,24 @@ namespace LabOOP1
                     if (_isDead)
                     {
                         _timeSinceDeath++;
-                        if (this is Pig)
-                        {
-                            DieImmediately(listOfAnimals);
-                        }
                         CheckTimeForRemoveFromList(listOfAnimals);
                     }
-
                     else
                     {
-
                         GeneralVoidsForLiveCicle(10);
-                        if (_wasCalled)
+                        if (_isHungry && CheckAbleToEat(listOfFoodForOmnivorous))
                         {
-                            MoveToTarget(Owner);
+                            EatingProcess(listOfAnimals, listOfPlants, listOfFruits, listOfFoodForOmnivorous);
+
+                        }
+                        else if (_isReadyToReproduce && CheckAbleToReproduce(listOfAnimals))
+                        {
+                            ReproducingProcess(listOfFoodForOmnivorous, listOfAnimals);
                         }
                         else
                         {
-                            if (_isHungry && CheckAbleToEat(listOfFoodForOmnivorous))
-                            {
-                                EatingProcess(listOfAnimals, listOfPlants, listOfFruits, listOfFoodForOmnivorous);
-
-                            }
-                            else if (_isReadyToReproduce && CheckAbleToReproduce(listOfAnimals))
-                            {
-                                ReproducingProcess(listOfFoodForOmnivorous, listOfAnimals);
-                            }
-                            else
-                            {
-                                CheckForUpdatingCellAndGoal();
-                                MoveToRandomCell();
-                            }
+                            CheckForUpdatingCellAndGoal();
+                            MoveToRandomCell();
                         }
                     }
                 }
