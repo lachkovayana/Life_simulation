@@ -8,6 +8,7 @@ namespace LabOOP1
         private List<Animal> _listOfAnimals = new();
         private List<Plant> _listOfAllPlants = new();
         private List<Fruit> _listOfFruits = new();
+        private List<Human> _listOfHumans = new();
         private List<FoodForHerbivorous> _listOfFoodForHerbivorous = new();
         private List<FoodForOmnivorous> _listOfFoodForOmnivorous = new();
         private readonly Rendering _rendering = new();
@@ -18,6 +19,7 @@ namespace LabOOP1
 
         private const int _densityAnimals = 20;
         private const int _densityPlants = 50;
+        private const int _densityHumans = 80;
 
 
         private void UpdateAnimals()
@@ -59,10 +61,19 @@ namespace LabOOP1
                 _listOfFoodForOmnivorous.Add(an);
             }
         }
+
+        private void UpdateMen()
+        {
+            foreach (Human human in _listOfHumans.ToArray())
+            {
+                human.LiveHumanCicle(_listOfHumans, _listOfFoodForOmnivorous, _listOfAnimals, _listOfAllPlants, _listOfFruits);
+            }
+        }
+
         private void UpdateSeason(int timerValue)
         {
-            //if (timerValue % 10 == 0)
-            //    s_currentSeason = (timerValue % 20 == 0) ? Season.summer : Season.winter;
+            if (timerValue % 150 == 0)
+                s_currentSeason = (timerValue % 300 == 0) ? Season.summer : Season.winter;
         }
 
         public void LiveOneCicle(int timerValue)
@@ -71,7 +82,8 @@ namespace LabOOP1
             UpdateAnimals();
             UpdatePlants();
             UpdateFood();
-            _rendering.UpdateField(_listOfAnimals, _listOfAllPlants, _listOfFruits);
+            UpdateMen();
+            _rendering.UpdateField(_listOfAnimals, _listOfAllPlants, _listOfFruits, _listOfHumans);
             listOfAnimalsCopy = _listOfAnimals;
         }
 
@@ -89,60 +101,50 @@ namespace LabOOP1
                         {
                             case 0:
                                 _listOfAnimals.Add(new Rabbit((x, y)));
-                                //_rendering.DrawFirstGeneration(MapObject.rabbit, x, y);
                                 break;
                             case 1:
                                 _listOfAnimals.Add(new Horse((x, y)));
-                                //_rendering.DrawFirstGeneration(MapObject.horse, x, y);
                                 break;
                             case 2:
-                                _listOfAnimals.Add(new Giraffe((x, y)));
-                                //_rendering.DrawFirstGeneration(MapObject.giraffe, x, y);
+                                _listOfAnimals.Add(new Sheep((x, y)));
                                 break;
                             case 3:
                                 _listOfAnimals.Add(new Tiger((x, y)));
-                                //_rendering.DrawFirstGeneration(MapObject.tiger, x, y);
                                 break;
                             case 4:
                                 _listOfAnimals.Add(new Wolf((x, y)));
-                                //_rendering.DrawFirstGeneration(MapObject.wolf, x, y);
                                 break;
                             case 5:
                                 _listOfAnimals.Add(new Fox((x, y)));
-                                //_rendering.DrawFirstGeneration(MapObject.fox, x, y);
                                 break;
                             case 6:
                                 _listOfAnimals.Add(new Bear((x, y)));
-                                //_rendering.DrawFirstGeneration(MapObject.bear, x, y);
                                 break;
                             case 7:
                                 _listOfAnimals.Add(new Pig((x, y)));
-                                //_rendering.DrawFirstGeneration(MapObject.pig, x, y);
                                 break;
                             case 8:
                                 _listOfAnimals.Add(new Rat((x, y)));
-                                //_rendering.DrawFirstGeneration(MapObject.rat, x, y);
                                 break;
                         }
                     }
-                    else
+                    else if (random.Next(_densityPlants) == 0)
                     {
-                        switch (random.Next(_densityPlants))
+                        switch (random.Next(0, 2))
                         {
                             case 0:
-                                EdiblePlant newEPlant = new((x, y));
-                                _listOfAllPlants.Add(newEPlant);
-                                //if (newEPlant.IsHealthy())
-                                //    _rendering.DrawFirstGeneration(MapObject.ediblePlantHealthy, x, y);
-                                //else
-                                //    _rendering.DrawFirstGeneration(MapObject.ediblePlantPoisonous, x, y);
+                                _listOfAllPlants.Add(new EdiblePlant((x, y)));
                                 break;
 
                             case 1:
                                 _listOfAllPlants.Add(new InediblePlant((x, y)));
-                                //_rendering.DrawFirstGeneration(MapObject.inediblePlant, x, y);
                                 break;
                         }
+
+                    }
+                    else if (random.Next(_densityHumans) == 0)
+                    {
+                        _listOfHumans.Add(new Human((x, y)));
 
                     }
                     listOfAnimalsCopy = _listOfAnimals;

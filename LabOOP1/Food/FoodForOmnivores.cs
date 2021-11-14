@@ -2,6 +2,9 @@
 {
     public abstract class FoodForOmnivorous
     {
+        //protected abstract int NutritionalUnit { get;}
+        protected abstract string GetInfo();
+
         protected (int, int) currentPosition;
         public FoodForOmnivorous((int, int) pos)
         {
@@ -13,6 +16,7 @@
             Rendering.LightChoosen(currentPosition.Item1, currentPosition.Item2);
             return GetInfo();
         }
-        protected virtual string GetInfo() { return ""; }
-    }
+        
+
+}
 }

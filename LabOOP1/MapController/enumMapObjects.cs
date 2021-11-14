@@ -2,7 +2,7 @@
 {
     public enum MapObject
     {
-        rabbit, horse, giraffe,
+        rabbit, horse, sheep,
         tiger, wolf, fox,
         bear, pig, rat,
 

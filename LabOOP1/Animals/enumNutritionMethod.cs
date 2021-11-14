@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace LabOOP1
+﻿namespace LabOOP1
 {
     public enum NutritionMethod
     {

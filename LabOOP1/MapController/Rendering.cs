@@ -13,7 +13,7 @@ namespace LabOOP1
         Image rabbitImg = Image.FromFile("../../../img/OneRabbitCut.png");
         Image bearImg = Image.FromFile("../../../img/OneBearCut.png");
         Image horseImg = Image.FromFile("../../../img/OneHorseCut.png");
-        Image giraffeImg = Image.FromFile("../../../img/OneGiraffeCut.png");
+        Image sheepImg = Image.FromFile("../../../img/OneSheep.png");
         Image foxImg = Image.FromFile("../../../img/OneFoxCut.png");
         Image tigerImg = Image.FromFile("../../../img/OneTigerCut.png");
         Image ratImg = Image.FromFile("../../../img/OneRatCut.png");
@@ -47,28 +47,56 @@ namespace LabOOP1
         Image treeSeed = Image.FromFile("../../../img/treeSeed.png");
         Image treeSprout = Image.FromFile("../../../img/treeSprout.png");
 
+        Image man = Image.FromFile("../../../img/human.png");
+        Image woman = Image.FromFile("../../../img/primitiveWoman.png");
+
+        Image meat = Image.FromFile("../../../img/meat.png");
+
         public static FoodForOmnivorous[,] FieldOfAllMapObjects = new FoodForOmnivorous[Form1.s_cols, Form1.s_rows];
 
         Color seasonColor = Color.Gainsboro;
 
-        public static (int, int) coorLight; 
+        public static (int, int) coorLight;
 
-        public void UpdateField(List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits)
+        public void UpdateField(List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits, List<Human> listOfHumans)
         {
             UpdateSeasonColor();
-            RefreshField();
+            ClearField();
             UpdatePlants(listOfAllPlants);
             UpdateFruits(listOfFruits);
+            UpdateHumans(listOfHumans);
             UpdateAnimals(listOfAnimals);
+
+            Form1.s_pictureBox.Refresh();
+
         }
         void UpdateSeasonColor()
         {
             seasonColor = (MapObjectsControl.s_currentSeason == Season.summer) ? Color.DarkSeaGreen : Color.Gainsboro;
         }
-        void RefreshField()
+        void ClearField()
         {
             FieldOfAllMapObjects = new FoodForOmnivorous[Form1.s_cols, Form1.s_rows];
             Form1.s_graphics.Clear(seasonColor);
+        }
+        private void UpdateHumans(List<Human> listOfHumans)
+        {
+            foreach (Human h in listOfHumans)
+            {
+                int x = h.GetPosition().Item1;
+                int y = h.GetPosition().Item2;
+                FieldOfAllMapObjects[x, y] = h;
+                switch (h.gender)
+                {
+                    case Gender.female:
+                        Draw(woman, x, y);
+                        break;
+                    case Gender.male:
+                        Draw(man, x, y);
+                        break;
+
+                }
+            }
         }
 
         void UpdatePlants(List<Plant> listOfPlants)
@@ -192,40 +220,42 @@ namespace LabOOP1
                 int y = animal.GetPosition().Item2;
 
                 FieldOfAllMapObjects[x, y] = animal;
-
-                switch (animal)
+                if (animal.IsDead)
+                    Draw(meat, x, y);
+                else
                 {
-                    case Rabbit:
-                        Draw(rabbitImg, x, y);
-                        break;
-                    case Horse:
-                        Draw(horseImg, x, y);
-                        break;
-                    case Giraffe:
-                        Draw(giraffeImg, x, y);
-                        break;
-                    case Tiger:
-                        Draw(tigerImg, x, y);
-                        break;
-                    case Wolf:
-                        Draw(wolfImg, x, y);
-                        break;
-                    case Fox:
-                        Draw(foxImg, x, y);
-                        break;
-                    case Bear:
-                        Draw(bearImg, x, y);
-                        break;
-                    case Pig:
-                        Draw(pigImg, x, y);
-                        break;
-                    case Rat:
-                        Draw(ratImg, x, y);
-                        break;
+                    switch (animal)
+                    {
+                        case Rabbit:
+                            Draw(rabbitImg, x, y);
+                            break;
+                        case Horse:
+                            Draw(horseImg, x, y);
+                            break;
+                        case Sheep:
+                            Draw(sheepImg, x, y);
+                            break;
+                        case Tiger:
+                            Draw(tigerImg, x, y);
+                            break;
+                        case Wolf:
+                            Draw(wolfImg, x, y);
+                            break;
+                        case Fox:
+                            Draw(foxImg, x, y);
+                            break;
+                        case Bear:
+                            Draw(bearImg, x, y);
+                            break;
+                        case Pig:
+                            Draw(pigImg, x, y);
+                            break;
+                        case Rat:
+                            Draw(ratImg, x, y);
+                            break;
+                    }
                 }
             }
-            Form1.s_pictureBox.Refresh();
-
         }
         public static void LightChoosen(int x, int y)
         {

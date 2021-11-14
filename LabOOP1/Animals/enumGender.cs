@@ -1,7 +1,8 @@
-﻿using System;
-
-enum Gender
+﻿namespace LabOOP1
 {
-	male,
-	female
+    public enum Gender
+    {
+        male,
+        female
+    }
 }

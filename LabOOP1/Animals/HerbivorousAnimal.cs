@@ -33,7 +33,7 @@ namespace LabOOP1
     {
 
         public Rabbit((int, int) pos) : base(pos) { }
-        protected override int MaxHealth { get { return 80; } }
+        protected override int MaxHealth { get => 80;  }
         protected override int MaxSatiety { get { return 80; } }
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
@@ -69,14 +69,14 @@ namespace LabOOP1
         }
     }
 
-    public class Giraffe : HerbivorousAnimal
+    public class Sheep : HerbivorousAnimal
     {
-        public Giraffe((int, int) pos) : base(pos) { }
+        public Sheep((int, int) pos) : base(pos) { }
         protected override int MaxHealth { get { return 90; } }
         protected override int MaxSatiety { get { return 90; } }
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
-            listOfAnimals.Add(new Giraffe(currentPosition));
+            listOfAnimals.Add(new Sheep(currentPosition));
         }
         protected override (int, int) MoveToRandomCellOver()
         {

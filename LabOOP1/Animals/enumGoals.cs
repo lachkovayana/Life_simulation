@@ -1,6 +1,6 @@
 ﻿namespace LabOOP1
 {
-    enum GoalOfTheLastStep
+    public enum GoalOfTheLastStep
     {
         goingToFood,
         goingToPartner,

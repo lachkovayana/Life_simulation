@@ -5,8 +5,9 @@ namespace LabOOP1
 {
     public class Fruit : FoodForHerbivorous
     {
-
         public Fruit((int, int) pos) : base(pos) { }
+
+        //protected override int NutritionalUnit { get;}
 
         public void Die(List<Fruit> list)
         {
