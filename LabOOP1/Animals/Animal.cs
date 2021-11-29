@@ -12,9 +12,8 @@ namespace LabOOP1
         private bool _wasEaten = false;
         private bool _isDead = false;
         private bool _isDomesticated = false;
-        protected PurposeOfMovement myGoal = PurposeOfMovement.goingToRandomCell;
 
-        protected Movement movement = new();
+        protected (int, int) BasisCellPosition;
         protected int _timeSinceBreeding = 0;
         protected int _timeSinceDeath = 0;
         protected int _currentSatiety;
@@ -23,14 +22,14 @@ namespace LabOOP1
         protected bool _isHungry = false;
         protected bool _isReadyToReproduce = false;
         protected NutritionMethod Nutrition = NutritionMethod.omnivorous;
-
-        protected (int, int) BasisCellPosition;
+        protected PurposeOfMovement myGoal = PurposeOfMovement.goingToRandomCell;
+        protected Movement movement = new();
 
         public Gender gender = Gender.female;
 
         protected abstract int MaxHealth { get; }
         protected abstract int MaxSatiety { get; }
-        public bool WasEaten { get => _wasEaten; set { _wasEaten = value; } }
+        public bool WasEaten { get => _wasEaten; set { _wasEaten = value; _isDead = value; } }
         public bool IsDead { get => _isDead; set { _isDead = value; } }
         public bool IsDomesticated { get => _isDomesticated; set { _isDomesticated = value; } }
 
@@ -58,9 +57,19 @@ namespace LabOOP1
         protected abstract (int, int) MoveToRandomCellOver();
         protected abstract (int, int) MoveToTargetOver(FoodForOmnivorous target);
         protected abstract void Reproduce(List<Animal> listOfAnimals);
-        protected abstract bool CheckAbleToEat(List<FoodForOmnivorous> listOfFoodForOmnivorous);
+        //protected abstract bool CheckAbleToEat(List<FoodForOmnivorous> listOfFoodForOmnivorous);
         protected abstract bool CheckForEating(FoodForOmnivorous food);
         protected abstract void SetNutrition();
+        protected bool CheckAbleToEat(List<FoodForOmnivorous> listOfFoodForOmnivorous, Func<FoodForOmnivorous, bool> Check)
+        {
+
+            foreach (FoodForOmnivorous food in listOfFoodForOmnivorous)
+            {
+                if (Check(food))
+                    return true;
+            }
+            return false;
+        }
 
 
         //------------------------------------------< methods for update health and satiety >-----------------------------------------------------
@@ -174,7 +183,7 @@ namespace LabOOP1
                 else if (target is EdiblePlant plant)
                     plant.Die(listOfAllPlants);
 
-                if (f.IsHealthy())
+                if (f.IsHealthy)
                     RiseSatiety();
                 else
                     DecreaseHealthByZero();
@@ -182,7 +191,8 @@ namespace LabOOP1
 
             else if (target is Animal animal)
             {
-                animal.DieImmediately(listOfAnimals);
+                //animal.DieImmediately(listOfAnimals);
+                animal.WasEaten = true;
                 RiseSatiety();
             }
 
@@ -191,7 +201,7 @@ namespace LabOOP1
 
         //---------------------------------------------< reproduce characters >-------------------------------------------------------
 
-        private bool CheckAbleToReproduce(List<Animal> listOfAnimals)
+        protected bool CheckAbleToReproduce(List<Animal> listOfAnimals)
         {
             foreach (Animal animal in listOfAnimals)
             {
@@ -276,7 +286,7 @@ namespace LabOOP1
         {
             myGoal = PurposeOfMovement.goingToPartner;
 
-            Animal partner = (Animal)FindTarget(listOfFoodForOmnivorous, CheckPartner); 
+            Animal partner = (Animal)FindTarget(listOfFoodForOmnivorous, CheckPartner);
 
             MoveToTarget(partner);
 
@@ -287,22 +297,19 @@ namespace LabOOP1
             }
         }
 
-        private void EatingProcess(List<Animal> listOfAnimals, List<Plant> listOfPlants, List<Fruit> listOfFruits, List<FoodForOmnivorous> listOfFoodForOmnivorous)
+        protected void EatingProcess(List<Animal> listOfAnimals, List<Plant> listOfPlants, List<Fruit> listOfFruits, List<FoodForOmnivorous> listOfFoodForOmnivorous)
         {
-            myGoal = PurposeOfMovement.goingToFood;
 
             var target = FindTarget(listOfFoodForOmnivorous, CheckForEating);
             if (target != null)
             {
                 MoveToTarget(target);
+                myGoal = PurposeOfMovement.goingToFood;
 
                 if (target.GetPosition() == currentPosition)
                     Eat(target, listOfAnimals, listOfPlants, listOfFruits);
             }
         }
-
-
-
 
         //--------------------------------------------------< main part >---------------------------------------------------------------
         public void LiveAnimalCicle(List<Animal> listOfAnimals, List<Plant> listOfPlants, List<Fruit> listOfFruits, List<FoodForOmnivorous> listOfFoodForOmnivorous)
@@ -330,10 +337,9 @@ namespace LabOOP1
                     else
                     {
                         GeneralVoidsForLiveCicle(10);
-                        if (_isHungry && CheckAbleToEat(listOfFoodForOmnivorous))
+                        if (_isHungry && CheckAbleToEat(listOfFoodForOmnivorous, CheckForEating))
                         {
                             EatingProcess(listOfAnimals, listOfPlants, listOfFruits, listOfFoodForOmnivorous);
-
                         }
                         else if (_isReadyToReproduce && CheckAbleToReproduce(listOfAnimals))
                         {

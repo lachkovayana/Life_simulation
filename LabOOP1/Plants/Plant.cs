@@ -51,11 +51,13 @@ namespace LabOOP1
         private void UpdateAge()
         {
             _age++;
-            if (_age == 10)
+            //if (_age == 10)
+            if (_age == 5)
             {
                 Stage = PlantStage.sprout;
             }
-            if (_age == 20)
+            //if (_age == 20)
+            if (_age == 8)
             {
                 Stage = PlantStage.grown;
             }
@@ -115,9 +117,9 @@ namespace LabOOP1
                 {
                     name = (_isHealthy ? "healthy" : "poisonous") + " " + name;
                 }
-                name += (_isAbleToSurviveTheWinter ? " and I am able to survive the winter" : " and I will die when winter comes... ");
-                name += "\r\n" + (_isStopsFruits ? "Also, I stop growing fruit" : "But I can grow fruit every season, you know!");
-
+                name += (_isAbleToSurviveTheWinter ? " and I am able to survive the winter" : " and I will die when winter comes...");
+                var tmp = _isAbleToSurviveTheWinter ? (_isStopsFruits ? "I stop growing fruit" : "I can grow fruit every season") : "";
+                name += "\r\n" + tmp;
                 string result = string.Concat("Hey! I am an ", name,
                     ".\r\nI'm a ", Stage, " now",
                     ".\r\nMy position now is ", currentPosition);

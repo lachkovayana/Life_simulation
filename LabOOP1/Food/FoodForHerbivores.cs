@@ -5,6 +5,8 @@ namespace LabOOP1
 	{
 		private readonly int _densityHealthyPlant = 4;
 		protected bool _isHealthy = true; 
+
+		public bool IsHealthy { get => _isHealthy; }
 		public FoodForHerbivorous((int, int) pos) : base(pos)
 		{
 			Random random = new();
@@ -13,10 +15,7 @@ namespace LabOOP1
 				_isHealthy = false;
 			}
 		}
-		public bool IsHealthy()
-		{
-			return _isHealthy;
-		}
+	
 		public virtual void SetHealthStatus(bool status)
 		{
 			_isHealthy = status;

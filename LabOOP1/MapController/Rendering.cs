@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Collections.Generic;
 
 
@@ -114,13 +112,13 @@ namespace LabOOP1
                         switch (plant.Stage)
                         {
                             case PlantStage.seed:
-                                if (plant1.IsHealthy())
+                                if (plant1.IsHealthy)
                                     Draw(plantSeed, x, y);
                                 else
                                     Draw(plantPoisonousSeed, x, y);
                                 break;
                             case PlantStage.sprout:
-                                if (plant1.IsHealthy())
+                                if (plant1.IsHealthy)
                                 {
                                     if (plant1.IsFruiting())
                                         Draw(ePLantHealthyFruitingSprout, x, y);
@@ -136,7 +134,7 @@ namespace LabOOP1
                                 }
                                 break;
                             case PlantStage.grown:
-                                if (plant1.IsHealthy())
+                                if (plant1.IsHealthy)
                                 {
                                     if (plant1.IsFruiting())
                                     {
@@ -157,7 +155,7 @@ namespace LabOOP1
 
                                 break;
                             case PlantStage.dead:
-                                if (plant1.IsHealthy())
+                                if (plant1.IsHealthy)
                                     Draw(ePLantHealthyDead, x, y);
                                 else
                                     Draw(ePLantPoisionousDead, x, y);
@@ -201,7 +199,7 @@ namespace LabOOP1
                 int y = fruit.GetPosition().Item2;
                 FieldOfAllMapObjects[x, y] = fruit;
 
-                if (fruit.IsHealthy())
+                if (fruit.IsHealthy)
                 {
                     Draw(fruitHealthy, x, y);
                 }

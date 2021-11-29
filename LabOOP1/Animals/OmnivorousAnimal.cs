@@ -11,16 +11,7 @@ namespace LabOOP1
         public OmnivorousAnimal((int, int) pos) : base(pos) {}
 
         //--------------------------------------------------<override methods>---------------------------------------------------------------
-        protected override bool CheckAbleToEat(List<FoodForOmnivorous> listOfFoodForOmnivorous)
-        {
 
-            foreach (FoodForOmnivorous food in listOfFoodForOmnivorous)
-            {
-                if (food is FoodForHerbivorous || (food is Animal && food.GetType() != this.GetType()))
-                    return true;
-            }
-            return false;
-        }
         protected override bool CheckForEating(FoodForOmnivorous food)
         {
             return (food is FoodForHerbivorous ||  (food is Animal animal && !food.Equals(this) && animal.GetType() != GetType()));
