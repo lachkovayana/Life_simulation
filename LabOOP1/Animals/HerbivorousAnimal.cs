@@ -15,7 +15,10 @@ namespace LabOOP1
         {
             Nutrition = NutritionMethod.herbivorous;
         }
-
+        protected override bool CheckOwnerStocks()
+        {
+            return Owner.CheckStocks(FoodTypes.plant) || Owner.CheckStocks(FoodTypes.fruit);
+        }
     }
 
     //--------------------------------------------------<inheritor classes>---------------------------------------------------------------
@@ -27,6 +30,8 @@ namespace LabOOP1
         public Rabbit((int, int) pos) : base(pos) { }
         protected override int MaxHealth { get => 80;  }
         protected override int MaxSatiety { get { return 80; } }
+        protected override bool IsAbleToHibernate { get { return true; } }
+
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
             listOfAnimals.Add(new Rabbit(currentPosition));
@@ -47,13 +52,14 @@ namespace LabOOP1
         public Horse((int, int) pos) : base(pos) { }
         protected override int MaxHealth { get { return 100; } }
         protected override int MaxSatiety { get { return 100; } }
+
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
             listOfAnimals.Add(new Horse(currentPosition));
         }
         protected override (int, int) MoveToRandomCellOver()
         {
-            return movement.MoveToRCNotGoingFar(currentPosition, BasisCellPosition);
+            return movement.MoveToRCWithProbability(this);
         }
         protected override (int, int) MoveToTargetOver(FoodForOmnivorous target)
         {
@@ -66,13 +72,14 @@ namespace LabOOP1
         public Sheep((int, int) pos) : base(pos) { }
         protected override int MaxHealth { get { return 90; } }
         protected override int MaxSatiety { get { return 90; } }
+
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
             listOfAnimals.Add(new Sheep(currentPosition));
         }
         protected override (int, int) MoveToRandomCellOver()
         {
-            return movement.MoveToRCWithProbability(this);
+            return movement.MoveToRCNotGoingFar(currentPosition, BasisCellPosition, this);
         }
         protected override (int, int) MoveToTargetOver(FoodForOmnivorous target)
         {

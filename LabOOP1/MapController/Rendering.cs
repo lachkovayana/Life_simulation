@@ -186,7 +186,6 @@ namespace LabOOP1
                         }
                         break;
                 }
-
             }
         }
 
@@ -263,6 +262,7 @@ namespace LabOOP1
         void Draw(Image img, int x, int y)
         {
             Form1.s_graphics.DrawImage(img, x * Form1.s_resolution, y * Form1.s_resolution, new Rectangle(new Point(0, 0), new Size(35, 35)), GraphicsUnit.Pixel);
+            //Form1.s_graphics.DrawImage(img, x * Form1.s_resolution, y * Form1.s_resolution, 15, 15);
         }
     }
 }

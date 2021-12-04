@@ -20,6 +20,10 @@ namespace LabOOP1
         {
             Nutrition = NutritionMethod.omnivorous;
         }
+        protected override bool CheckOwnerStocks()
+        {
+            return Owner.CheckStocks(FoodTypes.plant) || Owner.CheckStocks(FoodTypes.fruit) || Owner.CheckStocks(FoodTypes.meat);
+        }
     }
 
 
@@ -30,6 +34,7 @@ namespace LabOOP1
         public Bear((int, int) pos) : base(pos) {}
         protected override int MaxHealth { get { return 120; } }
         protected override int MaxSatiety { get { return 120; } }
+        protected override bool IsAbleToHibernate { get { return true; } }
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
             listOfAnimals.Add(new Bear(currentPosition));
@@ -50,13 +55,14 @@ namespace LabOOP1
         public Pig((int, int) pos) : base(pos) {}
         protected override int MaxHealth { get { return 140; } }
         protected override int MaxSatiety { get { return 140; } }
+
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
             listOfAnimals.Add(new Pig(currentPosition));
         }
         protected override (int, int) MoveToRandomCellOver()
         {
-            return movement.MoveToRCNotGoingFar(currentPosition, BasisCellPosition);
+            return movement.MoveToRCNotGoingFar(currentPosition, BasisCellPosition, this);
         }
 
         protected override (int, int) MoveToTargetOver(FoodForOmnivorous target)
@@ -70,6 +76,7 @@ namespace LabOOP1
         public Rat((int, int) pos) : base(pos) {}
         protected override int MaxHealth { get { return 150; } }
         protected override int MaxSatiety { get { return 150; } }
+
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
             listOfAnimals.Add(new Rat(currentPosition));

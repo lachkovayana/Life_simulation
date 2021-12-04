@@ -11,7 +11,7 @@ namespace LabOOP1
         }
 
         //случайное движение, не отходя больше чем на 2 клетки от места рождения/последней еды
-        public (int, int) MoveToRCNotGoingFar((int, int) pos, (int, int) basisCellPos)
+        public (int, int) MoveToRCNotGoingFar((int, int) pos, (int, int) basisCellPos, Animal an)
         {
             Random rnd = new();
             int x, y;

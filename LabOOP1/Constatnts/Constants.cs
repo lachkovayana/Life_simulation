@@ -3,6 +3,6 @@
     public class Constants
     {
         public const double ImpVal = 1000000000;
-        public const int MaxCountOfStock = 3;
+        public const int MaxCountOfStock = 1;
     }
 }

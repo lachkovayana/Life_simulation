@@ -2,11 +2,16 @@
 {
     public enum PurposeOfMovement
     {
-        goingToFood,
-        goingToPartner,
-        goingToRandomCell,
-        goingToTame,
-        goingToCollectFood,
-        standing
+        goToFood,
+        goToPartner,
+        goToRandomCell,
+        goToTame,
+        goToCollectFood,
+        stand,
+        sleep,
+        goToOwner, 
+        walkNextToOwner,
+        moveAwayFromOwnerToEat,
+        moveAwayFromOwnerToReproduce
     }
 }

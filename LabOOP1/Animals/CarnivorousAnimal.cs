@@ -18,6 +18,10 @@ namespace LabOOP1
         {
             Nutrition = NutritionMethod.carnivorous;
         }
+        protected override bool CheckOwnerStocks()
+        {
+            return Owner.CheckStocks(FoodTypes.meat);
+        }
 
     }
     //--------------------------------------------------<inheritor classes>---------------------------------------------------------------
@@ -27,6 +31,7 @@ namespace LabOOP1
         public Tiger((int, int) pos) : base(pos) { }
         protected override int MaxHealth { get { return 120; } }
         protected override int MaxSatiety { get { return 120; } }
+
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
             listOfAnimals.Add(new Tiger(currentPosition));
@@ -49,13 +54,14 @@ namespace LabOOP1
         public Wolf((int, int) pos) : base(pos) { }
         protected override int MaxHealth { get { return 130; } }
         protected override int MaxSatiety { get { return 130; } }
+
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
             listOfAnimals.Add(new Wolf(currentPosition));
         }
         protected override (int, int) MoveToRandomCellOver()
         {
-            return movement.MoveToRCNotGoingFar(currentPosition, BasisCellPosition);
+            return movement.MoveToRCNotGoingFar(currentPosition, BasisCellPosition, this);
         }
         protected override (int, int) MoveToTargetOver(FoodForOmnivorous target)
         {
@@ -71,6 +77,8 @@ namespace LabOOP1
 
         protected override int MaxHealth { get { return 110; } }
         protected override int MaxSatiety { get { return 110; } }
+        protected override bool IsAbleToHibernate { get { return true; } }
+
         protected override void Reproduce(List<Animal> listOfAnimals)
         {
             listOfAnimals.Add(new Fox(currentPosition));

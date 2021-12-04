@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Animals",
+    "\\Human",
+    "\\MapController"
   ],
   "SelectedNode": "\\LabOOP1.sln",
   "PreviewInSolutionExplorer": false

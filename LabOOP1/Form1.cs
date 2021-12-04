@@ -9,6 +9,7 @@ namespace LabOOP1
     public partial class Form1 : Form
     {
         public static int s_resolution = 35;
+         //public static int s_resolution = 15;
         public static Graphics s_graphics;
         public static int s_rows;
         public static int s_cols;
@@ -23,6 +24,8 @@ namespace LabOOP1
         {
             InitializeComponent();
             pictureBox1.Size = new Size(1000,700);
+            //pictureBox1.Size = new Size(15000, 15000);
+
         }
 
         private void Timer1_Tick(object sender, EventArgs e)

@@ -13,7 +13,7 @@ namespace LabOOP1
         private List<FoodForOmnivorous> _listOfFoodForOmnivorous = new();
         private readonly Rendering _rendering = new();
 
-        public static Season s_currentSeason = Season.summer;
+        public static Season s_currentSeason;
 
         public static List<Animal> listOfAnimalsCopy = new();
 
@@ -21,6 +21,10 @@ namespace LabOOP1
         private const int _densityPlants = 50;
         private const int _densityHumans = 50;
 
+        public MapObjectsControl()
+        {
+            s_currentSeason = Season.summer;
+        }
 
         private void UpdateAnimals()
         {
