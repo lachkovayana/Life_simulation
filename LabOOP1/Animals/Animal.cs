@@ -99,7 +99,7 @@ namespace LabOOP1
         }
         protected void DecreaseSatiety()
         {
-            int decreaseCoef = MapObjectsControl.s_currentSeason == Season.winter ? 10 : 5;
+            int decreaseCoef = MapObjectsControl.s_currentSeason == Season.winter ? 5 : 3;
             _currentSatiety = Math.Max(0, _currentSatiety - decreaseCoef);
             if (_currentSatiety <= 50)
             {
