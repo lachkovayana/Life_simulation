@@ -13,13 +13,13 @@ namespace LabOOP1
             { FoodTypes.fruit, 0 },
             { FoodTypes.plant, 0 }
         };
-        //private Dictionary<FoodTypes, int> _toolsStocks = new()
-        //{
-        //    { FoodTypes.wood, 0 },
-        //    { FoodTypes.stone, 0 },
-        //    { FoodTypes.iron, 0 },
-        //    { FoodTypes.gold, 0 }
-        //};
+        private Dictionary<ResourceTypes, int> _resourceStocks = new()
+        {
+            { ResourceTypes.wood, 0 },
+            { ResourceTypes.stone, 0 },
+            { ResourceTypes.iron, 0 },
+            { ResourceTypes.gold, 0 }
+        };
         private Dictionary<Type, Animal> _domesticatedAnimal = new()
         {
             { typeof(Wolf), null },
@@ -107,6 +107,9 @@ namespace LabOOP1
                 else
                 {
 
+                    //if инвентарь заполнен, то идти к хранилищу  
+                    // else 
+
                     if (CheckStockNotReachedLimit(FoodTypes.plant) && CheckAbleToFindFood(listOfFoodForOmnivorous, (food) => food is EdiblePlant f && f.IsHealthy && f.Stage != PlantStage.seed))
                     {
                         GoCollectPlantsMyself(listOfFoodForOmnivorous, listOfPlants, listOfFruits, (food) => food is Plant pl && pl.IsHealthy);
@@ -128,8 +131,12 @@ namespace LabOOP1
                             GoTameAnimals(listOfFoodForOmnivorous);
                         }
                     }
+                    //else if {
+                        //идти к источнику
+                    //}
                     else
                     {
+                        var pp = Source.GetItem<GoldSource>();
                         MoveToRandomCell();
                         myGoal = PurposeOfMovement.goToRandomCell;
                     }
@@ -330,7 +337,7 @@ namespace LabOOP1
 
             foreach (var pair in _foodStocks)
             {
-                if (pair.Value != Constants.MaxCountOfStock)
+                if (pair.Value != Constants.MaxCountOfFoodStock)
                     desiredFoodTypesList.Add(pair.Key);
             }
         }
@@ -422,7 +429,7 @@ namespace LabOOP1
 
         //--------------------------------------------------------< stocks >-----------------------------------------------------------
 
-        private bool CheckStoksFullness(int count = Constants.MaxCountOfStock)
+        private bool CheckStoksFullness(int count = Constants.MaxCountOfFoodStock)
         {
             foreach (var pair in _foodStocks)
             {
@@ -431,7 +438,7 @@ namespace LabOOP1
             }
             return true;
         }
-        private bool CheckStockNotReachedLimit(FoodTypes ft, int count = Constants.MaxCountOfStock)
+        private bool CheckStockNotReachedLimit(FoodTypes ft, int count = Constants.MaxCountOfFoodStock)
         {
             return _foodStocks[ft] < count;
         }
@@ -488,7 +495,7 @@ namespace LabOOP1
         protected override string GetInfo()
         {
             if (IsDead) { return "I'm dead... :("; }
-            var linesS = _foodStocks.Select(kvp => "- " + kvp.Key + ": " + kvp.Value + "/" + Constants.MaxCountOfStock);
+            var linesS = _foodStocks.Select(kvp => "- " + kvp.Key + ": " + kvp.Value + "/" + Constants.MaxCountOfFoodStock);
             string domAnimals = "";
             foreach (var pair in _domesticatedAnimal)
             {

@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using System.Collections.Generic;
-
+using System;
 
 namespace LabOOP1
 {
@@ -50,6 +50,11 @@ namespace LabOOP1
 
         Image meat = Image.FromFile("../../../img/meat.png");
 
+        Image goldSourse = Image.FromFile("../../../img/gold.png");
+        Image ironSourse = Image.FromFile("../../../img/iron.png");
+        Image stoneSourse = Image.FromFile("../../../img/stone.png");
+        Image woodSourse = Image.FromFile("../../../img/wood.png");
+
         public static FoodForOmnivorous[,] FieldOfAllMapObjects = new FoodForOmnivorous[Form1.s_cols, Form1.s_rows];
 
         Color seasonColor = Color.Gainsboro;
@@ -68,6 +73,32 @@ namespace LabOOP1
             Form1.s_pictureBox.Refresh();
 
         }
+
+        //private void UpdateSources(MyList<Source> listOfSources)
+        //{
+        //    foreach (Source in listOfSources)
+        //    {
+        //        switch (Source)
+        //        {
+        //            case PlantStage.seed:
+        //                Draw(treeSeed, x, y);
+        //                break;
+        //            case PlantStage.sprout:
+        //                Draw(treeSprout, x, y);
+        //                break;
+        //            case PlantStage.grown:
+        //                if (plant.IsFruiting())
+        //                    Draw(iPlantFruiting, x, y);
+        //                else
+        //                    Draw(iPlant, x, y);
+        //                break;
+        //            case PlantStage.dead:
+        //                Draw(treeDead, x, y);
+        //                break;
+        //        }
+        //    }
+        //}
+
         void UpdateSeasonColor()
         {
             seasonColor = (MapObjectsControl.s_currentSeason == Season.summer) ? Color.DarkSeaGreen : Color.Gainsboro;

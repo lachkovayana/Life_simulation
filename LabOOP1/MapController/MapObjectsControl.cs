@@ -9,6 +9,9 @@ namespace LabOOP1
         private List<Plant> _listOfAllPlants = new();
         private List<Fruit> _listOfFruits = new();
         private List<Animal> _listOfHumans = new();
+        //MyList<Resources> _listOfSources = new();
+
+
         private List<FoodForHerbivorous> _listOfFoodForHerbivorous = new();
         private List<FoodForOmnivorous> _listOfFoodForOmnivorous = new();
         private readonly Rendering _rendering = new();
@@ -20,10 +23,12 @@ namespace LabOOP1
         private const int _densityAnimals = 20;
         private const int _densityPlants = 50;
         private const int _densityHumans = 40;
+        private const int _densitySources = 40;
 
         public MapObjectsControl()
         {
             s_currentSeason = Season.summer;
+
         }
 
         private void UpdateAnimals()
@@ -82,6 +87,8 @@ namespace LabOOP1
 
         public void LiveOneCicle(int timerValue)
         {
+            //_listOfGoldRes.Add(new Gold((x, y)));
+
             UpdateSeason(timerValue);
             UpdateAnimals();
             UpdatePlants();
@@ -142,6 +149,7 @@ namespace LabOOP1
 
                             case 1:
                                 _listOfAllPlants.Add(new InediblePlant((x, y)));
+                                //_listOfSources.Add(new Wood((x, y)));
                                 break;
                         }
 
@@ -151,6 +159,28 @@ namespace LabOOP1
                         _listOfHumans.Add(new Human((x, y)));
 
                     }
+                    //else if (random.Next(_densitySources) == 0)
+                    //{
+                    //    switch (random.Next(4))
+                    //    {
+                    //        case 0:
+                    //            _listOfSources.Add(new GoldSource());
+                    //            break;
+                    //        case 1:
+                    //            _listOfSources.Add(new StoneSource());
+
+                    //            break;
+                    //        case 2:
+                    //            _listOfSources.Add(new IronSource());
+
+                    //            break;
+                    //        case 3:
+                    //            _listOfSources.Add(new WoodSource());
+
+                    //            break;
+
+                    //    }
+                    //}
                     listOfAnimalsCopy = _listOfAnimals;
                 }
             }
