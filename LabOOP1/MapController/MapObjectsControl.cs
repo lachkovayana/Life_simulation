@@ -10,7 +10,7 @@ namespace LabOOP1
         private List<Fruit> _listOfFruits = new();
         private List<Animal> _listOfHumans = new();
         //MyList<Resources> _listOfSources = new();
-
+        private List<Source> _listOfSources = new();
 
         private List<FoodForHerbivorous> _listOfFoodForHerbivorous = new();
         private List<FoodForOmnivorous> _listOfFoodForOmnivorous = new();
@@ -159,28 +159,28 @@ namespace LabOOP1
                         _listOfHumans.Add(new Human((x, y)));
 
                     }
-                    //else if (random.Next(_densitySources) == 0)
-                    //{
-                    //    switch (random.Next(4))
-                    //    {
-                    //        case 0:
-                    //            _listOfSources.Add(new GoldSource());
-                    //            break;
-                    //        case 1:
-                    //            _listOfSources.Add(new StoneSource());
+                    else if (random.Next(_densitySources) == 0)
+                    {
+                        switch (random.Next(4))
+                        {
+                            case 0:
+                                _listOfSources.Add(new GoldSource((x, y)));
+                                break;
+                            case 1:
+                                _listOfSources.Add(new StoneSource((x,y)));
 
-                    //            break;
-                    //        case 2:
-                    //            _listOfSources.Add(new IronSource());
+                                break;
+                            case 2:
+                                _listOfSources.Add(new IronSource((x, y)));
 
-                    //            break;
-                    //        case 3:
-                    //            _listOfSources.Add(new WoodSource());
+                                break;
+                            case 3:
+                                _listOfSources.Add(new WoodSource((x, y)));
 
-                    //            break;
+                                break;
 
-                    //    }
-                    //}
+                        }
+                    }
                     listOfAnimalsCopy = _listOfAnimals;
                 }
             }

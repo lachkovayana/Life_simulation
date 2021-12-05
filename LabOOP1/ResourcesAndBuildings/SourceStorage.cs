@@ -14,9 +14,7 @@ namespace LabOOP1
         void DeleteItem(TKey key);
     }
 
-   
-
-    public class PersonStorage : IStorage<Source, (int, int)>
+    public class SourceStorage : IStorage<Source, (int, int)>
     {
         private ICollection<Source> _sources;
 
@@ -44,10 +42,4 @@ namespace LabOOP1
             }
         }
     }
-
-
-
-
-
-   
 }

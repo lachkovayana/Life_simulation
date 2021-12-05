@@ -29,12 +29,16 @@ namespace LabOOP1
     }
     public class GoldSource : Source
     {
-        public GoldSource() { }
+        public GoldSource((int, int) pos) { }
     }
     public class IronSource : Source
-    { public IronSource((int, int) pos) { } }
+    {
+        public IronSource((int, int) pos) { }
+    }
     public class StoneSource : Source
-    { public StoneSource((int, int) pos) { } }
+    {
+        public StoneSource((int, int) pos) { }
+    }
 
     public class WoodSource : Source
     {
