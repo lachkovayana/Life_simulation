@@ -6,6 +6,7 @@ namespace LabOOP1
 {
     public class Repos
     {
+
         public static T GetSourceOfType<T>() where T : Source, new()
         {
             var newProduct = new T();

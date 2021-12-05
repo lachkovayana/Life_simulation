@@ -31,7 +31,7 @@ namespace LabOOP1
         List<Type> desiredAnimalsList = new();
 
         private Human partner = null;
-
+        private bool needToBuildHouse = false;
         public Human((int, int) pos) : base(pos) { }
 
 
@@ -62,7 +62,7 @@ namespace LabOOP1
 
         //--------------------------------------------------------< main cicle >-----------------------------------------------------------
 
-        public void LiveHumanCicle(List<Animal> listOfHumans, List<FoodForOmnivorous> listOfFoodForOmnivorous, List<Animal> listOfAnimals, List<Plant> listOfPlants, List<Fruit> listOfFruits)
+        public void LiveHumanCicle(List<Animal> listOfHumans, List<FoodForOmnivorous> listOfFoodForOmnivorous, List<Animal> listOfAnimals, List<Plant> listOfPlants, List<Fruit> listOfFruits, List<House> listOfHouses)
         {
             if (CheckTimeToDie())
                 DieHuman(listOfHumans);
@@ -131,12 +131,13 @@ namespace LabOOP1
                             GoTameAnimals(listOfFoodForOmnivorous);
                         }
                     }
-                    //else if {
-                        //идти к источнику
-                    //}
+                    else if (needToBuildHouse)
+                    {
+                        BuildHouse(listOfHouses);
+                    }
                     else
                     {
-                        var pp = Source.GetItem<GoldSource>();
+                        
                         MoveToRandomCell();
                         myGoal = PurposeOfMovement.goToRandomCell;
                     }
@@ -148,6 +149,11 @@ namespace LabOOP1
                     myGoal = PurposeOfMovement.goToRandomCell;
                 }
             }
+        }
+
+        private void BuildHouse(List<House> listOfHouses)
+        {
+            listOfHouses.Add(new House(currentPosition, _foodStocks));
         }
 
         void GoToMakePair(List<Animal> listOfHumans)
@@ -163,6 +169,7 @@ namespace LabOOP1
                 {
                     partner = target;
                     target.partner = this;
+                    target.needToBuildHouse = true;
                 }
             }
             else

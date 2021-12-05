@@ -17,10 +17,15 @@ namespace LabOOP1
     public class SourceStorage : IStorage<Source, (int, int)>
     {
         private ICollection<Source> _sources;
-
+        private int _countOfRes = 5;
         public ICollection<Source> GetItems()
         {
-            return _sources;
+            if (_countOfRes > 0)
+            {
+                _countOfRes--;
+                return _sources;
+            }
+            else return default;
         }
 
         public Source GetItem((int, int) pos)
@@ -35,10 +40,10 @@ namespace LabOOP1
 
         public void DeleteItem((int, int) pos)
         {
-            var personToRemove = _sources.FirstOrDefault(x => x.Position == pos);
-            if (personToRemove != null)
+            var sourceToRemove = _sources.FirstOrDefault(x => x.Position == pos);
+            if (sourceToRemove != null)
             {
-                _sources.Remove(personToRemove);
+                _sources.Remove(sourceToRemove);
             }
         }
     }

@@ -55,13 +55,15 @@ namespace LabOOP1
         Image stoneSourse = Image.FromFile("../../../img/stone.png");
         Image woodSourse = Image.FromFile("../../../img/wood.png");
 
+        Image house = Image.FromFile("../../../img/house1.png");
+
         public static FoodForOmnivorous[,] FieldOfAllMapObjects = new FoodForOmnivorous[Form1.s_cols, Form1.s_rows];
 
         Color seasonColor = Color.Gainsboro;
 
         public static (int, int) coorLight;
 
-        public void UpdateField(List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits, List<Animal> listOfHumans)
+        public void UpdateField(List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits, List<Animal> listOfHumans, List<House> listOfHouses)
         {
             UpdateSeasonColor();
             ClearField();
@@ -69,9 +71,19 @@ namespace LabOOP1
             UpdateFruits(listOfFruits);
             UpdateHumans(listOfHumans);
             UpdateAnimals(listOfAnimals);
-
+            UpdateHouses(listOfHouses);
             Form1.s_pictureBox.Refresh();
 
+        }
+
+        private void UpdateHouses(List<House> listOfHouses)
+        {
+            foreach (House h in listOfHouses) {
+                int x = h.GetPosition().Item1;
+                int y = h.GetPosition().Item2;
+
+                Draw(house, x, y);
+            }
         }
 
         //private void UpdateSources(MyList<Source> listOfSources)

@@ -11,6 +11,7 @@ namespace LabOOP1
         private List<Animal> _listOfHumans = new();
         //MyList<Resources> _listOfSources = new();
         private List<Source> _listOfSources = new();
+        private List<House> _listOfHouses = new();
 
         private List<FoodForHerbivorous> _listOfFoodForHerbivorous = new();
         private List<FoodForOmnivorous> _listOfFoodForOmnivorous = new();
@@ -75,7 +76,7 @@ namespace LabOOP1
         {
             foreach (Human human in _listOfHumans.ToArray())
             {
-                human.LiveHumanCicle(_listOfHumans, _listOfFoodForOmnivorous, _listOfAnimals, _listOfAllPlants, _listOfFruits);
+                human.LiveHumanCicle(_listOfHumans, _listOfFoodForOmnivorous, _listOfAnimals, _listOfAllPlants, _listOfFruits, _listOfHouses);
             }
         }
 
@@ -94,7 +95,7 @@ namespace LabOOP1
             UpdatePlants();
             UpdateFood();
             UpdateMen();
-            _rendering.UpdateField(_listOfAnimals, _listOfAllPlants, _listOfFruits, _listOfHumans);
+            _rendering.UpdateField(_listOfAnimals, _listOfAllPlants, _listOfFruits, _listOfHumans, _listOfHouses);
             listOfAnimalsCopy = _listOfAnimals;
         }
 

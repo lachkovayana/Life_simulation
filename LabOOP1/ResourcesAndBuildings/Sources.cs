@@ -11,22 +11,22 @@ namespace LabOOP1
         public (int, int) Position { get; set; }
         public int Count { get; set; }
     }
-    public class Source<T> where T : new()
-    {
-        public int CountOfRes = 5;
+    //public class Source<T> where T : new()
+    //{
+    //    public int CountOfRes = 5;
 
-        public (int, int) p;
-        public T GetItem()
-        {
-            if (CountOfRes > 0)
-            {
-                CountOfRes--;
-                return new T();
-            }
+    //    public (int, int) p;
+    //    public T GetItem()
+    //    {
+    //        if (CountOfRes > 0)
+    //        {
+    //            CountOfRes--;
+    //            return new T();
+    //        }
 
-            else return default; //null
-        }
-    }
+    //        else return default; //null
+    //    }
+    //}
     public class GoldSource : Source
     {
         public GoldSource((int, int) pos) { }
