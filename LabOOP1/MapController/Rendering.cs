@@ -57,36 +57,38 @@ namespace LabOOP1
 
         Image house = Image.FromFile("../../../img/house1.png");
 
-        public static FoodForOmnivorous[,] FieldOfAllMapObjects = new FoodForOmnivorous[Form1.s_cols, Form1.s_rows];
+        public static List<MapObject>[,] FieldOfAllMapObjects = new List<MapObject>[Form1.s_cols, Form1.s_rows];
 
         Color seasonColor = Color.Gainsboro;
 
         public static (int, int) coorLight;
 
-        public void UpdateField(List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits, List<Animal> listOfHumans, List<House> listOfHouses)
+        public void DrawField(List<Animal> listOfAnimals, List<Plant> listOfAllPlants, List<Fruit> listOfFruits, List<Animal> listOfHumans)
         {
-            UpdateSeasonColor();
+            DrawSeasonColor();
             ClearField();
-            UpdatePlants(listOfAllPlants);
-            UpdateFruits(listOfFruits);
-            UpdateHumans(listOfHumans);
-            UpdateAnimals(listOfAnimals);
-            UpdateHouses(listOfHouses);
+            DrawPlants(listOfAllPlants);
+            DrawFruits(listOfFruits);
+            DrawHumans(listOfHumans);
+            DrawAnimals(listOfAnimals);
+            DrawHouses();
             Form1.s_pictureBox.Refresh();
 
         }
 
-        private void UpdateHouses(List<House> listOfHouses)
+        private void DrawHouses()
         {
-            foreach (House h in listOfHouses) {
+            foreach (House h in MapObjectsControl.ListOfHouses)
+            {
                 int x = h.GetPosition().Item1;
                 int y = h.GetPosition().Item2;
-
                 Draw(house, x, y);
+
+                FieldOfAllMapObjects[x, y].Add(h);
             }
         }
 
-        //private void UpdateSources(MyList<Source> listOfSources)
+        //private void DrawSources(MyList<Source> listOfSources)
         //{
         //    foreach (Source in listOfSources)
         //    {
@@ -111,22 +113,22 @@ namespace LabOOP1
         //    }
         //}
 
-        void UpdateSeasonColor()
+        void DrawSeasonColor()
         {
             seasonColor = (MapObjectsControl.s_currentSeason == Season.summer) ? Color.DarkSeaGreen : Color.Gainsboro;
         }
         void ClearField()
         {
-            FieldOfAllMapObjects = new FoodForOmnivorous[Form1.s_cols, Form1.s_rows];
+           //FieldOfAllMapObjects = new List<MapObject>[Form1.s_cols, Form1.s_rows];
             Form1.s_graphics.Clear(seasonColor);
         }
-        private void UpdateHumans(List<Animal> listOfHumans)
+        private void DrawHumans(List<Animal> listOfHumans)
         {
             foreach (Human h in listOfHumans)
             {
                 int x = h.GetPosition().Item1;
                 int y = h.GetPosition().Item2;
-                FieldOfAllMapObjects[x, y] = h;
+                FieldOfAllMapObjects[x, y].Add(h);
                 switch (h.gender)
                 {
                     case Gender.female:
@@ -140,14 +142,14 @@ namespace LabOOP1
             }
         }
 
-        void UpdatePlants(List<Plant> listOfPlants)
+        void DrawPlants(List<Plant> listOfPlants)
         {
             foreach (Plant plant in listOfPlants)
             {
                 int x = plant.GetPosition().Item1;
                 int y = plant.GetPosition().Item2;
 
-                FieldOfAllMapObjects[x, y] = plant;
+                FieldOfAllMapObjects[x, y].Add(plant);
 
                 switch (plant)
                 {
@@ -233,13 +235,13 @@ namespace LabOOP1
         }
 
 
-        void UpdateFruits(List<Fruit> listOfFruits)
+        void DrawFruits(List<Fruit> listOfFruits)
         {
             foreach (Fruit fruit in listOfFruits)
             {
                 int x = fruit.GetPosition().Item1;
                 int y = fruit.GetPosition().Item2;
-                FieldOfAllMapObjects[x, y] = fruit;
+                FieldOfAllMapObjects[x, y].Add(fruit);
 
                 if (fruit.IsHealthy)
                 {
@@ -252,14 +254,14 @@ namespace LabOOP1
             }
         }
 
-        void UpdateAnimals(List<Animal> listOfAnimals)
+        void DrawAnimals(List<Animal> listOfAnimals)
         {
             foreach (Animal animal in listOfAnimals)
             {
                 int x = animal.GetPosition().Item1;
                 int y = animal.GetPosition().Item2;
 
-                FieldOfAllMapObjects[x, y] = animal;
+                FieldOfAllMapObjects[x, y].Add(animal);
                 if (animal.IsDead)
                     Draw(meat, x, y);
                 else
@@ -305,7 +307,7 @@ namespace LabOOP1
         void Draw(Image img, int x, int y)
         {
             Form1.s_graphics.DrawImage(img, x * Form1.s_resolution, y * Form1.s_resolution, new Rectangle(new Point(0, 0), new Size(35, 35)), GraphicsUnit.Pixel);
-            //Form1.s_graphics.DrawImage(img, x * Form1.s_resolution, y * Form1.s_resolution, 15, 15);
+            //Form1.s_graphics.DrawImage(img, x * Form1.s_resolution, y * Form1.s_resolution);
         }
     }
 }

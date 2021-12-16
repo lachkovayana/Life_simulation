@@ -1,6 +1,6 @@
 ﻿namespace LabOOP1
 {
-    public abstract class FoodForOmnivorous
+    public abstract class FoodForOmnivorous : MapObject
     {
         //protected abstract int NutritionalUnit { get;}
         protected abstract string GetInfo();
@@ -11,7 +11,7 @@
             currentPosition = pos;
         }
         internal (int, int) GetPosition() => currentPosition;
-        public string GetInfoAndLight()
+        public override string GetInfoAndLight()
         {
             Rendering.LightChoosen(currentPosition.Item1, currentPosition.Item2);
             return GetInfo();

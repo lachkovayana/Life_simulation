@@ -1,6 +1,6 @@
 ﻿namespace LabOOP1
 {
-    public enum MapObject
+    public enum MapObjectsEnum
     {
         rabbit, horse, sheep,
         tiger, wolf, fox,
@@ -13,6 +13,8 @@
         ediblePlantPoisonousFruiting,
 
         inediblePlant,
-        inediblePlantFruiting
+        inediblePlantFruiting,
+
+        house, source
     }
 }

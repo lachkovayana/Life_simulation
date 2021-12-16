@@ -4,6 +4,7 @@
     {
         goToFood,
         goToPartner,
+        goToHouse,
         goToRandomCell,
         goToTame,
         goToCollectFood,

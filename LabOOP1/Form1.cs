@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-
+using System.Linq;
 //передача значения таймера для определения созревания растения
 
 namespace LabOOP1
 {
     public partial class Form1 : Form
     {
+        //public static int s_resolution = 35;
         public static int s_resolution = 35;
-         //public static int s_resolution = 15;
         public static Graphics s_graphics;
         public static int s_rows;
         public static int s_cols;
@@ -23,7 +24,7 @@ namespace LabOOP1
         public Form1()
         {
             InitializeComponent();
-            pictureBox1.Size = new Size(1000,700);
+            pictureBox1.Size = new Size(1500, 1050);
             //pictureBox1.Size = new Size(15000, 15000);
 
         }
@@ -119,7 +120,7 @@ namespace LabOOP1
         {
             int CurX = e.X / s_resolution;
             int CurY = e.Y / s_resolution;
-            currentObj = Rendering.FieldOfAllMapObjects[CurX, CurY];
+            List<MapObject> currentObj = Rendering.FieldOfAllMapObjects[CurX, CurY];
 
             if (Rendering.FieldOfAllMapObjects[CurX, CurY] == null)
             {
@@ -127,7 +128,7 @@ namespace LabOOP1
             }
             else
             {
-                SetMessage(Rendering.FieldOfAllMapObjects[CurX, CurY].GetInfoAndLight());
+                SetMessage(Rendering.FieldOfAllMapObjects[CurX, CurY].Last().GetInfoAndLight());
             }
 
         }

@@ -59,7 +59,7 @@ namespace LabOOP1
         //--------------------------------------------------< abstract methods >---------------------------------------------------------------
 
         protected abstract (int, int) MoveToRandomCellOver();
-        protected abstract (int, int) MoveToTargetOver(FoodForOmnivorous target);
+        protected abstract (int, int) MoveToTargetOver((int, int) position);
         protected abstract void Reproduce(List<Animal> listOfAnimals);
         protected abstract bool CheckOwnerStocks();
 
@@ -225,7 +225,7 @@ namespace LabOOP1
             if (!partner._isDomesticated)
                 partner.BasisCellPosition = partner.GetPosition();
         }
-        protected virtual bool CheckPartner(FoodForOmnivorous an)
+        private bool CheckPartner(FoodForOmnivorous an)
         {
             if (an is Animal animal)
             {
@@ -236,10 +236,10 @@ namespace LabOOP1
             }
             return false;
         }
-        protected virtual void UpdateReadiness(int ageForReproduce)
+        protected virtual void UpdateReadiness(int ageForReproduce, bool additionalCheck = true)
         {
             _timeSinceBreeding++;
-            if (_timeSinceBreeding >= ageForReproduce && !(_isHungry))
+            if (_timeSinceBreeding >= ageForReproduce && !(_isHungry) && additionalCheck)
             {
                 _isReadyToReproduce = true;
             }
@@ -274,9 +274,9 @@ namespace LabOOP1
             SetPosition(newPosAn);
         }
 
-        protected void MoveToTarget(FoodForOmnivorous target)
+        protected void MoveToTarget((int, int) position)
         {
-            var newPosAn = MoveToTargetOver(target);
+            var newPosAn = MoveToTargetOver(position);
             SetPosition(newPosAn);
         }
 
@@ -293,7 +293,7 @@ namespace LabOOP1
         {
             Animal partner = FindTarget<Animal>(listOfAnimals, CheckPartner);
 
-            MoveToTarget(partner);
+            MoveToTarget(partner.GetPosition());
             if (_isDomesticated)
             {
                 myGoal = PurposeOfMovement.moveAwayFromOwnerToReproduce;
@@ -313,7 +313,7 @@ namespace LabOOP1
             var target = FindTarget(listOfFoodForOmnivorous, CheckForEating);
             if (target != null)
             {
-                MoveToTarget(target);
+                MoveToTarget(target.GetPosition());
                 if (_isDomesticated)
                 {
                     myGoal = PurposeOfMovement.moveAwayFromOwnerToEat;
@@ -332,7 +332,7 @@ namespace LabOOP1
 
         private void EatingOwnersFoodProcess()
         {
-            MoveToTarget(Owner);
+            MoveToTarget(Owner.GetPosition());
             myGoal = PurposeOfMovement.goToOwner;
 
             if (Owner.GetPosition() == currentPosition)
@@ -362,7 +362,7 @@ namespace LabOOP1
             if (_isDomesticated)
             {
                 BasisCellPosition = Owner.GetPosition();
-                MoveToTarget(Owner);
+                MoveToTarget(Owner.GetPosition());
                 myGoal = PurposeOfMovement.goToOwner;
             }
 
@@ -443,10 +443,10 @@ namespace LabOOP1
             }
         }
 
-        protected void GeneralVoidsForLiveCicle(int time)
+        protected void GeneralVoidsForLiveCicle(int time, bool additionalCheck = true)
         {
             _noTarget = false;
-            UpdateReadiness(time);
+            UpdateReadiness(time, additionalCheck);
             UpdateAge();
             DecreaseSatiety();
         }

@@ -44,9 +44,9 @@ namespace LabOOP1
             return movement.MoveToRCOrdinary(currentPosition);
         }
 
-        protected override (int, int) MoveToTargetOver(FoodForOmnivorous target)
+        protected override (int, int) MoveToTargetOver((int, int) position)
         {
-            return movement.MoveToTargetFor4Cells(currentPosition, target.GetPosition());
+            return movement.MoveToTargetFor4Cells(currentPosition, position);
         }
     }
 
@@ -65,9 +65,9 @@ namespace LabOOP1
             return movement.MoveToRCNotGoingFar(currentPosition, BasisCellPosition, this);
         }
 
-        protected override (int, int) MoveToTargetOver(FoodForOmnivorous target)
+        protected override (int, int) MoveToTargetOver((int, int) position)
         {
-            return movement.MoveToTargetFor8Cells(currentPosition, target.GetPosition());
+            return movement.MoveToTargetFor8Cells(currentPosition, position);
         }
     }
 
@@ -86,9 +86,9 @@ namespace LabOOP1
             return movement.MoveToRCWithProbability(this);
         }
 
-        protected override (int, int) MoveToTargetOver(FoodForOmnivorous target)
+        protected override (int, int) MoveToTargetOver((int, int) position)
         {
-            return movement.MoveToTarget3CellsForward(currentPosition, target.GetPosition());
+            return movement.MoveToTarget3CellsForward(currentPosition, position);
         }
     }
 

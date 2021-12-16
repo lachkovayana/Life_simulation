@@ -11,7 +11,8 @@ namespace LabOOP1
         private List<Animal> _listOfHumans = new();
         //MyList<Resources> _listOfSources = new();
         private List<Source> _listOfSources = new();
-        private List<House> _listOfHouses = new();
+
+        public static List<House> ListOfHouses = new();
 
         private List<FoodForHerbivorous> _listOfFoodForHerbivorous = new();
         private List<FoodForOmnivorous> _listOfFoodForOmnivorous = new();
@@ -21,10 +22,10 @@ namespace LabOOP1
 
         public static List<Animal> listOfAnimalsCopy = new();
 
-        private const int _densityAnimals = 20;
-        private const int _densityPlants = 50;
+        private const int _densityAnimals = 1020;
+        private const int _densityPlants = 1050;
         private const int _densityHumans = 40;
-        private const int _densitySources = 40;
+        private const int _densitySources = 1040;
 
         public MapObjectsControl()
         {
@@ -76,7 +77,7 @@ namespace LabOOP1
         {
             foreach (Human human in _listOfHumans.ToArray())
             {
-                human.LiveHumanCicle(_listOfHumans, _listOfFoodForOmnivorous, _listOfAnimals, _listOfAllPlants, _listOfFruits, _listOfHouses);
+                human.LiveHumanCicle(_listOfHumans, _listOfFoodForOmnivorous, _listOfAnimals, _listOfAllPlants, _listOfFruits);
             }
         }
 
@@ -88,14 +89,12 @@ namespace LabOOP1
 
         public void LiveOneCicle(int timerValue)
         {
-            //_listOfGoldRes.Add(new Gold((x, y)));
-
             UpdateSeason(timerValue);
             UpdateAnimals();
             UpdatePlants();
             UpdateFood();
             UpdateMen();
-            _rendering.UpdateField(_listOfAnimals, _listOfAllPlants, _listOfFruits, _listOfHumans, _listOfHouses);
+            _rendering.DrawField(_listOfAnimals, _listOfAllPlants, _listOfFruits, _listOfHumans);
             listOfAnimalsCopy = _listOfAnimals;
         }
 
@@ -107,6 +106,7 @@ namespace LabOOP1
             {
                 for (int y = 0; y < Form1.s_rows; y++)
                 {
+                    Rendering.FieldOfAllMapObjects[x, y] = new List<MapObject>();   
                     if (random.Next(_densityAnimals) == 0)
                     {
                         switch (random.Next(9))
@@ -185,7 +185,7 @@ namespace LabOOP1
                     listOfAnimalsCopy = _listOfAnimals;
                 }
             }
-
+            ListOfHouses.Clear();
         }
     }
 }
