@@ -91,13 +91,12 @@ namespace LabOOP1
 
         public void LiveOneCicle(int timerValue)
         {
-            //FieldOfAllMapObjects = new List<MapObject>[Form1.s_cols, Form1.s_rows];э
-            ClearField();
             UpdateSeason(timerValue);
             UpdateAnimals();
             UpdatePlants();
             UpdateFood();
             UpdateMen();
+            ClearField();
             _rendering.DrawField(_listOfAnimals, _listOfAllPlants, _listOfFruits, _listOfHumans);
             listOfAnimalsCopy = _listOfAnimals;
         }
@@ -108,7 +107,7 @@ namespace LabOOP1
             {
                 for (int y = 0; y < Form1.s_rows; y++)
                 {
-                    FieldOfAllMapObjects[x, y] = new List<MapObject>();
+                    FieldOfAllMapObjects[x, y].Clear();
                 }
             }
         }

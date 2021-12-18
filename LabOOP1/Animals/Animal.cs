@@ -220,10 +220,12 @@ namespace LabOOP1
             partner._timeSinceBreeding = 0;
             partner._isReadyToReproduce = false;
 
+
             if (!_isDomesticated)
                 BasisCellPosition = currentPosition;
             if (!partner._isDomesticated)
                 partner.BasisCellPosition = partner.GetPosition();
+
         }
         private bool CheckPartner(FoodForOmnivorous an)
         {
@@ -236,10 +238,10 @@ namespace LabOOP1
             }
             return false;
         }
-        protected virtual void UpdateReadiness(int ageForReproduce, bool additionalCheck = true)
+        protected virtual void UpdateReadiness(int periodOfReproducing, bool additionalCheck = true)
         {
             _timeSinceBreeding++;
-            if (_timeSinceBreeding >= ageForReproduce && !(_isHungry) && additionalCheck)
+            if (_timeSinceBreeding >= periodOfReproducing && !(_isHungry) && additionalCheck)
             {
                 _isReadyToReproduce = true;
             }
@@ -291,7 +293,7 @@ namespace LabOOP1
 
         private void ReproducingProcess(List<FoodForOmnivorous> listOfFoodForOmnivorous, List<Animal> listOfAnimals)
         {
-            Animal partner = FindTarget<Animal>(listOfAnimals, CheckPartner);
+            Animal partner = FindTarget(listOfAnimals, CheckPartner);
 
             MoveToTarget(partner.GetPosition());
             if (_isDomesticated)

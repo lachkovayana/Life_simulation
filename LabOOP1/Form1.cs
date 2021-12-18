@@ -88,28 +88,7 @@ namespace LabOOP1
             timer1.Start();
         }
 
-        //Image ZoomPicture(Size size)
-        //{
-
-        //    Bitmap bm = new (pictureBox1.Image, Convert.ToInt32(pictureBox1.Image.Width * size.Width),
-        //        Convert.ToInt32(pictureBox1.Image.Height * size.Height));
-        //    Graphics gpu = Graphics.FromImage(bm);
-        //    gpu.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-        //    return bm;
-        //}
-        //PictureBox org;
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            //this.DoubleBuffered = true;
-            //org = new PictureBox();
-            //org.Image = pictureBox1.Image;
-        }
-
-        private void trackBar1_Scroll(object sender, EventArgs e)
-        {
-            //    pictureBox1.Image = ZoomPicture( new Size(trackBar1.Value, trackBar1.Value));
-
-        }
+       
 
         void SetMessage(string msg)
         {

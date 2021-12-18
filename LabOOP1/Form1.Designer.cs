@@ -33,7 +33,6 @@ namespace LabOOP1
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.buttonContinue = new System.Windows.Forms.Button();
             this.buttonStop = new System.Windows.Forms.Button();
@@ -41,7 +40,6 @@ namespace LabOOP1
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -56,7 +54,6 @@ namespace LabOOP1
             // 
             this.panel2.BackColor = System.Drawing.SystemColors.ControlDark;
             this.panel2.Controls.Add(this.textBox2);
-            this.panel2.Controls.Add(this.trackBar1);
             this.panel2.Controls.Add(this.textBox1);
             this.panel2.Controls.Add(this.buttonContinue);
             this.panel2.Controls.Add(this.buttonStop);
@@ -70,22 +67,11 @@ namespace LabOOP1
             // textBox2
             // 
             this.textBox2.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.textBox2.Location = new System.Drawing.Point(12, 351);
+            this.textBox2.Location = new System.Drawing.Point(12, 278);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(252, 568);
             this.textBox2.TabIndex = 13;
-            // 
-            // trackBar1
-            // 
-            this.trackBar1.Location = new System.Drawing.Point(59, 249);
-            this.trackBar1.Maximum = 4;
-            this.trackBar1.Minimum = 1;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(130, 56);
-            this.trackBar1.TabIndex = 12;
-            this.trackBar1.Value = 1;
-            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             // 
             // textBox1
             // 
@@ -150,10 +136,8 @@ namespace LabOOP1
             this.Controls.Add(this.panel1);
             this.Name = "Form1";
             this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
@@ -169,7 +153,6 @@ namespace LabOOP1
         private System.Windows.Forms.Button buttonContinue;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.TextBox textBox2;
     }
 }

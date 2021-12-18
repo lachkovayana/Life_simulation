@@ -10,7 +10,8 @@ namespace LabOOP1
     {
         public (int, int) currentPosition;
         public Human MaleOwner; 
-        public Human FemaleOwner; 
+        public Human FemaleOwner;
+        public string ReasoForBuilding;
 
         private Dictionary<FoodTypes, int> _foodStocks = new()
         {
@@ -44,14 +45,18 @@ namespace LabOOP1
 
             string name = GetType().ToString()[(GetType().ToString().IndexOf(".") + 1)..].ToLower();
 
-            string owners = "\r\nMy owners is male " + MaleOwner.GetPosition().ToString() + " and female " + FemaleOwner.GetPosition().ToString() + "\r\n";
+            string owners = "\r\nOwners: male " + MaleOwner.GetPosition().ToString() + ", female " + FemaleOwner.GetPosition().ToString() + "\r\n";
 
             string result = string.Concat("It's a ", name,
                 " with position ", currentPosition, "\r\nStocks inside :\r\n", string.Join(Environment.NewLine, linesS), owners);
+
             result += "\r\n";
+            result += "Was built based on " + ReasoForBuilding;
+            result += "\r\n\r\n";
             result +=  MaleOwner.IsDead ? "Male is dead" : MaleOwner.InfoForHouse();
             result += "\r\n\r\n";
             result += MaleOwner.IsDead ? "Female is dead" : FemaleOwner.InfoForHouse();
+
             return result;
         }
     }
