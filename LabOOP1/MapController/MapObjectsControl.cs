@@ -5,9 +5,9 @@ namespace LabOOP1
 {
     public class MapObjectsControl
     {
-        private const int _densityAnimals = 1020;
-        private const int _densityPlants = 1050;
-        private const int _densityHumans = 40;
+        private const int _densityAnimals = 50;
+        private const int _densityPlants = 50;
+        private const int _densityHumans = 50;
         private const int _densitySources = 1040;
 
         private List<Animal> _listOfAnimals = new();
@@ -18,15 +18,14 @@ namespace LabOOP1
         private List<FoodForHerbivorous> _listOfFoodForHerbivorous = new();
         private List<FoodForOmnivorous> _listOfFoodForOmnivorous = new();
 
-        public static List<House> ListOfHouses = new();
-
-        public static Season s_currentSeason;
-
-        public static List<Animal> listOfAnimalsCopy = new();
-
         private readonly Rendering _rendering = new();
 
-        public static List<MapObject>[,] FieldOfAllMapObjects = new List<MapObject>[Form1.s_cols, Form1.s_rows];
+        internal static Season s_currentSeason;
+        internal static List<House> ListOfHouses = new();
+        internal static List<Animal> listOfAnimalsCopy = new();
+
+        internal static List<MapObject>[,] FieldOfAllMapObjects = new List<MapObject>[Form1.s_cols, Form1.s_rows];
+        internal static List<List<MapObject>> ListOfVillages = new();
 
 
         public MapObjectsControl()

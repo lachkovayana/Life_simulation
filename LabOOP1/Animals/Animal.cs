@@ -257,7 +257,7 @@ namespace LabOOP1
         //--------------------------------------------------< die >---------------------------------------------------------------
         protected bool CheckTimeToDie()
         {
-            return (_currentHealth == 0 || _age == 100);
+            return (_currentHealth == 0 || _age == 200);
         }
 
         public void DieImmediately(List<Animal> listOfAnimals)
@@ -291,7 +291,7 @@ namespace LabOOP1
 
         //--------------------------------------------------< processes >---------------------------------------------------------------
 
-        private void ReproducingProcess(List<FoodForOmnivorous> listOfFoodForOmnivorous, List<Animal> listOfAnimals)
+        private void ReproducingProcess(List<Animal> listOfAnimals)
         {
             Animal partner = FindTarget(listOfAnimals, CheckPartner);
 
@@ -423,7 +423,7 @@ namespace LabOOP1
                         }
                         else if (_isReadyToReproduce && CheckAbleToReproduce(listOfAnimals))
                         {
-                            ReproducingProcess(listOfFoodForOmnivorous, listOfAnimals);
+                            ReproducingProcess( listOfAnimals);
                         }
                         else
                         {

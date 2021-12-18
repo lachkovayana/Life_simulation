@@ -9,9 +9,10 @@ namespace LabOOP1
     public class House : MapObject
     {
         public (int, int) currentPosition;
-        public Human MaleOwner; 
+        public Human MaleOwner;
         public Human FemaleOwner;
-        public string ReasoForBuilding;
+        public string ReasonForBuilding;
+        public int indexOfVillage;
 
         private Dictionary<FoodTypes, int> _foodStocks = new()
         {
@@ -20,12 +21,17 @@ namespace LabOOP1
             { FoodTypes.plant, 0 }
         };
 
-        public House((int, int) pos)
+        public House((int, int) pos, (int, int, int) baseHouseData)
         {
             currentPosition = pos;
+
+            ReasonForBuilding = baseHouseData == default ? "random" :
+                "pos: (" + baseHouseData.Item1.ToString() + ", " +
+                baseHouseData.Item2.ToString() + ") and " +
+                baseHouseData.Item3.ToString() + " village.";
         }
 
-        public void PutFood(FoodTypes ft, int count)
+        internal void PutFood(FoodTypes ft, int count)
         {
             _foodStocks[ft] += count;
         }
@@ -39,6 +45,7 @@ namespace LabOOP1
             Rendering.LightChoosen(currentPosition.Item1, currentPosition.Item2);
             return GetInfo();
         }
+
         private string GetInfo()
         {
             var linesS = _foodStocks.Select(kvp => "- " + kvp.Key + ": " + kvp.Value + "/" + Constants.MaxCountOfFoodStock);
@@ -51,13 +58,13 @@ namespace LabOOP1
                 " with position ", currentPosition, "\r\nStocks inside :\r\n", string.Join(Environment.NewLine, linesS), owners);
 
             result += "\r\n";
-            result += "Was built based on " + ReasoForBuilding;
+            result += "Was built based on " + ReasonForBuilding;
             result += "\r\n\r\n";
-            result +=  MaleOwner.IsDead ? "Male is dead" : MaleOwner.InfoForHouse();
-            result += "\r\n\r\n";
-            result += MaleOwner.IsDead ? "Female is dead" : FemaleOwner.InfoForHouse();
+            result += "Current index of village: " + indexOfVillage;
 
             return result;
         }
+
+
     }
 }

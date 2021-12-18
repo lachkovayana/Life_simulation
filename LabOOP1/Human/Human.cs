@@ -34,6 +34,7 @@ namespace LabOOP1
         private bool _needToBuildHouse = false;
         private House _house;
         private bool _noPlaceForBuilding = false;
+        private int _indexOfVillage;
         public Human((int, int) pos) : base(pos) { }
 
 
@@ -41,7 +42,7 @@ namespace LabOOP1
         //--------------------------------------------------------< override >-----------------------------------------------------------
 
         protected override int MaxHealth { get { return 130; } }
-        protected override int MaxSatiety { get { return 200; } }
+        protected override int MaxSatiety { get { return 500; } }
         protected override bool CheckForEating(FoodForOmnivorous food)
         {
             return (food is FoodForHerbivorous f && f.IsHealthy ||
@@ -121,7 +122,7 @@ namespace LabOOP1
                         GoToTheHouseToPutFood();
                     }
 
-                    if (CheckStockNotReachedLimit(FoodTypes.plant) && CheckAbleToFindFood(listOfFoodForOmnivorous, (food) => food is EdiblePlant f && f.IsHealthy && f.Stage != PlantStage.seed))
+                    else if (CheckStockNotReachedLimit(FoodTypes.plant) && CheckAbleToFindFood(listOfFoodForOmnivorous, (food) => food is EdiblePlant f && f.IsHealthy && f.Stage != PlantStage.seed))
                     {
                         GoCollectPlantsMyself(listOfFoodForOmnivorous, listOfPlants, listOfFruits, (food) => food is EdiblePlant f && f.IsHealthy && f.Stage != PlantStage.seed);
                     }
@@ -134,11 +135,9 @@ namespace LabOOP1
                         GoCollectPlantsMyself(listOfFoodForOmnivorous, listOfPlants, listOfFruits, (food) => food is Animal an && an.IsDead);
                     }
 
-
                     else if (!CheckDomesticatedAnimalFullness() && CheckStoksFullness(1))
                     {
-                            GoTameAnimals(listOfFoodForOmnivorous);
-                        
+                        GoTameAnimals(listOfFoodForOmnivorous);
                     }
                     else
                     {
@@ -158,19 +157,19 @@ namespace LabOOP1
         //------------------------------------------------------------< house >---------------------------------------------------------------
         private void HouseBuildingProcess()
         {
-            var positions = GetPositionsOfClosestHouses();
-            if (positions.Count == 0)
+            var positionsWithIndexes = GetPositionsOfClosestHouses();
+            if (positionsWithIndexes.Count == 0)
             {
-                BuildHouse(currentPosition, currentPosition);
+                BuildHouse(currentPosition, default);
             }
             else
             {
-                var coor = GetPositionOfFreePlaceNearHouse(positions);
+                var coor = GetPositionOfFreePlaceNearHouse(positionsWithIndexes);
                 if (coor != default)
                 {
                     var positionOfPlaceForNewHouse = coor.Item1;
-                    var positionOfBaseHouse = coor.Item2;
-                    BuildHouse(positionOfPlaceForNewHouse, positionOfBaseHouse);
+                    var baseHouse = coor.Item2;
+                    BuildHouse(positionOfPlaceForNewHouse, baseHouse);
                 }
                 else
                     _noPlaceForBuilding = true;
@@ -187,42 +186,47 @@ namespace LabOOP1
                 foreach (var pair in _foodStocks)
                 {
                     _house.PutFood(pair.Key, pair.Value);
+                    _foodStocks[pair.Key]--;
                 }
             }
         }
 
-        private List<(int, int)> GetPositionsOfClosestHouses()
+        private List<(int, int, int)> GetPositionsOfClosestHouses()
         {
-            List<(int, int)> positionsOfHouses = new();
+            List<(int, int, int)> positionsOfHousesWithIndexes = new();
             for (int x = currentPosition.Item1 - 3; x < currentPosition.Item1 + 3; x++)
             {
                 for (int y = currentPosition.Item2 - 3; y < currentPosition.Item2 + 3; y++)
                 {
                     if (x >= 0 && y >= 0 && x < Form1.s_cols && y < Form1.s_rows)
                     {
-                        if (MapObjectsControl.FieldOfAllMapObjects[x, y].OfType<House>().FirstOrDefault() != default)
+                        House supposedHouse = MapObjectsControl.FieldOfAllMapObjects[x, y].OfType<House>().FirstOrDefault();
+                        if (supposedHouse != default)
                         {
-                            positionsOfHouses.Add((x, y));
+                            var ind = supposedHouse.indexOfVillage;
+                            positionsOfHousesWithIndexes.Add((x, y, ind));
                         }
                     }
                 }
             }
-            return positionsOfHouses;
+            return positionsOfHousesWithIndexes;
         }
-        private ((int, int), (int, int)) GetPositionOfFreePlaceNearHouse(List<(int, int)> positions)
+        private ((int, int), (int, int, int)) GetPositionOfFreePlaceNearHouse(List<(int, int, int)> positionsAndIndex)
         {
-            var orderedPositions = positions.OrderBy(p => Math.Abs(p.Item1 - currentPosition.Item1)).ThenBy(p => Math.Abs(p.Item2 - currentPosition.Item2));
-            foreach (var pairCoor in orderedPositions)
+            var orderedPositions = positionsAndIndex.OrderBy(p => Math.Abs(p.Item1 - currentPosition.Item1)).ThenBy(p => Math.Abs(p.Item2 - currentPosition.Item2));
+            foreach (var pairOfCoorAndIndex in orderedPositions)
             {
-                for (int x = pairCoor.Item1 - 1; x < pairCoor.Item1 + 1; x++)
+                for (int x = pairOfCoorAndIndex.Item1 - 1; x < pairOfCoorAndIndex.Item1 + 1; x++)
                 {
-                    for (int y = pairCoor.Item2 - 1; y < pairCoor.Item2 + 1; y++)
+                    for (int y = pairOfCoorAndIndex.Item2 - 1; y < pairOfCoorAndIndex.Item2 + 1; y++)
                     {
                         if (x >= 0 && y >= 0 && x <= Form1.s_cols && y <= Form1.s_rows)
+                        {
                             if (MapObjectsControl.FieldOfAllMapObjects[x, y].OfType<House>().FirstOrDefault() == null)
                             {
-                                return ((x, y), pairCoor);
+                                return ((x, y), pairOfCoorAndIndex);
                             }
+                        }
                     }
                 }
             }
@@ -234,18 +238,38 @@ namespace LabOOP1
             return _house != null;
         }
 
-        private void BuildHouse((int, int) pos, (int, int) reas)
+        private void BuildHouse((int, int) pos, (int, int, int) baseHouseData)
         {
-            var nh = new House(pos);
-            nh.FemaleOwner = _partner;
-            nh.MaleOwner = this;
-            nh.ReasoForBuilding = reas == currentPosition? "random" : reas.ToString();
+            var newHouse = new House(pos, baseHouseData)
+            {
+                FemaleOwner = _partner,
+                MaleOwner = this,
+            };
 
-            _house = nh;
-            _partner._house = nh;
-            MapObjectsControl.ListOfHouses.Add(nh);
+            int ind = GetIndexOfHouse(baseHouseData);
+
+            _indexOfVillage = ind;
+            _partner._indexOfVillage = ind;
+            newHouse.indexOfVillage = ind;
+            _house = newHouse;
+            _partner._house = newHouse;
+
+            MapObjectsControl.ListOfVillages[ind].Add(newHouse);
+            MapObjectsControl.ListOfVillages[ind].Add(this);
+            MapObjectsControl.ListOfVillages[ind].Add(_partner);
+            MapObjectsControl.ListOfHouses.Add(newHouse);
 
             _needToBuildHouse = false;
+        }
+
+        private int GetIndexOfHouse((int, int, int) baseHouseData)
+        {
+            if (baseHouseData == default)
+            {
+                MapObjectsControl.ListOfVillages.Add(new List<MapObject>());
+                return MapObjectsControl.ListOfVillages.Count - 1;
+            }
+            return baseHouseData.Item3;
         }
 
 
@@ -510,7 +534,7 @@ namespace LabOOP1
             var target = FindTarget(listOfFoodForOmnivorous, (food) => food is Animal a && !a.IsDomesticated);
             if (target != null)
             {
-                CallWolfForHelp(target);
+                //CallWolfForHelp(target);
                 MoveToTarget(target.GetPosition());
                 myGoal = PurposeOfMovement.goToCollectFood;
                 if (currentPosition == target.GetPosition() && _domesticatedAnimal[typeof(Wolf)].GetPosition() == target.GetPosition())
@@ -527,10 +551,6 @@ namespace LabOOP1
 
 
 
-        private void CallWolfForHelp(FoodForOmnivorous target)
-        {
-
-        }
 
         //--------------------------------------------------------< stocks >-----------------------------------------------------------
 
@@ -611,29 +631,20 @@ namespace LabOOP1
             }
 
             string result = string.Concat("Hey! I am a ", gender,
+                "\r\n", "My age is ", _age,
                 "\r\n", "My health level is ", _currentHealth,
                 "\r\n", "My satiety level is ", _currentSatiety,
-                "\r\n", "My position is ", currentPosition,
-                "\r\n", "My age is ", _age,
+                "\r\n\r\n", "My position is ", currentPosition,
                 "\r\n", "Now I am ", myGoal,
-                "\r\n", _partner == null ? "No partner yet" : "My patner's coordinates: " + _partner.GetPosition(),
+                "\r\n\r\n", _partner == null ? "No partner yet" : "My patner's coordinates: " + _partner.GetPosition(),
                 "\r\n", _house == null ? "No house yet" : "Сoordinates of my house: " + _house.GetPosition(),
-                "\r\n", "Time sinse breeding: ", _timeSinceBreeding,
+                "\r\n", _indexOfVillage == default ? "No village yet" : "My village index is " + _indexOfVillage,
+                "\r\n\r\n", "Time sinse breeding: ", _timeSinceBreeding,
                 "\r\n", "I am ", _isReadyToReproduce ? "" : "not ", "ready for reproducing",
-                "\r\n", "My stocks:\r\n", string.Join(Environment.NewLine, linesS),
+                "\r\n\r\n", "My stocks:\r\n", string.Join(Environment.NewLine, linesS),
                 "\r\n", "And my animals:\r\n", domAnimals);
-            //"\r\n", "Max count of food in stocks is ", Constants.MaxCountOfStock);
-
             return result;
         }
-        public string InfoForHouse()
-        {
-            string result = string.Concat(gender,
-                " position is ", currentPosition,
-                "\r\n", _partner == null ? "No partner yet" : "Patner's coordinates: " + _partner.GetPosition(),
-                "\r\n", _house == null ? "No house yet" : "Сoordinates of my house: " + _house.GetPosition());
-
-            return result;
-        }
+        
     }
 }

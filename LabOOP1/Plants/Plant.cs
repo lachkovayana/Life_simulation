@@ -27,7 +27,7 @@ namespace LabOOP1
 
         private bool CheckGrowth()
         {
-            if (_isFruiting && Stage == PlantStage.grown && (_age % 10 == 0))
+            if (_isFruiting && Stage == PlantStage.grown && (_age % 15 == 0))
             {
                 if (MapObjectsControl.s_currentSeason == Season.winter)
                 {
@@ -41,7 +41,7 @@ namespace LabOOP1
         }
         private bool CheckForm()
         {
-            if (Stage == PlantStage.grown && (_age % 10 == 0))
+            if (Stage == PlantStage.grown && (_age % 15 == 0))
             {
                 return true;
             }
