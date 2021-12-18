@@ -31,7 +31,7 @@ namespace LabOOP1
         List<Type> desiredAnimalsList = new();
 
         private Human _partner = null;
-        //private bool _needToBuildHouse = false;
+        private bool _needToBuildHouse = false;
         private bool _haveAHouse = false;
 
         private House _house;
@@ -92,13 +92,27 @@ namespace LabOOP1
                     GoToMakePair(listOfHumans);
                 }
 
+                else if (_needToBuildHouse)
+                {
+                    var positions = GetPositionsOfClosestHouses();
+                    if (positions.Count == 0)
+                    {
+                        BuildHouse(currentPosition);
+                    }
+                    else
+                    {
+                        var coor = CheckNearbyArea(positions);
+                        if (coor != default)
+                            BuildHouse(coor);
+                        else
+                            _noTarget = true;
+                    }
+                }
 
                 else if (_isReadyToReproduce)
                 {
                     if (CheckPartnerReadiness(_partner))
                     {
-                        //MoveToTarget(_partner);
-                        //myGoal = PurposeOfMovement.goToPartner;
                         MoveToTarget(_house.GetPosition());
                         myGoal = PurposeOfMovement.goToHouse;
                     }
@@ -164,12 +178,49 @@ namespace LabOOP1
             }
         }
 
-        private void CheckForBuildingHouse()
-        {
 
-            //Rendering.FieldOfAllMapObjects[cure]
+
+        //------------------------------------------------------------< house >---------------------------------------------------------------
+
+        private List<(int, int)> GetPositionsOfClosestHouses()
+        {
+            List<(int, int)> positionsOfHouses = new();
+            for (int x = currentPosition.Item1 - 3; x < currentPosition.Item1 + 3; x++)
+            {
+                for (int y = currentPosition.Item2 - 3; y < currentPosition.Item2 + 3; y++)
+                {
+                    if (x >= 0 && y >= 0 && x < Form1.s_cols && y < Form1.s_rows)
+                    {
+                        if (MapObjectsControl.FieldOfAllMapObjects[x, y].OfType<House>().FirstOrDefault() != default)
+                        {
+                            positionsOfHouses.Add((x, y));
+                        }
+                    }
+                }
+            }
+            return positionsOfHouses;
         }
-        private void BuildHouse()
+        private (int, int) CheckNearbyArea(List<(int, int)> positions)
+        {
+            var orderedPositions = positions.OrderBy(p => Math.Abs(p.Item1 - currentPosition.Item1)).ThenBy(p => Math.Abs(p.Item2 - currentPosition.Item2));
+            foreach (var pairCoor in orderedPositions)
+            {
+                for (int x = pairCoor.Item1 - 1; x < pairCoor.Item1 + 1; x++)
+                {
+                    for (int y = pairCoor.Item2 - 1; y < pairCoor.Item2 + 1; y++)
+                    {
+                        if (x >= 0 && y >= 0 && x <= Form1.s_cols && y <= Form1.s_rows)
+                            if (MapObjectsControl.FieldOfAllMapObjects[x, y].OfType<House>().FirstOrDefault() == null)
+                            {
+                                return (x, y);
+                            }
+                    }
+                }
+            }
+            return default;
+        }
+
+        private void BuildHouse((int, int) pos)
         {
             var nh = new House(currentPosition);
             //listOfHouses.Add(nh);
@@ -180,40 +231,12 @@ namespace LabOOP1
             _partner._house = nh;
             _house.FemaleOwner = _partner;
             _house.MaleOwner = this;
-        }
-        protected virtual bool CheckHumanPartner(FoodForOmnivorous an)
-        {
-            if (an is Human human)
-            {
-                if (!human.Equals(this) && human.gender != gender &&
-                    human.CheckAgeForRelationship() && !human._isHungry)
-                    return true;
-            }
-            return false;
-        }
-        void GoToMakePair(List<Animal> listOfHumans)
-        {
-            var target = (Human)FindTarget(listOfHumans, CheckHumanPartner);
-            if (target != null)
-            {
-                MoveToTarget(target.GetPosition());
-                myGoal = PurposeOfMovement.goToPartner;
 
-                if (target.GetPosition() == currentPosition && gender == Gender.male)
-                {
-                    _partner = target;
-                    target._partner = this;
-                    //_needToBuildHouse = true;
-                    BuildHouse();
-
-                }
-            }
-            else
-                _noTarget = true;
-
+            _needToBuildHouse = false;
         }
 
-        //--------------------------------------------------------< eat >-----------------------------------------------------------
+
+        //------------------------------------------------------------< eat >---------------------------------------------------------------
         private bool CheckAbleToFindFood(List<FoodForOmnivorous> listOfFoodForOmnivorous, Func<FoodForOmnivorous, bool> check)
         {
             foreach (FoodForOmnivorous food in listOfFoodForOmnivorous)
@@ -263,7 +286,7 @@ namespace LabOOP1
         }
 
 
-        //--------------------------------------------------------< Tame >-----------------------------------------------------------
+        //--------------------------------------------------------< tame >-----------------------------------------------------------
         //private Type GetMissingAnimal()
         //{
         //    foreach (var pair in _domesticatedAnimal)
@@ -361,11 +384,6 @@ namespace LabOOP1
         //    return target;
         //}
 
-        private bool CheckPartner(Human p)
-        {
-            return (p._partner == null && p.gender != gender && !p._isHungry && !p.Equals(this) && p._age > 20);
-        }
-
         private bool CheckHavePartner()
         {
             return _partner != null;
@@ -374,7 +392,35 @@ namespace LabOOP1
         {
             return _age > 5;
         }
+        private bool CheckHumanPartner(FoodForOmnivorous an)
+        {
+            if (an is Human human)
+            {
+                if (!human.Equals(this) && human.gender != gender &&
+                    human.CheckAgeForRelationship() && !human._isHungry)
+                    return true;
+            }
+            return false;
+        }
+        void GoToMakePair(List<Animal> listOfHumans)
+        {
+            var target = (Human)FindTarget(listOfHumans, CheckHumanPartner);
+            if (target != null)
+            {
+                MoveToTarget(target.GetPosition());
+                myGoal = PurposeOfMovement.goToPartner;
 
+                if (target.GetPosition() == currentPosition && gender == Gender.male)
+                {
+                    _partner = target;
+                    target._partner = this;
+                    _needToBuildHouse = true;
+                }
+            }
+            else
+                _noTarget = true;
+
+        }
 
         //--------------------------------------------------------< Eat >-----------------------------------------------------------
 
@@ -563,6 +609,15 @@ namespace LabOOP1
                 "\r\n", "My stocks:\r\n", string.Join(Environment.NewLine, linesS),
                 "\r\n", "And my animals:\r\n", domAnimals);
             //"\r\n", "Max count of food in stocks is ", Constants.MaxCountOfStock);
+
+            return result;
+        }
+        public string InfoForHouse()
+        {
+            string result = string.Concat(gender,
+                " position is ", currentPosition,
+                "\r\n", _partner == null ? "No partner yet" : "Patner's coordinates: " + _partner.GetPosition(),
+                "\r\n", _house == null ? "No house yet" : "Сoordinates of my house: " + _house.GetPosition());
 
             return result;
         }

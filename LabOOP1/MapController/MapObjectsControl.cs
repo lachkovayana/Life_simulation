@@ -5,27 +5,29 @@ namespace LabOOP1
 {
     public class MapObjectsControl
     {
+        private const int _densityAnimals = 1020;
+        private const int _densityPlants = 1050;
+        private const int _densityHumans = 40;
+        private const int _densitySources = 1040;
+
         private List<Animal> _listOfAnimals = new();
         private List<Plant> _listOfAllPlants = new();
         private List<Fruit> _listOfFruits = new();
         private List<Animal> _listOfHumans = new();
-        //MyList<Resources> _listOfSources = new();
         private List<Source> _listOfSources = new();
-
-        public static List<House> ListOfHouses = new();
-
         private List<FoodForHerbivorous> _listOfFoodForHerbivorous = new();
         private List<FoodForOmnivorous> _listOfFoodForOmnivorous = new();
-        private readonly Rendering _rendering = new();
+
+        public static List<House> ListOfHouses = new();
 
         public static Season s_currentSeason;
 
         public static List<Animal> listOfAnimalsCopy = new();
 
-        private const int _densityAnimals = 1020;
-        private const int _densityPlants = 1050;
-        private const int _densityHumans = 40;
-        private const int _densitySources = 1040;
+        private readonly Rendering _rendering = new();
+
+        public static List<MapObject>[,] FieldOfAllMapObjects = new List<MapObject>[Form1.s_cols, Form1.s_rows];
+
 
         public MapObjectsControl()
         {
@@ -89,6 +91,8 @@ namespace LabOOP1
 
         public void LiveOneCicle(int timerValue)
         {
+            //FieldOfAllMapObjects = new List<MapObject>[Form1.s_cols, Form1.s_rows];э
+            ClearField();
             UpdateSeason(timerValue);
             UpdateAnimals();
             UpdatePlants();
@@ -98,6 +102,16 @@ namespace LabOOP1
             listOfAnimalsCopy = _listOfAnimals;
         }
 
+        private void ClearField()
+        {
+            for (int x = 0; x < Form1.s_cols; x++)
+            {
+                for (int y = 0; y < Form1.s_rows; y++)
+                {
+                    FieldOfAllMapObjects[x, y] = new List<MapObject>();
+                }
+            }
+        }
 
         public void CreateFirstGeneration()
         {
@@ -106,7 +120,7 @@ namespace LabOOP1
             {
                 for (int y = 0; y < Form1.s_rows; y++)
                 {
-                    Rendering.FieldOfAllMapObjects[x, y] = new List<MapObject>();   
+                    FieldOfAllMapObjects[x, y] = new List<MapObject>();
                     if (random.Next(_densityAnimals) == 0)
                     {
                         switch (random.Next(9))
@@ -168,7 +182,7 @@ namespace LabOOP1
                                 _listOfSources.Add(new GoldSource((x, y)));
                                 break;
                             case 1:
-                                _listOfSources.Add(new StoneSource((x,y)));
+                                _listOfSources.Add(new StoneSource((x, y)));
 
                                 break;
                             case 2:

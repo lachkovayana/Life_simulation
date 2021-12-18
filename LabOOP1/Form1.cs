@@ -17,7 +17,7 @@ namespace LabOOP1
         public static PictureBox s_pictureBox;
 
         private MapObjectsControl mapController;
-        private FoodForOmnivorous currentObj = null;
+        private MapObject currentObj = null;
         private int timerValue = 0;
 
         private string startMessage = "There is nothing to show yet. \r\nClick on any object on the map!";
@@ -31,7 +31,7 @@ namespace LabOOP1
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
-            textBox1.Text = (++timerValue).ToString() ;
+            textBox1.Text = (++timerValue).ToString();
             mapController.LiveOneCicle(timerValue);
             ShowMessage();
         }
@@ -120,15 +120,15 @@ namespace LabOOP1
         {
             int CurX = e.X / s_resolution;
             int CurY = e.Y / s_resolution;
-            List<MapObject> currentObj = Rendering.FieldOfAllMapObjects[CurX, CurY];
 
-            if (Rendering.FieldOfAllMapObjects[CurX, CurY] == null)
+            if (MapObjectsControl.FieldOfAllMapObjects[CurX, CurY].Count == 0)
             {
-               SetMessage("Whoops! Missclick! \r\nNothing at position (" + CurX + ";" + CurY + ")");
+                SetMessage("Whoops! Missclick! \r\nNothing at position (" + CurX + ";" + CurY + ")");
             }
             else
             {
-                SetMessage(Rendering.FieldOfAllMapObjects[CurX, CurY].Last().GetInfoAndLight());
+                currentObj = MapObjectsControl.FieldOfAllMapObjects[CurX, CurY].Last();
+                SetMessage(currentObj.GetInfoAndLight());
             }
 
         }

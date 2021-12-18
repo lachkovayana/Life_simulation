@@ -48,6 +48,10 @@ namespace LabOOP1
 
             string result = string.Concat("It's a ", name,
                 " with position ", currentPosition, "\r\nStocks inside :\r\n", string.Join(Environment.NewLine, linesS), owners);
+            result += "\r\n";
+            result +=  MaleOwner.IsDead ? "Male is dead" : MaleOwner.InfoForHouse();
+            result += "\r\n\r\n";
+            result += MaleOwner.IsDead ? "Female is dead" : FemaleOwner.InfoForHouse();
             return result;
         }
     }

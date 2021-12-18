@@ -57,7 +57,6 @@ namespace LabOOP1
 
         Image house = Image.FromFile("../../../img/house1.png");
 
-        public static List<MapObject>[,] FieldOfAllMapObjects = new List<MapObject>[Form1.s_cols, Form1.s_rows];
 
         Color seasonColor = Color.Gainsboro;
 
@@ -84,7 +83,7 @@ namespace LabOOP1
                 int y = h.GetPosition().Item2;
                 Draw(house, x, y);
 
-                FieldOfAllMapObjects[x, y].Add(h);
+                MapObjectsControl.FieldOfAllMapObjects[x, y].Add(h);
             }
         }
 
@@ -119,7 +118,7 @@ namespace LabOOP1
         }
         void ClearField()
         {
-           //FieldOfAllMapObjects = new List<MapObject>[Form1.s_cols, Form1.s_rows];
+           //MapObjectsControl.FieldOfAllMapObjects = new List<MapObject>[Form1.s_cols, Form1.s_rows];
             Form1.s_graphics.Clear(seasonColor);
         }
         private void DrawHumans(List<Animal> listOfHumans)
@@ -128,7 +127,7 @@ namespace LabOOP1
             {
                 int x = h.GetPosition().Item1;
                 int y = h.GetPosition().Item2;
-                FieldOfAllMapObjects[x, y].Add(h);
+                MapObjectsControl.FieldOfAllMapObjects[x, y].Add(h);
                 switch (h.gender)
                 {
                     case Gender.female:
@@ -149,7 +148,7 @@ namespace LabOOP1
                 int x = plant.GetPosition().Item1;
                 int y = plant.GetPosition().Item2;
 
-                FieldOfAllMapObjects[x, y].Add(plant);
+                MapObjectsControl.FieldOfAllMapObjects[x, y].Add(plant);
 
                 switch (plant)
                 {
@@ -241,7 +240,7 @@ namespace LabOOP1
             {
                 int x = fruit.GetPosition().Item1;
                 int y = fruit.GetPosition().Item2;
-                FieldOfAllMapObjects[x, y].Add(fruit);
+                MapObjectsControl.FieldOfAllMapObjects[x, y].Add(fruit);
 
                 if (fruit.IsHealthy)
                 {
@@ -261,7 +260,7 @@ namespace LabOOP1
                 int x = animal.GetPosition().Item1;
                 int y = animal.GetPosition().Item2;
 
-                FieldOfAllMapObjects[x, y].Add(animal);
+                MapObjectsControl.FieldOfAllMapObjects[x, y].Add(animal);
                 if (animal.IsDead)
                     Draw(meat, x, y);
                 else
