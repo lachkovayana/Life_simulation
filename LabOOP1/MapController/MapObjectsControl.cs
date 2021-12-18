@@ -5,9 +5,9 @@ namespace LabOOP1
 {
     public class MapObjectsControl
     {
-        private const int _densityAnimals = 50;
-        private const int _densityPlants = 50;
-        private const int _densityHumans = 50;
+        private const int _densityAnimals = 1050;
+        private const int _densityPlants = 1050;
+        private const int _densityHumans = 20;
         private const int _densitySources = 1040;
 
         private List<Animal> _listOfAnimals = new();

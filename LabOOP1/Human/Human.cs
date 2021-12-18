@@ -34,7 +34,7 @@ namespace LabOOP1
         private bool _needToBuildHouse = false;
         private House _house;
         private bool _noPlaceForBuilding = false;
-        private int _indexOfVillage;
+        private int _indexOfVillage = -1;
         public Human((int, int) pos) : base(pos) { }
 
 
@@ -100,20 +100,7 @@ namespace LabOOP1
 
                 else if (_isReadyToReproduce)
                 {
-                    (int, int) hp = _house.GetPosition();
-                    if (CheckPartnerReadiness(_partner))
-                    {
-                        MoveToTarget(hp);
-                        myGoal = PurposeOfMovement.goToHouseToReproduce;
-
-                        if (_partner.GetPosition() == hp && hp == currentPosition && gender == Gender.female)
-                        {
-                            Reproduce(listOfHumans);
-                            UpdateReproduceCharacters(_partner);
-                        }
-                    }
-                    else
-                        _noTarget = true;
+                    GoToTheHouseToReproduce(listOfAnimals);
                 }
                 else
                 {
@@ -153,6 +140,8 @@ namespace LabOOP1
                 }
             }
         }
+
+
 
         //------------------------------------------------------------< house >---------------------------------------------------------------
         private void HouseBuildingProcess()
@@ -211,9 +200,14 @@ namespace LabOOP1
             }
             return positionsOfHousesWithIndexes;
         }
-        private ((int, int), (int, int, int)) GetPositionOfFreePlaceNearHouse(List<(int, int, int)> positionsAndIndex)
+        private ((int, int), (int, int, int)) GetPositionOfFreePlaceNearHouse(List<(int, int, int)> positionsAndIndices)
         {
-            var orderedPositions = positionsAndIndex.OrderBy(p => Math.Abs(p.Item1 - currentPosition.Item1)).ThenBy(p => Math.Abs(p.Item2 - currentPosition.Item2));
+            var orderedPositions = positionsAndIndices.OrderBy(p => Math.Abs(p.Item1 - currentPosition.Item1)).ThenBy(p => Math.Abs(p.Item2 - currentPosition.Item2));
+
+            ((int, int), (int, int, int)) result = default;
+
+            List<House> listOfNearbyHouses = new();
+
             foreach (var pairOfCoorAndIndex in orderedPositions)
             {
                 for (int x = pairOfCoorAndIndex.Item1 - 1; x < pairOfCoorAndIndex.Item1 + 1; x++)
@@ -222,15 +216,46 @@ namespace LabOOP1
                     {
                         if (x >= 0 && y >= 0 && x <= Form1.s_cols && y <= Form1.s_rows)
                         {
-                            if (MapObjectsControl.FieldOfAllMapObjects[x, y].OfType<House>().FirstOrDefault() == null)
+                            House HouseInThisPosition = MapObjectsControl.FieldOfAllMapObjects[x, y].OfType<House>().FirstOrDefault();
+                            if (result == default && HouseInThisPosition == null)
                             {
-                                return ((x, y), pairOfCoorAndIndex);
+                                result = ((x, y), pairOfCoorAndIndex);
+                            }
+                            if (HouseInThisPosition != null)
+                            {
+                                listOfNearbyHouses.Add(HouseInThisPosition);
                             }
                         }
                     }
                 }
             }
-            return default;
+
+            //int indexOfChoosenBaseHouse = result.Item2.Item3;
+
+            //foreach (House house in listOfNearbyHouses)
+            //{
+            //    int indexOfCurHouse = house.indexOfVillage;
+            //    if (indexOfCurHouse != indexOfChoosenBaseHouse)
+            //    {
+            //        int indMin = Math.Min(indexOfCurHouse, indexOfChoosenBaseHouse);
+            //        int indMax = Math.Max(indexOfCurHouse, indexOfChoosenBaseHouse);
+            //        foreach (MapObject mapObj in MapObjectsControl.ListOfVillages[indMax])
+            //        {
+            //            if (mapObj is Human humanMO)
+            //            {
+            //                humanMO._indexOfVillage = indMin;
+            //            }
+            //            if (mapObj is House houseMO)
+            //            {
+            //                houseMO.indexOfVillage = indMin;
+            //            }
+            //            MapObjectsControl.ListOfVillages[indMin].Add(mapObj);
+            //        }
+            //        MapObjectsControl.ListOfVillages[indMax].Clear();
+            //    }
+            //}
+
+            return result;
         }
 
         private bool CheckIfHasAHouse()
@@ -398,29 +423,23 @@ namespace LabOOP1
         {
             return h._isReadyToReproduce;
         }
+        private void GoToTheHouseToReproduce(List<Animal> listOfHumans)
+        {
+            (int, int) hp = _house.GetPosition();
+            if (CheckPartnerReadiness(_partner))
+            {
+                MoveToTarget(hp);
+                myGoal = PurposeOfMovement.goToHouseToReproduce;
 
-        //private Human FindPartner(List<Animal> listOfHumans)
-        //{
-        //    var minDist = Constants.ImpVal;
-        //    Human target = null;
-
-        //    foreach (Human h in listOfHumans)
-        //    {
-        //        if (CheckPartner(h))
-        //        {
-        //            double dist = movement.CountDistL1(currentPosition, h.GetPosition());
-
-        //            if (dist < minDist)
-        //            {
-        //                minDist = dist;
-        //                target = h;
-        //            }
-        //        }
-        //    }
-
-        //    return target;
-        //}
-
+                if (_partner.GetPosition() == hp && hp == currentPosition && gender == Gender.female)
+                {
+                    Reproduce(listOfHumans);
+                    UpdateReproduceCharacters(_partner);
+                }
+            }
+            else
+                _noTarget = true;
+        }
         private bool CheckIfHasAPartner()
         {
             return _partner != null;
@@ -638,13 +657,13 @@ namespace LabOOP1
                 "\r\n", "Now I am ", myGoal,
                 "\r\n\r\n", _partner == null ? "No partner yet" : "My patner's coordinates: " + _partner.GetPosition(),
                 "\r\n", _house == null ? "No house yet" : "Сoordinates of my house: " + _house.GetPosition(),
-                "\r\n", _indexOfVillage == default ? "No village yet" : "My village index is " + _indexOfVillage,
+                "\r\n", _indexOfVillage == -1 ? "No village yet" : "My village index is " + _indexOfVillage,
                 "\r\n\r\n", "Time sinse breeding: ", _timeSinceBreeding,
                 "\r\n", "I am ", _isReadyToReproduce ? "" : "not ", "ready for reproducing",
                 "\r\n\r\n", "My stocks:\r\n", string.Join(Environment.NewLine, linesS),
                 "\r\n", "And my animals:\r\n", domAnimals);
             return result;
         }
-        
+
     }
 }
