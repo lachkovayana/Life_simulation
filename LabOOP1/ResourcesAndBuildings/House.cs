@@ -48,7 +48,7 @@ namespace LabOOP1
 
         private string GetInfo()
         {
-            var linesS = _foodStocks.Select(kvp => "- " + kvp.Key + ": " + kvp.Value + "/" + Constants.MaxCountOfFoodStock);
+            var linesS = _foodStocks.Select(kvp => "- " + kvp.Key + ": " + kvp.Value + "/" + Constants.MaxCountOfFoodStockForHouse);
 
             string name = GetType().ToString()[(GetType().ToString().IndexOf(".") + 1)..].ToLower();
 

@@ -20,7 +20,7 @@ namespace LabOOP1
         }
         protected override bool CheckOwnerStocks()
         {
-            return Owner.CheckStocks(FoodTypes.meat);
+            return Owner.CheckFoodForAnimals(FoodTypes.meat);
         }
 
     }

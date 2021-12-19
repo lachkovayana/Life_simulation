@@ -339,7 +339,7 @@ namespace LabOOP1
 
             if (Owner.GetPosition() == currentPosition)
             {
-                Owner.GetFoodFromOwner(this);
+                Owner.FeedAnimal(this);
             }
         }
         private void WalkingProcess()

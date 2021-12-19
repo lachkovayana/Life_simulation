@@ -76,9 +76,9 @@ namespace LabOOP1
                 GeneralVoidsForLiveCicle(20, CheckIfHasAHouse() && CheckIfHasAPartner());
 
 
-                if (_isHungry && (CheckAbleToEat(listOfFoodForOmnivorous, CheckForEating) || CheckStocks()))
+                if (_isHungry && (CheckAbleToEat(listOfFoodForOmnivorous, CheckForEating) || Stocks.CheckStocks(_foodStocks)))
                 {
-                    if (CheckStocks())
+                    if (Stocks.CheckStocks(_foodStocks))
                     {
                         EatSmthFromStocks(this);
                     }
@@ -104,25 +104,24 @@ namespace LabOOP1
                 }
                 else
                 {
-                    if (CheckIfHasAHouse() && CheckStoksFullness())
+                    if (CheckIfHasAHouse() && Stocks.CheckStoksFullness(_foodStocks))
                     {
                         GoToTheHouseToPutFood();
                     }
 
-                    else if (CheckStockNotReachedLimit(FoodTypes.plant) && CheckAbleToFindFood(listOfFoodForOmnivorous, (food) => food is EdiblePlant f && f.IsHealthy && f.Stage != PlantStage.seed))
+                    else if (gender == Gender.female && Stocks.CheckStockNotReachedLimit(_foodStocks, FoodTypes.plant) && CheckAbleToFindFood(listOfFoodForOmnivorous, (food) => food is EdiblePlant f && f.IsHealthy && f.Stage != PlantStage.seed))
                     {
                         GoCollectPlantsMyself(listOfFoodForOmnivorous, listOfPlants, listOfFruits, (food) => food is EdiblePlant f && f.IsHealthy && f.Stage != PlantStage.seed);
                     }
-                    else if (CheckStockNotReachedLimit(FoodTypes.fruit) && CheckAbleToFindFood(listOfFoodForOmnivorous, (food) => food is Fruit f && f.IsHealthy))
+                    else if (gender == Gender.female && Stocks.CheckStockNotReachedLimit(_foodStocks, FoodTypes.fruit) && CheckAbleToFindFood(listOfFoodForOmnivorous, (food) => food is Fruit f && f.IsHealthy))
                     {
                         GoCollectPlantsMyself(listOfFoodForOmnivorous, listOfPlants, listOfFruits, (food) => food is Fruit fr && fr.IsHealthy);
                     }
-                    else if (CheckStockNotReachedLimit(FoodTypes.meat) && CheckAbleToFindFood(listOfFoodForOmnivorous, (food) => food is Animal an && an.IsDead))
+                    else if (gender == Gender.female && Stocks.CheckStockNotReachedLimit(_foodStocks, FoodTypes.meat) && CheckAbleToFindFood(listOfFoodForOmnivorous, (food) => food is Animal an && an.IsDead))
                     {
                         GoCollectPlantsMyself(listOfFoodForOmnivorous, listOfPlants, listOfFruits, (food) => food is Animal an && an.IsDead);
                     }
-
-                    else if (!CheckDomesticatedAnimalFullness() && CheckStoksFullness(1))
+                    else if (gender == Gender.male && !CheckDomesticatedAnimalFullness() && Stocks.CheckStoksFullness(_foodStocks, 1))
                     {
                         GoTameAnimals(listOfFoodForOmnivorous);
                     }
@@ -143,6 +142,7 @@ namespace LabOOP1
 
 
 
+
         //------------------------------------------------------------< house >---------------------------------------------------------------
         private void HouseBuildingProcess()
         {
@@ -153,17 +153,64 @@ namespace LabOOP1
             }
             else
             {
-                var coor = GetPositionOfFreePlaceNearHouse(positionsWithIndexes);
-                if (coor != default)
+                var data = GetDataAboutNewHouse(positionsWithIndexes);
+                if (data != default)
                 {
-                    var positionOfPlaceForNewHouse = coor.Item1;
-                    var baseHouse = coor.Item2;
-                    BuildHouse(positionOfPlaceForNewHouse, baseHouse);
+                    DefineIndices(data);
+                    var positionOfPlaceForNewHouse = data.Item1;
+                    var positionAndIndexOfBaseHouse = data.Item2;
+                    BuildHouse(positionOfPlaceForNewHouse, positionAndIndexOfBaseHouse);
                 }
                 else
                     _noPlaceForBuilding = true;
             }
         }
+
+        private void DefineIndices(((int, int), (int, int, int)) data)
+        {
+            var newHousePosition = data.Item1;
+            var indexOfNewHouse = data.Item2.Item3;
+
+            for (int x = newHousePosition.Item1 - 1; x < newHousePosition.Item1 + 1; x++)
+            {
+                for (int y = newHousePosition.Item2 - 1; y < newHousePosition.Item2 + 1; y++)
+                {
+                    if (x >= 0 && y >= 0 && x < Form1.s_cols && y < Form1.s_rows)
+                    {
+                        //если рядом есть дом
+                        House houseAtThisPosition = MapObjectsControl.FieldOfAllMapObjects[x, y].OfType<House>().FirstOrDefault();
+                        if (houseAtThisPosition != null)
+                        {
+                            //и индекс деревни этого дома отличается от индекса деревни нашего строящегося дома
+                            var indexOfNearbyHouse = houseAtThisPosition.indexOfVillage;
+                            if (indexOfNearbyHouse != indexOfNewHouse)
+                            {
+                                //объединяем эти две деревни, индексом обеих становится минимальный индекс
+                                ChangeIndex(Math.Max(indexOfNewHouse, indexOfNearbyHouse), Math.Min(indexOfNewHouse, indexOfNearbyHouse));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ChangeIndex(int replaceableIndex, int newIndex)
+        {
+            foreach (MapObject mapObj in MapObjectsControl.ListOfVillages[replaceableIndex])
+            {
+                if (mapObj is Human human)
+                {
+                    human._indexOfVillage = newIndex;
+                }
+                if (mapObj is House house)
+                {
+                    house.indexOfVillage = newIndex;
+                }
+                MapObjectsControl.ListOfVillages[newIndex].Add(mapObj);
+            }
+            MapObjectsControl.ListOfVillages[replaceableIndex].Clear();
+        }
+
         private void GoToTheHouseToPutFood()
         {
             (int, int) hp = _house.GetPosition();
@@ -200,62 +247,34 @@ namespace LabOOP1
             }
             return positionsOfHousesWithIndexes;
         }
-        private ((int, int), (int, int, int)) GetPositionOfFreePlaceNearHouse(List<(int, int, int)> positionsAndIndices)
+        private ((int, int), (int, int, int)) GetDataAboutNewHouse(List<(int, int, int)> positionsAndIndices)
         {
+            //сортируем массив (коор1, коор2, индекс) так, чтобы в начале стояли ближайшие дома, в конце - самые дальние
             var orderedPositions = positionsAndIndices.OrderBy(p => Math.Abs(p.Item1 - currentPosition.Item1)).ThenBy(p => Math.Abs(p.Item2 - currentPosition.Item2));
 
-            ((int, int), (int, int, int)) result = default;
-
             List<House> listOfNearbyHouses = new();
-
+            //для каждого дома в радиусе 3 клеток (полученного из другого метода и уже отсортированного)
             foreach (var pairOfCoorAndIndex in orderedPositions)
             {
+                //проверяем область вокруг него
                 for (int x = pairOfCoorAndIndex.Item1 - 1; x < pairOfCoorAndIndex.Item1 + 1; x++)
                 {
                     for (int y = pairOfCoorAndIndex.Item2 - 1; y < pairOfCoorAndIndex.Item2 + 1; y++)
                     {
-                        if (x >= 0 && y >= 0 && x <= Form1.s_cols && y <= Form1.s_rows)
+                        if (x >= 0 && y >= 0 && x < Form1.s_cols && y < Form1.s_rows)
                         {
-                            House HouseInThisPosition = MapObjectsControl.FieldOfAllMapObjects[x, y].OfType<House>().FirstOrDefault();
-                            if (result == default && HouseInThisPosition == null)
+                            //как только находим свободное место, возвращаем
+                            //1 элемент - пара координат подходящего для строительства ного дома места,
+                            //2 элемент - данные о доме, относительно которого строим
+                            if (MapObjectsControl.FieldOfAllMapObjects[x, y].OfType<House>().FirstOrDefault() == null)
                             {
-                                result = ((x, y), pairOfCoorAndIndex);
-                            }
-                            if (HouseInThisPosition != null)
-                            {
-                                listOfNearbyHouses.Add(HouseInThisPosition);
+                                return ((x, y), pairOfCoorAndIndex);
                             }
                         }
                     }
                 }
             }
-
-            //int indexOfChoosenBaseHouse = result.Item2.Item3;
-
-            //foreach (House house in listOfNearbyHouses)
-            //{
-            //    int indexOfCurHouse = house.indexOfVillage;
-            //    if (indexOfCurHouse != indexOfChoosenBaseHouse)
-            //    {
-            //        int indMin = Math.Min(indexOfCurHouse, indexOfChoosenBaseHouse);
-            //        int indMax = Math.Max(indexOfCurHouse, indexOfChoosenBaseHouse);
-            //        foreach (MapObject mapObj in MapObjectsControl.ListOfVillages[indMax])
-            //        {
-            //            if (mapObj is Human humanMO)
-            //            {
-            //                humanMO._indexOfVillage = indMin;
-            //            }
-            //            if (mapObj is House houseMO)
-            //            {
-            //                houseMO.indexOfVillage = indMin;
-            //            }
-            //            MapObjectsControl.ListOfVillages[indMin].Add(mapObj);
-            //        }
-            //        MapObjectsControl.ListOfVillages[indMax].Clear();
-            //    }
-            //}
-
-            return result;
+            return default;
         }
 
         private bool CheckIfHasAHouse()
@@ -311,9 +330,9 @@ namespace LabOOP1
 
 
         //--------------------------------------------------------< collect food >-----------------------------------------------------------
+    
         private void GoCollectPlantsMyself(List<FoodForOmnivorous> listOfFoodForOmnivorous, List<Plant> listOfAllPlants, List<Fruit> listOfFruits, Func<FoodForOmnivorous, bool> myFunc)
         {
-
             var target = FindTarget(listOfFoodForOmnivorous, myFunc);
 
             if (target != null)
@@ -393,8 +412,6 @@ namespace LabOOP1
                         _noTarget = true;
                 }
             }
-
-
         }
 
         private void TameAnimal(Animal target)
@@ -415,7 +432,31 @@ namespace LabOOP1
             return true;
         }
 
+        //--------------------------------------------------------< Voids for domesticated animals >-----------------------------------------------------------
+        internal void ReportDeath(Animal animal)
+        {
+            switch (animal)
+            {
+                case Wolf:
+                    _domesticatedAnimal[typeof(Wolf)] = null;
+                    break;
+                case Pig:
+                    _domesticatedAnimal[typeof(Pig)] = null;
+                    break;
+                case Sheep:
+                    _domesticatedAnimal[typeof(Sheep)] = null;
+                    break;
+            }
+        }
+        public bool CheckFoodForAnimals(FoodTypes food)
+        {
+            return Stocks.CheckStocks(_foodStocks, food);
+        }
 
+        internal void FeedAnimal(Animal animal)
+        {
+            EatSmthFromStocks(animal);
+        }
         //--------------------------------------------------------< Partner & Reproduce >-----------------------------------------------------------
 
 
@@ -500,7 +541,7 @@ namespace LabOOP1
             switch (eater)
             {
                 case Human:
-                    key = FindMaxValueAndItsKey().Key;
+                    key = Stocks.FindMaxValueAndItsKey(_foodStocks).Key;
                     break;
 
                 case Wolf:
@@ -508,7 +549,7 @@ namespace LabOOP1
                     break;
 
                 case Pig:
-                    key = FindMaxValueAndItsKey().Key;
+                    key = Stocks.FindMaxValueAndItsKey(_foodStocks).Key;
 
                     break;
 
@@ -524,26 +565,7 @@ namespace LabOOP1
             eater.RiseSatiety();
         }
 
-        internal void ReportDeath(Animal animal)
-        {
-            switch (animal)
-            {
-                case Wolf:
-                    _domesticatedAnimal[typeof(Wolf)] = null;
-                    break;
-                case Pig:
-                    _domesticatedAnimal[typeof(Pig)] = null;
-                    break;
-                case Sheep:
-                    _domesticatedAnimal[typeof(Sheep)] = null;
-                    break;
-            }
-        }
-
-        internal void GetFoodFromOwner(Animal animal)
-        {
-            EatSmthFromStocks(animal);
-        }
+        
 
         //--------------------------------------------------------< hunt >-----------------------------------------------------------
 
@@ -573,44 +595,44 @@ namespace LabOOP1
 
         //--------------------------------------------------------< stocks >-----------------------------------------------------------
 
-        private bool CheckStoksFullness(int count = Constants.MaxCountOfFoodStock)
-        {
-            foreach (var pair in _foodStocks)
-            {
-                if (CheckStockNotReachedLimit(pair.Key, count))
-                    return false;
-            }
-            return true;
-        }
-        private bool CheckStockNotReachedLimit(FoodTypes ft, int count = Constants.MaxCountOfFoodStock)
-        {
-            return _foodStocks[ft] < count;
-        }
+        //private bool CheckStoksFullness(int count = Constants.MaxCountOfFoodStock)
+        //{
+        //    foreach (var pair in _foodStocks)
+        //    {
+        //        if (CheckStockNotReachedLimit(pair.Key, count))
+        //            return false;
+        //    }
+        //    return true;
+        //}
+        //private bool CheckStockNotReachedLimit(FoodTypes ft, int count = Constants.MaxCountOfFoodStock)
+        //{
+        //    return _foodStocks[ft] < count;
+        //}
 
-        public bool CheckStocks(FoodTypes food = FoodTypes.any)
-        {
-            if (food == FoodTypes.any)
-            {
-                foreach (var pair in _foodStocks)
-                {
-                    if (pair.Value != 0)
-                        return true;
-                }
-            }
-            else
-            {
-                return (_foodStocks[food] != 0);
-            }
+        //public bool CheckStocks(FoodTypes food = FoodTypes.any)
+        //{
+        //    if (food == FoodTypes.any)
+        //    {
+        //        foreach (var pair in _foodStocks)
+        //        {
+        //            if (pair.Value != 0)
+        //                return true;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        return _foodStocks[food] != 0;
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
 
-        private KeyValuePair<FoodTypes, int> FindMaxValueAndItsKey()
-        {
-            return _foodStocks.OrderByDescending(z => z.Value).ToDictionary(a => a, s => s).First().Value;
-        }
+        //private KeyValuePair<FoodTypes, int> FindMaxValueAndItsKey()
+        //{
+        //    return _foodStocks.OrderByDescending(z => z.Value).ToDictionary(a => a, s => s).First().Value;
+        //}
 
-
+       
         //--------------------------------------------------------< Die >-----------------------------------------------------------
 
 
