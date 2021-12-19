@@ -36,8 +36,8 @@ namespace LabOOP1
         private Barn _barn;
         private bool _noPlaceForBuilding = false;
         private bool _noFoodForTaming = false;
-        private int _indexOfVillage = -1;
         public Human((int, int) pos) : base(pos) { }
+        public int indexOfVillage = -1;
 
 
 
@@ -166,8 +166,8 @@ namespace LabOOP1
 
         private bool CheckIfHasABarn()
         {
-            if (_indexOfVillage != -1)
-                return MapObjectsControl.ListOfVillages[_indexOfVillage].OfType<Barn>().FirstOrDefault() != null;
+            if (indexOfVillage != -1)
+                return MapObjectsControl.ListOfVillages[indexOfVillage].OfType<Barn>().FirstOrDefault() != null;
             return false;
         }
 
@@ -184,7 +184,7 @@ namespace LabOOP1
                 var data = GetDataAboutNewHouse(positionsWithIndexes);
                 if (data != default)
                 {
-                    DefineIndices(data);
+                    MapObjectsControl.DefineIndices(data);
                     var positionOfPlaceForNewHouse = data.Item1;
                     var positionAndIndexOfBaseHouse = data.Item2;
                     BuildHouse(positionOfPlaceForNewHouse, positionAndIndexOfBaseHouse);
@@ -194,50 +194,7 @@ namespace LabOOP1
             }
         }
 
-        private void DefineIndices(((int, int), (int, int, int)) data)
-        {
-            var newHousePosition = data.Item1;
-            var indexOfNewHouse = data.Item2.Item3;
-
-            for (int x = newHousePosition.Item1 - 1; x < newHousePosition.Item1 + 1; x++)
-            {
-                for (int y = newHousePosition.Item2 - 1; y < newHousePosition.Item2 + 1; y++)
-                {
-                    if (x >= 0 && y >= 0 && x < Form1.s_cols && y < Form1.s_rows)
-                    {
-                        //если рядом есть дом
-                        House houseAtThisPosition = MapObjectsControl.FieldOfAllMapObjects[x, y].OfType<House>().FirstOrDefault();
-                        if (houseAtThisPosition != null)
-                        {
-                            //и индекс деревни этого дома отличается от индекса деревни нашего строящегося дома
-                            var indexOfNearbyHouse = houseAtThisPosition.indexOfVillage;
-                            if (indexOfNearbyHouse != indexOfNewHouse)
-                            {
-                                //объединяем эти две деревни, индексом обеих становится минимальный индекс
-                                ChangeIndex(Math.Max(indexOfNewHouse, indexOfNearbyHouse), Math.Min(indexOfNewHouse, indexOfNearbyHouse));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private void ChangeIndex(int replaceableIndex, int newIndex)
-        {
-            foreach (MapObject mapObj in MapObjectsControl.ListOfVillages[replaceableIndex])
-            {
-                if (mapObj is Human human)
-                {
-                    human._indexOfVillage = newIndex;
-                }
-                if (mapObj is House house)
-                {
-                    house.indexOfVillage = newIndex;
-                }
-                MapObjectsControl.ListOfVillages[newIndex].Add(mapObj);
-            }
-            MapObjectsControl.ListOfVillages[replaceableIndex].Clear();
-        }
+        
 
         private bool GoToTheBuildingToPutFood(Building building)
         {
@@ -278,9 +235,9 @@ namespace LabOOP1
         private List<(int, int, int)> GetPositionsOfClosestHouses()
         {
             List<(int, int, int)> positionsOfHousesWithIndexes = new();
-            for (int x = currentPosition.Item1 - 3; x < currentPosition.Item1 + 3; x++)
+            for (int x = currentPosition.Item1 - 3; x <= currentPosition.Item1 + 3; x++)
             {
-                for (int y = currentPosition.Item2 - 3; y < currentPosition.Item2 + 3; y++)
+                for (int y = currentPosition.Item2 - 3; y <= currentPosition.Item2 + 3; y++)
                 {
                     if (x >= 0 && y >= 0 && x < Form1.s_cols && y < Form1.s_rows)
                     {
@@ -305,9 +262,9 @@ namespace LabOOP1
             foreach (var pairOfCoorAndIndex in orderedPositions)
             {
                 //проверяем область вокруг него
-                for (int x = pairOfCoorAndIndex.Item1 - 1; x < pairOfCoorAndIndex.Item1 + 1; x++)
+                for (int x = pairOfCoorAndIndex.Item1 - 1; x <= pairOfCoorAndIndex.Item1 + 1; x++)
                 {
-                    for (int y = pairOfCoorAndIndex.Item2 - 1; y < pairOfCoorAndIndex.Item2 + 1; y++)
+                    for (int y = pairOfCoorAndIndex.Item2 - 1; y <= pairOfCoorAndIndex.Item2 + 1; y++)
                     {
                         if (x >= 0 && y >= 0 && x < Form1.s_cols && y < Form1.s_rows)
                         {
@@ -340,8 +297,8 @@ namespace LabOOP1
 
             int ind = GetIndexOfHouse(baseHouseData);
 
-            _indexOfVillage = ind;
-            _partner._indexOfVillage = ind;
+            indexOfVillage = ind;
+            _partner.indexOfVillage = ind;
             newHouse.indexOfVillage = ind;
             _house = newHouse;
             _partner._house = newHouse;
@@ -772,7 +729,7 @@ namespace LabOOP1
                 "\r\n", "Now I am ", myGoal,
                 "\r\n\r\n", _partner == null ? "No partner yet" : "My patner's coordinates: " + _partner.GetPosition(),
                 "\r\n", _house == null ? "No house yet" : "Сoordinates of my house: " + _house.GetPosition(),
-                "\r\n", _indexOfVillage == -1 ? "No village yet" : "My village index is " + _indexOfVillage,
+                "\r\n", indexOfVillage == -1 ? "No village yet" : "My village index is " + indexOfVillage,
                 "\r\n\r\n", "Time sinse breeding: ", _timeSinceBreeding,
                 "\r\n", "I am ", _isReadyToReproduce ? "" : "not ", "ready for reproducing",
                 "\r\n\r\n", "My stocks", gender == Gender.female ? ":\r\n" + string.Join(Environment.NewLine, linesS) : " are kept in house",

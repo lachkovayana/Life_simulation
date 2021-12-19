@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LabOOP1
 {
     public class MapObjectsControl
     {
-        private const int _densityAnimals = 30;
-        private const int _densityPlants = 50;
-        private const int _densityHumans = 20;
+        private const int _densityAnimals = 1030;
+        private const int _densityPlants = 1050;
+        private const int _densityHumans = 10;
         private const int _densitySources = 1040;
 
         private List<Animal> _listOfAnimals = new();
@@ -198,6 +199,51 @@ namespace LabOOP1
                 }
             }
             ListOfHouses.Clear();
+            ListOfVillages.Clear();
+        }
+       
+        private static void ChangeIndex(int replaceableIndex, int newIndex)
+        {
+            foreach (MapObject mapObj in ListOfVillages[replaceableIndex])
+            {
+                if (mapObj is Human human)
+                {
+                    human.indexOfVillage = newIndex;
+                }
+                if (mapObj is House house)
+                {
+                    house.indexOfVillage = newIndex;
+                }
+                ListOfVillages[newIndex].Add(mapObj);
+            }
+            ListOfVillages[replaceableIndex].Clear();
+        }
+        public static void DefineIndices(((int, int), (int, int, int)) data)
+        {
+            var newHousePosition = data.Item1;
+            var indexOfNewHouse = data.Item2.Item3;
+
+            for (int x = newHousePosition.Item1 - 1; x <= newHousePosition.Item1 + 1; x++)
+            {
+                for (int y = newHousePosition.Item2 - 1; y <= newHousePosition.Item2 + 1; y++)
+                {
+                    if (x >= 0 && y >= 0 && x < Form1.s_cols && y < Form1.s_rows)
+                    {
+                        //если рядом есть дом
+                        House houseAtThisPosition = FieldOfAllMapObjects[x, y].OfType<House>().FirstOrDefault();
+                        if (houseAtThisPosition != null)
+                        {
+                            //и индекс деревни этого дома отличается от индекса деревни нашего строящегося дома
+                            var indexOfNearbyHouse = houseAtThisPosition.indexOfVillage;
+                            if (indexOfNearbyHouse != indexOfNewHouse)
+                            {
+                                //объединяем эти две деревни, индексом обеих становится минимальный индекс
+                                ChangeIndex(Math.Max(indexOfNewHouse, indexOfNearbyHouse), Math.Min(indexOfNewHouse, indexOfNearbyHouse));
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
