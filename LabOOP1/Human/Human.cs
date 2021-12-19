@@ -93,7 +93,7 @@ namespace LabOOP1
                     {
                         GoToTheBuildingToEat(_house);
                     }
-                    
+
                     else if (CheckIfHasABarn())
                     {
                         foreach (MapObject m in MapObjectsControl.ListOfVillages[indexOfVillage])
@@ -158,8 +158,8 @@ namespace LabOOP1
                     {
                         if (m is Building b)
                         {
-                            GoToTheBuildingToPutFood(b);
-
+                            if (GoToTheBuildingToPutFood(b))
+                                break;
                         }
                     }
                 else
@@ -188,7 +188,7 @@ namespace LabOOP1
             {
                 GoTameAnimals(listOfFoodForOmnivorous);
             }
-
+            //строитель
             else if (_role == Role.builder && CheckTimeForBuildingBarn())
             {
                 BarnBuildingProcess();
