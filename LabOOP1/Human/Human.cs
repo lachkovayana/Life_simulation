@@ -31,14 +31,18 @@ namespace LabOOP1
         List<Type> desiredAnimalsList = new();
 
         private Human _partner = null;
-        private bool _needToBuildHouse = false;
         private House _house;
-        private Barn _barn;
+        private Barn _closestBarn;
+        private Role _role;
+        private bool _needToBuildHouse = false;
         private bool _noPlaceForBuilding = false;
         private bool _noFoodForTaming = false;
-        public Human((int, int) pos) : base(pos) { }
-        public int indexOfVillage = -1;
+        private bool _partOfLargeVillage = false;
+        private int _timeSinceFoundingVillage = 0;
 
+        public Human((int, int) pos) : base(pos)
+        { }
+        public int indexOfVillage = -1;
 
 
         //--------------------------------------------------------< override >-----------------------------------------------------------
@@ -76,7 +80,10 @@ namespace LabOOP1
             else
             {
                 GeneralVoidsForLiveCicle(20, CheckIfHasAHouse() && CheckIfHasAPartner());
-
+                if (!_partOfLargeVillage && CheckIfHasAHouse())
+                {
+                    CheckVillage();
+                }
 
                 if (_isHungry && (CheckAbleToEat(listOfFoodForOmnivorous, CheckForEating) || CheckIfHasAHouse() && Stocks.CheckStocksContainFoodType(ref _house.foodStocks)))
                 {
@@ -84,9 +91,9 @@ namespace LabOOP1
                     {
                         GoToTheBuildingToEat(_house);
                     }
-                    else if (CheckIfHasABarn() && Stocks.CheckStocksContainFoodType(ref _barn.foodStocks))
+                    else if (CheckIfHasABarn() && Stocks.CheckStocksContainFoodType(ref _closestBarn.foodStocks))
                     {
-                        GoToTheBuildingToEat(_barn);
+                        GoToTheBuildingToEat(_closestBarn);
                     }
                     else
                     {
@@ -110,43 +117,17 @@ namespace LabOOP1
                 }
                 else
                 {
-                    if (gender == Gender.female && (CheckIfHasAHouse() || CheckIfHasABarn()) && Stocks.CheckIfAtLastOneLimit(ref _foodStocks))
+                    if (_partOfLargeVillage)
                     {
-                        if (!GoToTheBuildingToPutFood(_house))
-                        {
-                            if (CheckIfHasABarn())
-                                GoToTheBuildingToPutFood(_barn);
-                        }
-                    }
-                    else if (gender == Gender.female && Stocks.CheckStockNotReachedLimit(ref _foodStocks, FoodTypes.plant)
-                        && CheckAbleToFindFood(listOfFoodForOmnivorous, (food) => food is EdiblePlant f && f.IsHealthy && f.Stage != PlantStage.seed))
-                    {
-                        GoCollectPlantsMyself(listOfFoodForOmnivorous, listOfPlants, listOfFruits,
-                            (food) => food is EdiblePlant f && f.IsHealthy && f.Stage != PlantStage.seed);
-                    }
-                    else if (gender == Gender.female && Stocks.CheckStockNotReachedLimit(ref _foodStocks, FoodTypes.fruit)
-                        && CheckAbleToFindFood(listOfFoodForOmnivorous, (food) => food is Fruit f && f.IsHealthy))
-                    {
-                        GoCollectPlantsMyself(listOfFoodForOmnivorous, listOfPlants, listOfFruits, (food) => food is Fruit fr && fr.IsHealthy);
-                    }
-                    else if (gender == Gender.female && Stocks.CheckStockNotReachedLimit(ref _foodStocks, FoodTypes.meat)
-                        && CheckAbleToFindFood(listOfFoodForOmnivorous, (food) => food is Animal an && an.IsDead))
-                    {
-                        GoCollectPlantsMyself(listOfFoodForOmnivorous, listOfPlants, listOfFruits, (food) => food is Animal an && an.IsDead);
-                    }
+                        _timeSinceFoundingVillage++;
 
-                    else if (gender == Gender.male && !CheckDomesticatedAnimalFullness() && (CheckIfHasAHouse() || CheckIfHasABarn()))
-                    // && (Stocks.CheckStoksFullness(_house.foodStocks, 1) || Stocks.CheckStoksFullness(_barn.foodStocks, 1)))
-                    {
-                        GoTameAnimals(listOfFoodForOmnivorous);
+                        VoidsForDependentPerson(listOfFoodForOmnivorous, listOfAnimals, listOfPlants, listOfFruits);
                     }
 
                     else
                     {
-                        MoveToRandomCell();
-                        myGoal = PurposeOfMovement.goToRandomCell;
+                        VoidsForIndependentPerson(listOfFoodForOmnivorous, listOfPlants, listOfFruits);
                     }
-
                 }
                 if (_noTarget || _noPlaceForBuilding || _noFoodForTaming)
                 {
@@ -156,19 +137,160 @@ namespace LabOOP1
             }
         }
 
+        private void VoidsForDependentPerson(List<FoodForOmnivorous> listOfFoodForOmnivorous, List<Animal> listOfAnimals, List<Plant> listOfPlants, List<Fruit> listOfFruits)
+        {
+            //собиратель несёт еду в амбар (если он есть) или дом при достижении лимита (2) хотя бы в одном из продуктов
+            if (_role == Role.gatherer && (CheckIfHasAHouse() || CheckIfHasABarn()) && Stocks.CheckIfAtLastOneLimit(ref _foodStocks))
+            {
+                var flag = true;
+                if (CheckIfHasABarn())
+                    flag = GoToTheBuildingToPutFood(_closestBarn);
+                else if (!flag || !CheckIfHasABarn())
+                    GoToTheBuildingToPutFood(_house);
+            }
+            //действия женщины-собирателя
+            else if (_role == Role.gatherer && Stocks.CheckStockNotReachedLimit(ref _foodStocks, FoodTypes.plant)
+                && CheckAbleToFindFood(listOfFoodForOmnivorous, (food) => food is EdiblePlant f && f.IsHealthy && f.Stage != PlantStage.seed))
+            {
+                GoCollectPlantsMyself(listOfFoodForOmnivorous, listOfPlants, listOfFruits,
+                    (food) => food is EdiblePlant f && f.IsHealthy && f.Stage != PlantStage.seed);
+            }
+            else if (_role == Role.gatherer && Stocks.CheckStockNotReachedLimit(ref _foodStocks, FoodTypes.fruit)
+                && CheckAbleToFindFood(listOfFoodForOmnivorous, (food) => food is Fruit f && f.IsHealthy))
+            {
+                GoCollectPlantsMyself(listOfFoodForOmnivorous, listOfPlants, listOfFruits, (food) => food is Fruit fr && fr.IsHealthy);
+            }
+            else if (_role == Role.gatherer && Stocks.CheckStockNotReachedLimit(ref _foodStocks, FoodTypes.meat)
+                && CheckAbleToFindFood(listOfFoodForOmnivorous, (food) => food is Animal an && an.IsDead))
+            {
+                GoCollectPlantsMyself(listOfFoodForOmnivorous, listOfPlants, listOfFruits, (food) => food is Animal an && an.IsDead);
+            }
+
+            //пастух не имеет собственных ресурсов, поэтому должен иметь дом/амбар, из которого возьмет еду для приручения животного
+            else if (_role == Role.shepherd && !CheckDomesticatedAnimalFullness() && (CheckIfHasAHouse() || CheckIfHasABarn()))
+            {
+                GoTameAnimals(listOfFoodForOmnivorous);
+            }
+
+            else if (_role == Role.builder && CheckTimeForBuildingBarn())
+            {
+                barnBuildingProcess();
+            }
+
+            //охотник (если охота была удачной, несёт добычу в амбар, если он уже построен)
+            else if (_role == Role.hunter && CheckAbleToHunt(listOfAnimals))
+            {
+                GoToHunt(listOfAnimals);
+                if (_foodStocks[FoodTypes.meat] != 0)
+                {
+                    if (CheckIfHasABarn())
+                        GoToTheBuildingToPutFood(_closestBarn);
+                    else
+                        GoToTheBuildingToPutFood(_house);
+
+                }
+            }
+            else
+            {
+                MoveToRandomCell();
+                myGoal = PurposeOfMovement.goToRandomCell;
+            }
+        }
+
+        private void VoidsForIndependentPerson(List<FoodForOmnivorous> listOfFoodForOmnivorous, List<Plant> listOfPlants, List<Fruit> listOfFruits)
+        {
+            if (Stocks.CheckStockNotReachedLimit(ref _foodStocks, FoodTypes.plant)
+                           && CheckAbleToFindFood(listOfFoodForOmnivorous, (food) => food is EdiblePlant f && f.IsHealthy && f.Stage != PlantStage.seed))
+            {
+                GoCollectPlantsMyself(listOfFoodForOmnivorous, listOfPlants, listOfFruits, (food) => food is Plant pl && pl.IsHealthy);
+            }
+            else if (Stocks.CheckStockNotReachedLimit(ref _foodStocks, FoodTypes.fruit)
+                && CheckAbleToFindFood(listOfFoodForOmnivorous, (food) => food is Fruit f && f.IsHealthy))
+            {
+                GoCollectPlantsMyself(listOfFoodForOmnivorous, listOfPlants, listOfFruits, (food) => food is Fruit fr && fr.IsHealthy);
+            }
+            else if (Stocks.CheckStockNotReachedLimit(ref _foodStocks, FoodTypes.meat)
+                && CheckAbleToFindFood(listOfFoodForOmnivorous, (food) => food is Animal an && an.IsDead))
+            {
+                GoCollectPlantsMyself(listOfFoodForOmnivorous, listOfPlants, listOfFruits, (food) => food is Animal an && an.IsDead);
+            }
+
+
+            else if (!CheckDomesticatedAnimalFullness() && Stocks.CheckStoksFullness(ref _foodStocks, 1))
+            {
+                if (!CheckDomesticatedAnimalFullness())
+                {
+                    GoTameAnimals(listOfFoodForOmnivorous);
+                }
+            }
+            else
+            {
+                MoveToRandomCell();
+                myGoal = PurposeOfMovement.goToRandomCell;
+            }
+        }
+
+        //------------------------------------------------------------< village >---------------------------------------------------------------
+
+        private void CheckVillage()
+        {
+            //если объединено 3 и больше домов, то это деревня
+            if (MapObjectsControl.ListOfVillages[indexOfVillage].Count >= 9)
+            {
+                _partOfLargeVillage = true;
+                _house.partOfLargeVillage = true;
+                GetRole();
+            }
+        }
+
+        private void GetRole()
+        {
+            if (gender == Gender.female)
+            {
+                _role = Role.gatherer;
+            }
+            else
+            {
+                Random random = new();
+                _role = (Role)random.Next(1, 4);
+
+            }
+        }
+
 
 
         //------------------------------------------------------------< barn >---------------------------------------------------------------
-        private void GoToTheBarn()
-        {
-            throw new NotImplementedException();
-        }
-
         private bool CheckIfHasABarn()
         {
             if (indexOfVillage != -1)
                 return MapObjectsControl.ListOfVillages[indexOfVillage].OfType<Barn>().FirstOrDefault() != null;
             return false;
+        }
+        private void barnBuildingProcess()
+        {
+            var positionsWithIndexes = GetPositionsOfClosestHouses();
+            if (positionsWithIndexes.Count == 0)
+            {
+                BuildHouse(currentPosition, default);
+            }
+            else
+            {
+                var data = GetDataAboutNewHouse(positionsWithIndexes);
+                if (data != default)
+                {
+                    MapObjectsControl.DefineIndices(data);
+                    var positionOfPlaceForNewHouse = data.Item1;
+                    var positionAndIndexOfBaseHouse = data.Item2;
+                    BuildHouse(positionOfPlaceForNewHouse, positionAndIndexOfBaseHouse);
+                }
+                else
+                    _noPlaceForBuilding = true;
+            }
+        }
+
+        private bool CheckTimeForBuildingBarn()
+        {
+            return _timeSinceFoundingVillage == 1 || _timeSinceFoundingVillage % 20 == 0;
         }
 
         //------------------------------------------------------------< house >---------------------------------------------------------------
@@ -194,8 +316,6 @@ namespace LabOOP1
             }
         }
 
-        
-
         private bool GoToTheBuildingToPutFood(Building building)
         {
             (int, int) buildingPosition = building.GetPosition();
@@ -208,7 +328,6 @@ namespace LabOOP1
             {
                 foreach (var pair in _foodStocks)
                 {
-
                     if (Stocks.CheckStockNotReachedLimit(ref building.foodStocks, pair.Key, limit))
                     {
                         Stocks.PutFood(ref building.foodStocks, pair.Key, pair.Value);
@@ -373,15 +492,6 @@ namespace LabOOP1
 
 
         //--------------------------------------------------------< tame >-----------------------------------------------------------
-        //private Type GetMissingAnimal()
-        //{
-        //    foreach (var pair in _domesticatedAnimal)
-        //    {
-        //        if (pair.Value == null)
-        //            return pair.Key;
-        //    }
-        //    return null;
-        //}
 
         private void GetListOfDesiredAnimals()
         {
@@ -404,27 +514,30 @@ namespace LabOOP1
                 {
                     _noTarget = false;
                     _noFoodForTaming = false;
-                    (Building, FoodTypes) data = default;
-                    switch (target)
-                    {
-                        case HerbivorousAnimal:
-                            data = TryToGetNeededFood(FoodTypes.plant);
-                            if (data == default)
-                                data = TryToGetNeededFood(FoodTypes.fruit);
-                            break;
-                        case CarnivorousAnimal:
-                            data = TryToGetNeededFood(FoodTypes.meat);
-                            break;
-                        case OmnivorousAnimal:
-                            data = TryToGetNeededFood(FoodTypes.plant);
-                            if (data == default)
-                                data = TryToGetNeededFood(FoodTypes.fruit);
-                            if (data == default)
-                                data = TryToGetNeededFood(FoodTypes.meat);
-                            break;
-                    }
 
-                    if (data != default)
+                    (Building, FoodTypes) data = default;
+                    if (CheckIfHasAHouse() || CheckIfHasABarn())
+                    {
+                        switch (target)
+                        {
+                            case HerbivorousAnimal:
+                                data = TryToGetNeededFood(FoodTypes.plant);
+                                if (data == default)
+                                    data = TryToGetNeededFood(FoodTypes.fruit);
+                                break;
+                            case CarnivorousAnimal:
+                                data = TryToGetNeededFood(FoodTypes.meat);
+                                break;
+                            case OmnivorousAnimal:
+                                data = TryToGetNeededFood(FoodTypes.plant);
+                                if (data == default)
+                                    data = TryToGetNeededFood(FoodTypes.fruit);
+                                if (data == default)
+                                    data = TryToGetNeededFood(FoodTypes.meat);
+                                break;
+                        }
+                    }
+                    if (data != default || !CheckIfHasAHouse())
                     {
                         MoveToTarget(target.GetPosition());
                         myGoal = PurposeOfMovement.goToTame;
@@ -454,9 +567,9 @@ namespace LabOOP1
             }
             else if (CheckIfHasABarn())
             {
-                if (Stocks.CheckStocksContainFoodType(ref _barn.foodStocks, ft))
+                if (Stocks.CheckStocksContainFoodType(ref _closestBarn.foodStocks, ft))
                 {
-                    Stocks.GetOneItemForTame(ref _barn.foodStocks, ft);
+                    Stocks.GetOneItemForTame(ref _closestBarn.foodStocks, ft);
                     return (_house, ft);
                 }
             }
@@ -500,12 +613,12 @@ namespace LabOOP1
         }
         public bool CheckFoodForAnimals(FoodTypes food)
         {
-            return CheckIfHasABarn() && Stocks.CheckStocksContainFoodType(ref _barn.foodStocks, food);
+            return CheckIfHasABarn() && Stocks.CheckStocksContainFoodType(ref _closestBarn.foodStocks, food);
         }
 
         internal void FeedAnimal(Animal animal)
         {
-            EatSmthFromStocks(animal, _barn);
+            EatSmthFromStocks(animal, _closestBarn);
         }
         //--------------------------------------------------------< Partner & Reproduce >-----------------------------------------------------------
 
@@ -537,7 +650,7 @@ namespace LabOOP1
         }
         private bool CheckAgeForRelationship()
         {
-            return _age > 5;
+            return _age > 15;
         }
         private bool CheckHumanPartner(FoodForOmnivorous an)
         {
@@ -637,10 +750,35 @@ namespace LabOOP1
             {
                 _noTarget = true;
             }
-
         }
+        private bool CheckAbleToHunt(List<Animal> listOfAnimals)
+        {
+            Animal target = FindTarget(listOfAnimals, (food) => food is Animal a && !a.IsDomesticated);
+            if (target != null)
+            {
+                return true;
+            }
 
-
+            return false;
+        }
+        private void GoToHunt(List<Animal> listOfAnimals)
+        {
+            Animal target = FindTarget(listOfAnimals, (food) => food is Animal a && !a.IsDomesticated);
+            if (target != null)
+            {
+                MoveToTarget(target.GetPosition());
+                myGoal = PurposeOfMovement.goToHunt;
+                if (currentPosition == target.GetPosition())
+                {
+                    target.WasKilled = true;
+                    Stocks.PutFood(ref _foodStocks, FoodTypes.meat, 10);
+                }
+            }
+            else
+            {
+                _noTarget = true;
+            }
+        }
 
 
         //--------------------------------------------------------< stocks >-----------------------------------------------------------
@@ -730,9 +868,12 @@ namespace LabOOP1
                 "\r\n\r\n", _partner == null ? "No partner yet" : "My patner's coordinates: " + _partner.GetPosition(),
                 "\r\n", _house == null ? "No house yet" : "Сoordinates of my house: " + _house.GetPosition(),
                 "\r\n", indexOfVillage == -1 ? "No village yet" : "My village index is " + indexOfVillage,
+                _house == null ? "" : (_partOfLargeVillage ? "\r\nWe are part of a large village" : "\r\nOur settlement does not yet form a village"),
+                 _partOfLargeVillage ? "\r\nMy role is " + _role : "",
                 "\r\n\r\n", "Time sinse breeding: ", _timeSinceBreeding,
                 "\r\n", "I am ", _isReadyToReproduce ? "" : "not ", "ready for reproducing",
-                "\r\n\r\n", "My stocks", gender == Gender.female ? ":\r\n" + string.Join(Environment.NewLine, linesS) : " are kept in house",
+                "\r\n\r\n", "My stocks", gender == Gender.female || gender == Gender.male && !_partOfLargeVillage ?
+                ":\r\n" + string.Join(Environment.NewLine, linesS) : " are kept in house",
                 "\r\n", "And my animals:\r\n", domAnimals);
             return result;
         }

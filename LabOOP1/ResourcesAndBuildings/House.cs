@@ -11,6 +11,7 @@ namespace LabOOP1
         public Human MaleOwner;
         public Human FemaleOwner;
         public string ReasonForBuilding;
+        public bool partOfLargeVillage = false;
         public House((int, int) pos, (int, int, int) baseHouseData) : base (pos)
         {
             ReasonForBuilding = baseHouseData == default ? "random" :

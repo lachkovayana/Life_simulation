@@ -3,6 +3,7 @@
     public enum PurposeOfMovement
     {
         goToFood,
+        goToHunt,
         goToPartner,
         goToHouseToReproduce,
         goToHouseToPutFood,

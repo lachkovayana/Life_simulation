@@ -9,6 +9,7 @@ namespace LabOOP1
 
         private bool _isInHibernation = false;
         private bool _wasEaten = false;
+        private bool _wasKilled = false;
         private bool _isDead = false;
         private bool _isDomesticated = false;
         private Human _owner = null;
@@ -32,6 +33,7 @@ namespace LabOOP1
         protected abstract int MaxSatiety { get; }
         protected virtual bool IsAbleToHibernate { get { return false; } }
         public bool WasEaten { get => _wasEaten; set { _wasEaten = value; _isDead = value; } }
+        public bool WasKilled { get => _wasKilled; set { _wasKilled = value; _isDead = value; } }
         public bool IsDead { get => _isDead; set { _isDead = value; } }
         public bool IsDomesticated { get => _isDomesticated; set { _isDomesticated = value; } }
 
@@ -65,16 +67,7 @@ namespace LabOOP1
 
         protected abstract bool CheckForEating(FoodForOmnivorous food);
         protected abstract void SetNutrition();
-        protected bool CheckAbleToEat(List<FoodForOmnivorous> listOfFoodForOmnivorous, Func<FoodForOmnivorous, bool> Check)
-        {
-
-            foreach (FoodForOmnivorous food in listOfFoodForOmnivorous)
-            {
-                if (Check(food))
-                    return true;
-            }
-            return false;
-        }
+       
 
 
         //------------------------------------------< methods for update health and satiety >-----------------------------------------------------
@@ -176,6 +169,16 @@ namespace LabOOP1
 
             if (!_isDomesticated)
                 BasisCellPosition = currentPosition;
+        }
+        protected bool CheckAbleToEat(List<FoodForOmnivorous> listOfFoodForOmnivorous, Func<FoodForOmnivorous, bool> Check)
+        {
+
+            foreach (FoodForOmnivorous food in listOfFoodForOmnivorous)
+            {
+                if (Check(food))
+                    return true;
+            }
+            return false;
         }
 
         internal void Feed()
@@ -371,7 +374,7 @@ namespace LabOOP1
 
             else
             {
-                if (_wasEaten)
+                if (_wasEaten || _wasKilled)
                 {
                     DieImmediately(listOfAnimals);
                 }
