@@ -32,11 +32,10 @@ namespace LabOOP1
 
         private Human _partner = null;
         private House _house;
-        private Barn _closestBarn;
         private Role _role;
         private bool _needToBuildHouse = false;
         private bool _noPlaceForBuilding = false;
-        private bool _noFoodForTaming = false;
+        private bool _noFoodForTamingAnimal = false;
         private bool _partOfLargeVillage = false;
         private int _timeSinceFoundingVillage = 0;
 
@@ -80,6 +79,9 @@ namespace LabOOP1
             else
             {
                 GeneralVoidsForLiveCicle(20, CheckIfHasAHouse() && CheckIfHasAPartner());
+                _noTarget = false;
+                _noFoodForTamingAnimal = false;
+
                 if (!_partOfLargeVillage && CheckIfHasAHouse())
                 {
                     CheckVillage();
@@ -91,10 +93,20 @@ namespace LabOOP1
                     {
                         GoToTheBuildingToEat(_house);
                     }
-                    else if (_partOfLargeVillage)
+                    
+                    else if (CheckIfHasABarn())
                     {
-                        if (CheckIfHasABarn() && Stocks.CheckStocksContainFoodType(ref _closestBarn.foodStocks))
-                            GoToTheBuildingToEat(_closestBarn);
+                        foreach (MapObject m in MapObjectsControl.ListOfVillages[indexOfVillage])
+                        {
+                            if (m is Building b)
+                            {
+                                if (Stocks.CheckStocksContainFoodType(ref b.foodStocks))
+                                {
+                                    GoToTheBuildingToEat(b);
+                                    break;
+                                }
+                            }
+                        }
                     }
                     else
                     {
@@ -121,16 +133,14 @@ namespace LabOOP1
                     if (_partOfLargeVillage)
                     {
                         _timeSinceFoundingVillage++;
-
                         VoidsForDependentPerson(listOfFoodForOmnivorous, listOfAnimals, listOfPlants, listOfFruits);
                     }
-
                     else
                     {
                         VoidsForIndependentPerson(listOfFoodForOmnivorous, listOfPlants, listOfFruits);
                     }
                 }
-                if (_noTarget || _noPlaceForBuilding || _noFoodForTaming)
+                if (_noTarget || _noPlaceForBuilding || _noFoodForTamingAnimal)
                 {
                     MoveToRandomCell();
                     myGoal = PurposeOfMovement.goToRandomCell;
@@ -143,10 +153,16 @@ namespace LabOOP1
             //собиратель несёт еду в амбар (если он есть) или дом при достижении лимита (2) хотя бы в одном из продуктов
             if (_role == Role.gatherer && (CheckIfHasAHouse() || CheckIfHasABarn()) && Stocks.CheckIfAtLastOneLimit(ref _foodStocks))
             {
-                var flag = true;
                 if (CheckIfHasABarn())
-                    flag = GoToTheBuildingToPutFood(_closestBarn);
-                else if (!flag || !CheckIfHasABarn())
+                    foreach (MapObject m in MapObjectsControl.ListOfVillages[indexOfVillage])
+                    {
+                        if (m is Building b)
+                        {
+                            GoToTheBuildingToPutFood(b);
+
+                        }
+                    }
+                else
                     GoToTheBuildingToPutFood(_house);
             }
             //действия женщины-собирателя
@@ -185,7 +201,10 @@ namespace LabOOP1
                 if (_foodStocks[FoodTypes.meat] != 0)
                 {
                     if (CheckIfHasABarn())
-                        GoToTheBuildingToPutFood(_closestBarn);
+                    {
+                        Barn barn = GetAnyBarn();
+                        GoToTheBuildingToPutFood(barn);
+                    }
                     else
                         GoToTheBuildingToPutFood(_house);
 
@@ -196,6 +215,11 @@ namespace LabOOP1
                 MoveToRandomCell();
                 myGoal = PurposeOfMovement.goToRandomCell;
             }
+        }
+
+        private Barn GetAnyBarn()
+        {
+            return MapObjectsControl.ListOfVillages[indexOfVillage].OfType<Barn>().FirstOrDefault();
         }
 
         private void VoidsForIndependentPerson(List<FoodForOmnivorous> listOfFoodForOmnivorous, List<Plant> listOfPlants, List<Fruit> listOfFruits)
@@ -219,10 +243,7 @@ namespace LabOOP1
 
             else if (!CheckDomesticatedAnimalFullness() && Stocks.CheckStoksFullness(ref _foodStocks, 1))
             {
-                if (!CheckDomesticatedAnimalFullness())
-                {
-                    GoTameAnimals(listOfFoodForOmnivorous);
-                }
+                GoTameAnimals(listOfFoodForOmnivorous);
             }
             else
             {
@@ -263,8 +284,7 @@ namespace LabOOP1
         //------------------------------------------------------------< barn >---------------------------------------------------------------
         private bool CheckIfHasABarn()
         {
-            return false;
-            //return MapObjectsControl.ListOfVillages[indexOfVillage].OfType<Barn>().FirstOrDefault() != null;
+            return MapObjectsControl.ListOfVillages[indexOfVillage].OfType<Barn>().FirstOrDefault() != null;
         }
         private void BarnBuildingProcess()
         {
@@ -380,7 +400,8 @@ namespace LabOOP1
 
             if (currentPosition == buildingPosition)
             {
-                EatSmthFromStocks(this, building);
+                Stocks.GetOneItem(ref building.foodStocks, FoodTypes.any);
+                RiseSatiety();
             }
         }
 
@@ -393,7 +414,7 @@ namespace LabOOP1
                 {
                     if (x >= 0 && y >= 0 && x < Form1.s_cols && y < Form1.s_rows)
                     {
-                        House supposedHouse = MapObjectsControl.FieldOfAllMapObjects[x, y].OfType<House>().FirstOrDefault();
+                        Building supposedHouse = MapObjectsControl.FieldOfAllMapObjects[x, y].OfType<Building>().FirstOrDefault();
                         if (supposedHouse != default)
                         {
                             var ind = supposedHouse.indexOfVillage;
@@ -423,7 +444,7 @@ namespace LabOOP1
                             //как только находим свободное место, возвращаем
                             //1 элемент - пара координат подходящего для строительства ного дома места,
                             //2 элемент - данные о доме, относительно которого строим
-                            if (MapObjectsControl.FieldOfAllMapObjects[x, y].OfType<House>().FirstOrDefault() == null)
+                            if (MapObjectsControl.FieldOfAllMapObjects[x, y].OfType<Building>().FirstOrDefault() == null)
                             {
                                 return ((x, y), pairOfCoorAndIndex);
                             }
@@ -536,6 +557,46 @@ namespace LabOOP1
                     desiredAnimalsList.Add(pair.Key);
             }
         }
+        private (Building, FoodTypes) FeedAnimalIfVil(Animal target)
+        {
+            (Building, FoodTypes) data = default;
+
+            switch (target)
+            {
+                case HerbivorousAnimal:
+                    data = TryToGetNeededFood(FoodTypes.plant);
+                    if (data == default)
+                        data = TryToGetNeededFood(FoodTypes.fruit);
+                    break;
+                case CarnivorousAnimal:
+                    data = TryToGetNeededFood(FoodTypes.meat);
+                    break;
+                case OmnivorousAnimal:
+                    data = TryToGetNeededFood(FoodTypes.plant);
+                    if (data == default)
+                        data = TryToGetNeededFood(FoodTypes.fruit);
+                    if (data == default)
+                        data = TryToGetNeededFood(FoodTypes.meat);
+                    break;
+            }
+            return data;
+        }
+        private void FeedAnimalIfIndep(Animal target)
+        {
+            switch (target)
+            {
+                case HerbivorousAnimal:
+                    Stocks.GetOneItem(ref _foodStocks, FoodTypes.plant);
+                    break;
+                case CarnivorousAnimal:
+                    Stocks.GetOneItem(ref _foodStocks, FoodTypes.meat);
+                    break;
+                case OmnivorousAnimal:
+                    Stocks.GetOneItem(ref _foodStocks, FoodTypes.plant);
+                    break;
+            }
+        }
+
 
         private void GoTameAnimals(List<FoodForOmnivorous> listOfFoodForOmnivorous)
         {
@@ -545,32 +606,17 @@ namespace LabOOP1
                 Animal target = (Animal)FindTarget(listOfFoodForOmnivorous, (obj) => obj.GetType() == type && obj is Animal an && !an.IsDomesticated);
                 if (target != null)
                 {
-                    _noTarget = false;
-                    _noFoodForTaming = false;
-
                     (Building, FoodTypes) data = default;
-                    if (CheckIfHasAHouse())
+                    if (_partOfLargeVillage)
                     {
-                        switch (target)
-                        {
-                            case HerbivorousAnimal:
-                                data = TryToGetNeededFood(FoodTypes.plant);
-                                if (data == default)
-                                    data = TryToGetNeededFood(FoodTypes.fruit);
-                                break;
-                            case CarnivorousAnimal:
-                                data = TryToGetNeededFood(FoodTypes.meat);
-                                break;
-                            case OmnivorousAnimal:
-                                data = TryToGetNeededFood(FoodTypes.plant);
-                                if (data == default)
-                                    data = TryToGetNeededFood(FoodTypes.fruit);
-                                if (data == default)
-                                    data = TryToGetNeededFood(FoodTypes.meat);
-                                break;
-                        }
+                        data = FeedAnimalIfVil(target);
                     }
-                    if (data != default || !CheckIfHasAHouse())
+                    if (!_partOfLargeVillage)
+                    {
+                        FeedAnimalIfIndep(target);
+                    }
+
+                    if (data != default || !_partOfLargeVillage)
                     {
                         MoveToTarget(target.GetPosition());
                         myGoal = PurposeOfMovement.goToTame;
@@ -582,7 +628,7 @@ namespace LabOOP1
                     }
                     else
                     {
-                        _noFoodForTaming = true;
+                        _noFoodForTamingAnimal = true;
                     }
                 }
                 else
@@ -595,16 +641,23 @@ namespace LabOOP1
         {
             if (Stocks.CheckStocksContainFoodType(ref _house.foodStocks, ft))
             {
-                Stocks.GetOneItemForTame(ref _house.foodStocks, ft);
+                Stocks.GetOneItem(ref _house.foodStocks, ft);
                 return (_house, ft);
             }
             else if (CheckIfHasABarn())
             {
-                if (Stocks.CheckStocksContainFoodType(ref _closestBarn.foodStocks, ft))
+                foreach (Building b in MapObjectsControl.ListOfBuildings)
                 {
-                    Stocks.GetOneItemForTame(ref _closestBarn.foodStocks, ft);
-                    return (_house, ft);
+                    if (b is Barn barn)
+                    {
+                        if (Stocks.CheckStocksContainFoodType(ref barn.foodStocks, ft))
+                        {
+                            Stocks.GetOneItem(ref barn.foodStocks, ft);
+                            return (barn, ft);
+                        }
+                    }
                 }
+
             }
             return default;
         }
@@ -646,12 +699,31 @@ namespace LabOOP1
         }
         public bool CheckFoodForAnimals(FoodTypes food)
         {
-            return CheckIfHasABarn() && Stocks.CheckStocksContainFoodType(ref _closestBarn.foodStocks, food);
+            if (CheckIfHasABarn())
+            {
+                foreach (Building b in MapObjectsControl.ListOfBuildings)
+                {
+                    if (b is Barn barn)
+                    {
+                        if (Stocks.CheckStocksContainFoodType(ref barn.foodStocks, food))
+                            return true;
+                    }
+                }
+            }
+            return false;
         }
 
         internal void FeedAnimal(Animal animal)
         {
-            EatSmthFromStocks(animal, _closestBarn);
+            if (_partOfLargeVillage)
+            {
+                FeedAnimalIfVil(animal);
+            }
+            if (!_partOfLargeVillage)
+            {
+                FeedAnimalIfIndep(animal);
+            }
+            animal.Feed();
         }
         //--------------------------------------------------------< Partner & Reproduce >-----------------------------------------------------------
 
@@ -729,37 +801,6 @@ namespace LabOOP1
             }
         }
 
-        private void EatSmthFromStocks(Animal eater, Building building)
-        {
-            myGoal = PurposeOfMovement.stand;
-
-            FoodTypes key = FoodTypes.any;
-            switch (eater)
-            {
-                case Human:
-                    key = Stocks.FindMaxValueAndItsKey(ref building.foodStocks).Key;
-                    break;
-
-                case Wolf:
-                    key = FoodTypes.meat;
-                    break;
-
-                case Pig:
-                    key = Stocks.FindMaxValueAndItsKey(ref building.foodStocks).Key;
-
-                    break;
-
-                case Sheep:
-                    if (building.foodStocks[FoodTypes.fruit] >= building.foodStocks[FoodTypes.plant])
-                        key = FoodTypes.fruit;
-                    else
-                        key = FoodTypes.plant;
-                    break;
-            }
-
-            _house.foodStocks[key]--;
-            eater.RiseSatiety();
-        }
 
 
 

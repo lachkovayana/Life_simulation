@@ -31,7 +31,7 @@ namespace LabOOP1
             }
             return false;
         }
-        public static void GetOneItemForTame(ref Dictionary<FoodTypes, int> foodStocks, FoodTypes ft)
+        public static void GetOneItem(ref Dictionary<FoodTypes, int> foodStocks, FoodTypes ft)
         {
             foodStocks[ft]--;   
         }
