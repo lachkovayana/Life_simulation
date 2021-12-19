@@ -128,33 +128,9 @@ namespace LabOOP1
 
         //------------------------------------------------< find a food >------------------------------------------------------------
 
-
-
-        protected FoodForOmnivorous FindTargetOLD(List<FoodForOmnivorous> listOfFoodForOmnivorous, Func<FoodForOmnivorous, bool> Check)
-        {
-            var minDist = Constants.ImpVal;
-            FoodForOmnivorous target = null;
-
-            foreach (FoodForOmnivorous f in listOfFoodForOmnivorous)
-            {
-                if (Check(f))
-                {
-                    double dist = movement.CountDistL1(currentPosition, f.GetPosition());
-
-                    if (dist < minDist)
-                    {
-                        minDist = dist;
-                        target = f;
-                    }
-                }
-            }
-
-            return target;
-        }
-
         protected T FindTarget<T>(List<T> listOfFoodForOmnivorous, Func<T, bool> Check) where T : FoodForOmnivorous
         {
-            var minDist = Constants.ImpVal;
+            var minDist = (double)Constants.ImpVal;
             T target = null;
 
             foreach (T f in listOfFoodForOmnivorous)
@@ -200,6 +176,11 @@ namespace LabOOP1
 
             if (!_isDomesticated)
                 BasisCellPosition = currentPosition;
+        }
+
+        internal void Feed()
+        {
+            RiseSatiety();
         }
 
         //---------------------------------------------< reproduce characters >-------------------------------------------------------
@@ -423,7 +404,7 @@ namespace LabOOP1
                         }
                         else if (_isReadyToReproduce && CheckAbleToReproduce(listOfAnimals))
                         {
-                            ReproducingProcess( listOfAnimals);
+                            ReproducingProcess(listOfAnimals);
                         }
                         else
                         {
