@@ -56,6 +56,7 @@ namespace LabOOP1
         Image woodSourse = Image.FromFile("../../../img/wood.png");
 
         Image house = Image.FromFile("../../../img/house1.png");
+        Image barn = Image.FromFile("../../../img/building1.png");
 
 
         Color seasonColor = Color.Gainsboro;
@@ -77,13 +78,22 @@ namespace LabOOP1
 
         private void DrawHouses()
         {
-            foreach (House h in MapObjectsControl.ListOfHouses)
+            foreach (Building b in MapObjectsControl.ListOfBuildings)
             {
-                int x = h.GetPosition().Item1;
-                int y = h.GetPosition().Item2;
-                Draw(house, x, y);
+                int x = b.GetPosition().Item1;
+                int y = b.GetPosition().Item2;
+                switch (b)
+                {
+                    case House:
+                        Draw(house, x, y);
+                        break;
+                    case Barn:
+                        Draw(barn, x, y);
+                        break;
+                }
+                
 
-                MapObjectsControl.FieldOfAllMapObjects[x, y].Add(h);
+                MapObjectsControl.FieldOfAllMapObjects[x, y].Add(b);
             }
         }
 

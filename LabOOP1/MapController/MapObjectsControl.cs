@@ -6,8 +6,8 @@ namespace LabOOP1
 {
     public class MapObjectsControl
     {
-        private const int _densityAnimals = 30;
-        private const int _densityPlants = 50;
+        private const int _densityAnimals = 1030;
+        private const int _densityPlants = 1050;
         private const int _densityHumans = 10;
         private const int _densitySources = 1040;
 
@@ -22,7 +22,7 @@ namespace LabOOP1
         private readonly Rendering _rendering = new();
 
         internal static Season s_currentSeason;
-        internal static List<House> ListOfHouses = new();
+        internal static List<Building> ListOfBuildings = new();
         internal static List<Animal> listOfAnimalsCopy = new();
 
         internal static List<MapObject>[,] FieldOfAllMapObjects = new List<MapObject>[Form1.s_cols, Form1.s_rows];
@@ -198,7 +198,7 @@ namespace LabOOP1
                     listOfAnimalsCopy = _listOfAnimals;
                 }
             }
-            ListOfHouses.Clear();
+            ListOfBuildings.Clear();
             ListOfVillages.Clear();
         }
        

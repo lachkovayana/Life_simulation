@@ -49,6 +49,7 @@ namespace LabOOP1
                     if (pair.Value > 0)
                         return true;
                 }
+                return false;
             }
 
             return foodStocks[food] > 0;

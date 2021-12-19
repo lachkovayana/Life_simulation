@@ -91,9 +91,10 @@ namespace LabOOP1
                     {
                         GoToTheBuildingToEat(_house);
                     }
-                    else if (CheckIfHasABarn() && Stocks.CheckStocksContainFoodType(ref _closestBarn.foodStocks))
+                    else if (_partOfLargeVillage)
                     {
-                        GoToTheBuildingToEat(_closestBarn);
+                        if (CheckIfHasABarn() && Stocks.CheckStocksContainFoodType(ref _closestBarn.foodStocks))
+                            GoToTheBuildingToEat(_closestBarn);
                     }
                     else
                     {
@@ -174,7 +175,7 @@ namespace LabOOP1
 
             else if (_role == Role.builder && CheckTimeForBuildingBarn())
             {
-                barnBuildingProcess();
+                BarnBuildingProcess();
             }
 
             //охотник (если охота была удачной, несёт добычу в амбар, если он уже построен)
@@ -262,30 +263,62 @@ namespace LabOOP1
         //------------------------------------------------------------< barn >---------------------------------------------------------------
         private bool CheckIfHasABarn()
         {
-            if (indexOfVillage != -1)
-                return MapObjectsControl.ListOfVillages[indexOfVillage].OfType<Barn>().FirstOrDefault() != null;
             return false;
+            //return MapObjectsControl.ListOfVillages[indexOfVillage].OfType<Barn>().FirstOrDefault() != null;
         }
-        private void barnBuildingProcess()
+        private void BarnBuildingProcess()
         {
-            var positionsWithIndexes = GetPositionsOfClosestHouses();
-            if (positionsWithIndexes.Count == 0)
+            var listOfPosOfAllBuildings = GetPositionsOfBuildingsInVillage();
+            var freePlacePosition = GetPosFreePlace(listOfPosOfAllBuildings);
+            if (freePlacePosition != default)
             {
-                BuildHouse(currentPosition, default);
+                BuildBarn(freePlacePosition);
             }
             else
+                _noPlaceForBuilding = true;
+
+        }
+
+        private void BuildBarn((int, int) freePlacePosition)
+        {
+            var newBarn = new Barn(freePlacePosition)
             {
-                var data = GetDataAboutNewHouse(positionsWithIndexes);
-                if (data != default)
+                indexOfVillage = indexOfVillage
+            };
+            MapObjectsControl.ListOfVillages[indexOfVillage].Add(newBarn);
+            MapObjectsControl.ListOfBuildings.Add(newBarn);
+        }
+
+        private (int, int) GetPosFreePlace(List<(int, int)> listOfPosOfAllBuildings)
+        {
+            foreach (var pos in listOfPosOfAllBuildings)
+            {
+                for (int x = pos.Item1 - 1; x <= pos.Item1 + 1; x++)
                 {
-                    MapObjectsControl.DefineIndices(data);
-                    var positionOfPlaceForNewHouse = data.Item1;
-                    var positionAndIndexOfBaseHouse = data.Item2;
-                    BuildHouse(positionOfPlaceForNewHouse, positionAndIndexOfBaseHouse);
+                    for (int y = pos.Item2 - 1; y <= pos.Item2 + 1; y++)
+                    {
+                        if (x >= 0 && y >= 0 && x < Form1.s_cols && y < Form1.s_rows)
+                        {
+                            if (MapObjectsControl.FieldOfAllMapObjects[x, y].OfType<Building>().FirstOrDefault() == null)
+                                return (x, y);
+                        }
+                    }
                 }
-                else
-                    _noPlaceForBuilding = true;
             }
+            return default;
+        }
+
+        private List<(int, int)> GetPositionsOfBuildingsInVillage()
+        {
+            List<(int, int)> allBuildingsPos = new();
+            foreach (MapObject m in MapObjectsControl.ListOfVillages[indexOfVillage])
+            {
+                if (m is Building b)
+                {
+                    allBuildingsPos.Add(b.GetPosition());
+                }
+            }
+            return allBuildingsPos;
         }
 
         private bool CheckTimeForBuildingBarn()
@@ -296,7 +329,7 @@ namespace LabOOP1
         //------------------------------------------------------------< house >---------------------------------------------------------------
         private void HouseBuildingProcess()
         {
-            var positionsWithIndexes = GetPositionsOfClosestHouses();
+            var positionsWithIndexes = GetPosAndIndOfClosestHouses();
             if (positionsWithIndexes.Count == 0)
             {
                 BuildHouse(currentPosition, default);
@@ -351,7 +384,7 @@ namespace LabOOP1
             }
         }
 
-        private List<(int, int, int)> GetPositionsOfClosestHouses()
+        private List<(int, int, int)> GetPosAndIndOfClosestHouses()
         {
             List<(int, int, int)> positionsOfHousesWithIndexes = new();
             for (int x = currentPosition.Item1 - 3; x <= currentPosition.Item1 + 3; x++)
@@ -425,7 +458,7 @@ namespace LabOOP1
             MapObjectsControl.ListOfVillages[ind].Add(newHouse);
             MapObjectsControl.ListOfVillages[ind].Add(this);
             MapObjectsControl.ListOfVillages[ind].Add(_partner);
-            MapObjectsControl.ListOfHouses.Add(newHouse);
+            MapObjectsControl.ListOfBuildings.Add(newHouse);
 
             _needToBuildHouse = false;
         }
@@ -516,7 +549,7 @@ namespace LabOOP1
                     _noFoodForTaming = false;
 
                     (Building, FoodTypes) data = default;
-                    if (CheckIfHasAHouse() || CheckIfHasABarn())
+                    if (CheckIfHasAHouse())
                     {
                         switch (target)
                         {
@@ -650,7 +683,7 @@ namespace LabOOP1
         }
         private bool CheckAgeForRelationship()
         {
-            return _age > 15;
+            return _age > 5;
         }
         private bool CheckHumanPartner(FoodForOmnivorous an)
         {
