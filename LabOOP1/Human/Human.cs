@@ -194,7 +194,7 @@ namespace LabOOP1
                 BarnBuildingProcess();
             }
 
-            //охотник (если охота была удачной, несёт добычу в амбар, если он уже построен)
+            //охотник (если охота была удачной, несёт добычу или в амбар, если он уже построен, или в дом)
             else if (_role == Role.hunter && CheckAbleToHunt(listOfAnimals))
             {
                 GoToHunt(listOfAnimals);
