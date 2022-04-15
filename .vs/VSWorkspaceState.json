@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\LabOOP1"
+    "\\Human",
+    "\\MapController",
+    "\\ResourcesAndBuildings"
   ],
-  "SelectedNode": "\\LabOOP1\\LabOOP1.sln",
+  "SelectedNode": "\\LabOOP1.sln",
   "PreviewInSolutionExplorer": false
 }
